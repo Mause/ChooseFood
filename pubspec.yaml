@@ -2,5 +2,5 @@ name: ChooseFood
 environment:
   sdk: '>=2.10.0 <3.0.0'
 
-dev_dependency:
-  - package:test
+dev_dependencies: 
+  test: ^1.17.12
