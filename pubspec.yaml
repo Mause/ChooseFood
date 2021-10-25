@@ -37,7 +37,7 @@ dependencies:
 
   flutter_facebook_auth: ^3.5.2
   logger: ^1.1.0
-  google_maps_webservice: ^0.0.19
+  google_maps_webservice: ^0.0.20-nullsafety.5
   geolocator: ^7.7.1
 
 dev_dependencies:
