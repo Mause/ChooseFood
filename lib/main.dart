@@ -1,3 +1,4 @@
+import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
@@ -72,6 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
+  _MyHomePageState() {
+    AndroidMetadata.metaDataAsMap.then(
+        (value) => places =
+            GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']),
+        onError: (error, stackTrace) async =>
+            log.e("Failed to get google maps api key", error, stackTrace));
+  }
+
   getPlaces() async {
     var geolocatorPlatform = GeolocatorPlatform.instance;
     var locationServiceEnabled =
@@ -98,7 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
-    var response = await places.searchNearbyWithRadius(location, 3000);
+    var response =
+        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
       log.e(response.errorMessage);
     } else {
