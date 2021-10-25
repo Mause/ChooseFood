@@ -58,5 +58,12 @@ jobs:
         run: flutter pub get
       - name: Prebuild
         run: flutter pub run build_runner build
-      - name: Build apk
+      - name: Build ${{ matrix.target }}
         run: flutter build ${{ matrix.target }}
+      - if: ${{ matrix.target }} == 'apk'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ secrets.SERVICE_TOKEN }}
+          packageName: com.example.MyApp
+          releaseFiles: app/build/outputs/bundle/release/*.aab
+          track: internal
