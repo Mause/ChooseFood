@@ -65,7 +65,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
           packageName: com.example.myapp
-          releaseFiles: build/app/outputs/flutter-appbundle/*.aab
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: internal
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
