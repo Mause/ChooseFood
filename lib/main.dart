@@ -7,15 +7,12 @@ import 'package:geolocator/geolocator.dart';
 
 void main() {
   FacebookAuth.instance.autoLogAppEventsEnabled(true);
-  FacebookAuth.i.webInitialize(
-      appId: "", cookie: true, xfbml: true, version: "1.0");
-  runApp(MyApp());
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key) {
-    Logger().i("webInitialised", FacebookAuth.i.isWebSdkInitialized);
-  }
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
