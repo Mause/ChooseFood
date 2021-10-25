@@ -12,9 +12,10 @@ var logger = Logger();
 class Config {
   final String googleMapsConfig;
 
-  Config({required googleMapsConfig});
+  Config({required this.googleMapsConfig});
 
-  factory Config.fromJson(Map<String,dynamic> json) => _$ConfigFromJson(json);
+  toJson() => _$ConfigToJson(this);
+  factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 }
 
 Future<Config> getConfig() async {
