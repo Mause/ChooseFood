@@ -64,7 +64,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
-          packageName: com.example.myapp
+          packageName: me.mause.choosefood
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: internalsharing
       - if: ${{ matrix.target == 'web' }}
