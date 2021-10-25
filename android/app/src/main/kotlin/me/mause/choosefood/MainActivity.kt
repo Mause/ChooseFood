@@ -1,4 +1,4 @@
-package com.example.myapp
+package me.mause.choosefood
 
 import io.flutter.embedding.android.FlutterActivity
 
