@@ -203,21 +203,21 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text('Number of matching locations'),
             Text('$numberOfPlaces',
                 style: Theme.of(context).textTheme.headline4),
-            NavigationBar(
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                onDestinationSelected: _handleNav,
-                selectedIndex: 0,
-                destinations: const [
-                  NavigationDestination(
-                      icon: Icon(CupertinoIcons.add), label: 'Increment'),
-                  NavigationDestination(
-                      icon: Icon(CupertinoIcons.person), label: 'Login'),
-                  NavigationDestination(
-                      icon: Icon(CupertinoIcons.placemark), label: 'Get Places')
-                ]),
           ],
         ),
       ),
+      bottomNavigationBar: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          onDestinationSelected: _handleNav,
+          selectedIndex: 0,
+          destinations: const [
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.add), label: 'Increment'),
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.person), label: 'Login'),
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.placemark), label: 'Get Places')
+          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
