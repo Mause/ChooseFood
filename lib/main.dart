@@ -107,7 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
-    var response = await places.searchNearbyWithRadius(location, 3000);
+    var response =
+        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
       log.e(response.errorMessage);
     } else {
