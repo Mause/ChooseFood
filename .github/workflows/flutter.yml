@@ -47,8 +47,8 @@ jobs:
     
     strategy:
       matrix:
-        target: [apk, web]
-    
+        target: [appbundle, web]
+
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
@@ -58,5 +58,10 @@ jobs:
         run: flutter pub get
       - name: Prebuild
         run: flutter pub run build_runner build
-      - name: Build apk
+      - name: Build ${{ matrix.target }}
         run: flutter build ${{ matrix.target }}
+      - if: ${{ matrix.target == 'web' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: web
+          path: build/web
