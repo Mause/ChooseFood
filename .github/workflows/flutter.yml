@@ -64,7 +64,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
-          packageName: com.example.MyApp
+          packageName: com.example.myapp
           releaseFiles: build/app/outputs/flutter-apk/*.a*
           track: internal
       - if: ${{ matrix.target == 'web' }}
