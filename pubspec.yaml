@@ -39,6 +39,8 @@ dependencies:
   logger: ^1.1.0
   google_maps_webservice: ^0.0.20-nullsafety.5
   geolocator: ^7.7.1
+  json_serializable: ^6.0.1
+  json_annotation: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +53,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
   test: ^1.17.12
+  build_runner: ^2.1.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -64,7 +67,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+     - config/config.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -1,9 +1,18 @@
+import 'dart:convert' show jsonDecode;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
+    show FacebookAuth;
 import 'package:logger/logger.dart' show Logger;
-import 'package:google_maps_webservice/places.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_webservice/places.dart'
+    show GoogleMapsPlaces, Location;
+import 'package:geolocator/geolocator.dart'
+    show GeolocatorPlatform, LocationPermission;
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show ServicesBinding, rootBundle;
+
+var logger = Logger();
 
 var log = Logger();
 
@@ -95,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
     log.w('Calling express login');
     var loginResult = await FacebookAuth.instance.expressLogin();
 
-    log.w(loginResult);
+    log.w("loginResult",
+        {"status": loginResult.status, "message": loginResult.message});
 
     setState(() {
       userId = loginResult.accessToken?.userId;
