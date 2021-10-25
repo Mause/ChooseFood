@@ -76,10 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
   _MyHomePageState() {
-    context.loaderOverlay.show();
     AndroidMetadata.metaDataAsMap.then(
         (value) {
-          context.loaderOverlay.hide();
           places = GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
         },
         onError: (error, stackTrace) async =>
