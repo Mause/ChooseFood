@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart'
 import 'dart:async' show Future;
 
 var log = Logger();
+const title = "Choose Food";
 
 void main() {
   FacebookAuth.instance.autoLogAppEventsEnabled(true);
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: title,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.deepPurple,
       ),
-      home: const LoaderOverlay(child: MyHomePage(title: 'Choose Food')),
+      home: const LoaderOverlay(child: MyHomePage(title: title)),
       routes: const {
         // "/food": Widget()
       },
