@@ -1,16 +1,20 @@
+import 'dart:math';
+
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth;
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart'
-    show GoogleMapsPlaces, Location;
+    show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'dart:async' show Future;
 
-var logger = Logger();
+import 'info.dart' show InfoPage;
+import 'common.dart' show title;
 
 var log = Logger();
 
@@ -27,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: title,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -40,9 +44,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.deepPurple,
       ),
-      home: const MyHomePage(title: 'Choose Food'),
-      routes: const {
-        // "/food": Widget()
+      home: const LoaderOverlay(child: MyHomePage(title: title)),
+      routes: {
+        InfoPage.routeName: (context) => const InfoPage(),
       },
     );
   }
@@ -69,19 +73,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
-  int numberOfPlaces = -1;
+  List<PlacesSearchResult> results = [];
 
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
   _MyHomePageState() {
     AndroidMetadata.metaDataAsMap.then(
-        (value) => places =
-            GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']),
+        (value) {
+          places = GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
+        },
         onError: (error, stackTrace) async =>
             log.e("Failed to get google maps api key", error, stackTrace));
   }
 
   getPlaces() async {
+    context.loaderOverlay.show();
     var geolocatorPlatform = GeolocatorPlatform.instance;
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
@@ -116,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     setState(() {
-      numberOfPlaces = response.results.length;
+      results = response.results;
+      context.loaderOverlay.hide();
     });
   }
 
@@ -143,6 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         getPlaces().whenComplete(() => log.i("complete get Places"));
         break;
+      case 3:
+        Navigator.pushNamed(context, InfoPage.routeName);
+        break;
       default:
         log.e("fell through", value);
     }
@@ -167,6 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    var locations = results
+        .sublist(0, min(results.length, 10))
+        .map((e) => Text(e.name, style: Theme.of(context).textTheme.headline4));
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -200,34 +215,31 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            const Text('Number of matching locations'),
-            Text('$numberOfPlaces',
-                style: Theme.of(context).textTheme.headline4),
-            NavigationBar(
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                onDestinationSelected: _handleNav,
-                selectedIndex: 0,
-                destinations: const [
-                  NavigationDestination(
-                      icon: Icon(CupertinoIcons.add), label: 'Increment'),
-                  NavigationDestination(
-                      icon: Icon(CupertinoIcons.person), label: 'Login'),
-                  NavigationDestination(
-                      icon: Icon(CupertinoIcons.placemark), label: 'Get Places')
-                ]),
+            const Text('Matching locations'),
+            ...locations,
           ],
         ),
       ),
+      bottomNavigationBar: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          onDestinationSelected: _handleNav,
+          selectedIndex: 0,
+          destinations: const [
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.add), label: 'Increment'),
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.person), label: 'Login'),
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.placemark), label: 'Get Places'),
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.info), label: "Info"),
+          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
-
-  double convert(num? number) {
-    return double.parse(number!.toString());
   }
 }
 
