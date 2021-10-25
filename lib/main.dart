@@ -13,8 +13,10 @@ import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'dart:async' show Future;
 
+import 'info.dart' show InfoPage;
+import 'common.dart' show title;
+
 var log = Logger();
-const title = "Choose Food";
 
 void main() {
   FacebookAuth.instance.autoLogAppEventsEnabled(true);
@@ -43,8 +45,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
       ),
       home: const LoaderOverlay(child: MyHomePage(title: title)),
-      routes: const {
-        // "/food": Widget()
+      routes: {
+        InfoPage.routeName: (context) => const InfoPage(),
       },
     );
   }
@@ -148,6 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         getPlaces().whenComplete(() => log.i("complete get Places"));
         break;
+      case 3:
+        Navigator.pushNamed(context, InfoPage.routeName);
+        break;
       default:
         log.e("fell through", value);
     }
@@ -225,7 +230,9 @@ class _MyHomePageState extends State<MyHomePage> {
             NavigationDestination(
                 icon: Icon(CupertinoIcons.person), label: 'Login'),
             NavigationDestination(
-                icon: Icon(CupertinoIcons.placemark), label: 'Get Places')
+                icon: Icon(CupertinoIcons.placemark), label: 'Get Places'),
+            NavigationDestination(
+                icon: Icon(CupertinoIcons.info), label: "Info"),
           ]),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
