@@ -1,5 +1,3 @@
-import 'dart:convert' show jsonDecode;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
@@ -10,7 +8,6 @@ import 'package:google_maps_webservice/places.dart'
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission;
 import 'dart:async' show Future;
-import 'package:flutter/services.dart' show ServicesBinding, rootBundle;
 
 var logger = Logger();
 
