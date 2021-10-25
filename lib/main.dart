@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:logger/logger.dart';
+import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart';
 import 'package:geolocator/geolocator.dart';
+
+var log = Logger();
 
 void main() {
   FacebookAuth.instance.autoLogAppEventsEnabled(true);
@@ -58,8 +60,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final log = Logger();
-
   int _counter = 0;
   String? userId;
   int numberOfPlaces = -1;
@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var geolocatorPlatform = GeolocatorPlatform.instance;
     if (!(await geolocatorPlatform.isLocationServiceEnabled() &&
         isAllowed(await geolocatorPlatform.checkPermission()))) {
-      logger.e("Location permission not given");
+      log.e("Location permission not given");
       return;
     }
 
