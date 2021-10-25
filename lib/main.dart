@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth;
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.deepPurple,
       ),
-      home: const MyHomePage(title: 'Choose Food'),
+      home: const LoaderOverlay(child: MyHomePage(title: 'Choose Food')),
       routes: const {
         // "/food": Widget()
       },
@@ -74,14 +75,18 @@ class _MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
   _MyHomePageState() {
+    context.loaderOverlay.show();
     AndroidMetadata.metaDataAsMap.then(
-        (value) => places =
-            GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']),
+        (value) {
+          context.loaderOverlay.hide();
+          places = GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
+        },
         onError: (error, stackTrace) async =>
             log.e("Failed to get google maps api key", error, stackTrace));
   }
 
   getPlaces() async {
+    context.loaderOverlay.show();
     var geolocatorPlatform = GeolocatorPlatform.instance;
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
@@ -117,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       results = response.results;
+      context.loaderOverlay.hide();
     });
   }
 
