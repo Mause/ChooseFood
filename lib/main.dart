@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth;
 import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart'
-    show GoogleMapsPlaces, Location;
+    show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'dart:async' show Future;
@@ -69,7 +71,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
-  int numberOfPlaces = -1;
+  List<PlacesSearchResult> results = [];
 
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
@@ -116,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     setState(() {
-      numberOfPlaces = response.results.length;
+      results = response.results;
     });
   }
 
@@ -167,6 +169,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    var locations = results
+        .sublist(0, min(results.length, 10))
+        .map((e) => Text(e.name, style: Theme.of(context).textTheme.headline4));
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -200,9 +207,8 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            const Text('Number of matching locations'),
-            Text('$numberOfPlaces',
-                style: Theme.of(context).textTheme.headline4),
+            const Text('Matching locations'),
+            ...locations,
           ],
         ),
       ),
