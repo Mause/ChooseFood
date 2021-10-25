@@ -62,13 +62,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _counter = 0;
   String? userId;
+  int numberOfPlaces = -1;
 
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
+
   getPlaces() async {
-    var geoposition = await GeolocatorPlatform.instance.getCurrentPosition();
-    var location = Location(geoposition.latitude, geoposition.longitude);
-    await places.searchNearbyWithRadius(location, 3000);
+    var geolocatorPlatform = GeolocatorPlatform.instance;
+    if (!(await geolocatorPlatform.isLocationServiceEnabled() &&
+        isAllowed(await geolocatorPlatform.checkPermission()))) {
+      logger.e("Location permission not given");
+      return;
+    }
+
+    var geoposition = await geolocatorPlatform.getCurrentPosition();
+    var location =
+        Location(lat: geoposition.latitude, lng: geoposition.longitude);
+
+    var response = await places.searchNearbyWithRadius(location, 3000);
+    if (response.errorMessage != null) {
+      log.e(response.errorMessage);
+    } else {
+      log.i("found places", response.results.length);
+    }
+
+    setState(() {
+      numberOfPlaces = response.results.length;
+    });
   }
 
   Future<void> _login() async {
@@ -150,15 +170,20 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            const Text('Number of matching locations'),
+            Text('$numberOfPlaces',
+                style: Theme.of(context).textTheme.headline4),
             NavigationBar(
                 labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
                 onDestinationSelected: _handleNav,
                 selectedIndex: 0,
                 destinations: const [
                   NavigationDestination(
-                      icon: Icon(CupertinoIcons.add), label: 'Hello'),
+                      icon: Icon(CupertinoIcons.add), label: 'Increment'),
                   NavigationDestination(
-                      icon: Icon(CupertinoIcons.minus), label: 'World')
+                      icon: Icon(CupertinoIcons.person), label: 'Login'),
+                  NavigationDestination(
+                      icon: Icon(CupertinoIcons.placemark), label: 'Get Places')
                 ]),
           ],
         ),
@@ -173,5 +198,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   double convert(num? number) {
     return double.parse(number!.toString());
+  }
+}
+
+bool isAllowed(LocationPermission index) {
+  switch (index) {
+    case LocationPermission.always:
+    case LocationPermission.whileInUse:
+      return true;
+    default:
+      return false;
   }
 }
