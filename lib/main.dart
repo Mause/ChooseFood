@@ -12,8 +12,6 @@ import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'dart:async' show Future;
 
-var logger = Logger();
-
 var log = Logger();
 
 void main() {
@@ -230,10 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
-
-  double convert(num? number) {
-    return double.parse(number!.toString());
   }
 }
 
