@@ -6,7 +6,7 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location;
 import 'package:geolocator/geolocator.dart'
-    show GeolocatorPlatform, LocationPermission;
+    show GeolocatorPlatform, LocationPermission, Position;
 import 'dart:async' show Future;
 
 var logger = Logger();
@@ -72,16 +72,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
-
   getPlaces() async {
     var geolocatorPlatform = GeolocatorPlatform.instance;
-    if (!(await geolocatorPlatform.isLocationServiceEnabled() &&
-        isAllowed(await geolocatorPlatform.checkPermission()))) {
+    var locationServiceEnabled =
+        await geolocatorPlatform.isLocationServiceEnabled();
+    var permission = await geolocatorPlatform.requestPermission();
+    log.i({
+      "message": "checking location",
+      "locationServiceEnabled": locationServiceEnabled,
+      "permission": permission
+    });
+    if (!(locationServiceEnabled && isAllowed(permission))) {
       log.e("Location permission not given");
       return;
     }
 
-    var geoposition = await geolocatorPlatform.getCurrentPosition();
+    Position geoposition;
+    try {
+      geoposition = await geolocatorPlatform.getCurrentPosition(
+          timeLimit: const Duration(seconds: 10));
+    } catch (e, s) {
+      log.e("timed out", e, s);
+      return;
+    }
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
