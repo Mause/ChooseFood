@@ -65,6 +65,16 @@ jobs:
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            build/app/outputs/bundle/release/app-release.aab
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
