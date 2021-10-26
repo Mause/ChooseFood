@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
+    uses: .github/actions/build
 
   build_appbundle:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
       - run: |
           wget https://github.com/google/bundletool/releases/download/1.8.1/bundletool-all-1.8.1.jar
           java -jar bundletool-all.1.8.1.jar -v
-      - uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
+      - uses: .github/actions/build
       - name: Build
         run: flutter build appbundle
       - uses: actions/upload-artifact@v2
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
+      - uses: .github/actions/build
       - name: Build
         run: flutter build web
       - uses: actions/upload-artifact@v2
