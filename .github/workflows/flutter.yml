@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: Mause/ChooseFood/.github/workflows/reuse.yaml
+      - uses: ./reuse.yaml
 
   build_releases:
     runs-on: ubuntu-latest
