@@ -26,8 +26,9 @@ class _BasePage extends State<BasePage> {
 
   @override
   void activate() {
-    this.selectedIndex = widget.selectedIndex;
-    this.children = widget.children;
+    super.activate();
+    selectedIndex = widget.selectedIndex;
+    children = widget.children;
   }
 
   void _handleNav(int value) {
