@@ -89,91 +89,39 @@ extension _ColorExtractionExtension on Map<String, dynamic> {
   }
 
   MaterialColor getAccent1() {
-    return MaterialColor(
-      _parseHexString(this['system_accent1_100']),
-      <int, Color>{
-        50: getColor('system_accent1_50'),
-        100: getColor('system_accent1_100'),
-        200: getColor('system_accent1_200'),
-        300: getColor('system_accent1_300'),
-        400: getColor('system_accent1_400'),
-        500: getColor('system_accent1_500'),
-        600: getColor('system_accent1_600'),
-        700: getColor('system_accent1_700'),
-        800: getColor('system_accent1_800'),
-        900: getColor('system_accent1_900'),
-      },
-    );
+    return get('accent1');
   }
 
   MaterialColor getAccent2() {
-    return MaterialColor(
-      _parseHexString(this['system_accent2_100']),
-      <int, Color>{
-        50: getColor('system_accent2_50'),
-        100: getColor('system_accent2_100'),
-        200: getColor('system_accent2_200'),
-        300: getColor('system_accent2_300'),
-        400: getColor('system_accent2_400'),
-        500: getColor('system_accent2_500'),
-        600: getColor('system_accent2_600'),
-        700: getColor('system_accent2_700'),
-        800: getColor('system_accent2_800'),
-        900: getColor('system_accent2_900'),
-      },
-    );
+    return get('accent2');
   }
 
   MaterialColor getAccent3() {
-    return MaterialColor(
-      _parseHexString(this['system_accent3_100']),
-      <int, Color>{
-        50: getColor('system_accent3_50'),
-        100: getColor('system_accent3_100'),
-        200: getColor('system_accent3_200'),
-        300: getColor('system_accent3_300'),
-        400: getColor('system_accent3_400'),
-        500: getColor('system_accent3_500'),
-        600: getColor('system_accent3_600'),
-        700: getColor('system_accent3_700'),
-        800: getColor('system_accent3_800'),
-        900: getColor('system_accent3_900'),
-      },
-    );
+    return get('accent3');
   }
 
   MaterialColor getNeutral1() {
-    return MaterialColor(
-      _parseHexString(this['system_neutral1_100']),
-      <int, Color>{
-        50: getColor('system_neutral1_50'),
-        100: getColor('system_neutral1_100'),
-        200: getColor('system_neutral1_200'),
-        300: getColor('system_neutral1_300'),
-        400: getColor('system_neutral1_400'),
-        500: getColor('system_neutral1_500'),
-        600: getColor('system_neutral1_600'),
-        700: getColor('system_neutral1_700'),
-        800: getColor('system_neutral1_800'),
-        900: getColor('system_neutral1_900'),
-      },
-    );
+    return get("neutral1");
   }
 
   MaterialColor getNeutral2() {
+    return get("neutral2");
+  }
+
+  MaterialColor get(String infix) {
     return MaterialColor(
-      _parseHexString(this['system_neutral2_100']),
+      _parseHexString(this['system_${infix}_100']),
       <int, Color>{
-        50: getColor('system_neutral2_50'),
-        100: getColor('system_neutral2_100'),
-        200: getColor('system_neutral2_200'),
-        300: getColor('system_neutral2_300'),
-        400: getColor('system_neutral2_400'),
-        500: getColor('system_neutral2_500'),
-        600: getColor('system_neutral2_600'),
-        700: getColor('system_neutral2_700'),
-        800: getColor('system_neutral2_800'),
-        900: getColor('system_neutral2_900'),
+        50: getColor('system_${infix}_50'),
+        100: getColor('system_${infix}_100'),
+        200: getColor('system_${infix}_200'),
+        300: getColor('system_${infix}_300'),
+        400: getColor('system_${infix}_400'),
+        500: getColor('system_${infix}_500'),
+        600: getColor('system_${infix}_600'),
+        700: getColor('system_${infix}_700'),
+        800: getColor('system_${infix}_800'),
+        900: getColor('system_${infix}_900'),
       },
     );
   }
