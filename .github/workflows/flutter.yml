@@ -60,6 +60,11 @@ jobs:
         run: flutter pub run build_runner build
       - name: Build ${{ matrix.target }}
         run: flutter build ${{ matrix.target }}
+      - if: ${{ matrix.target == 'appbundle' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
