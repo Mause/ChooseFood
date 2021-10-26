@@ -17,14 +17,18 @@ class BasePage extends StatefulWidget {
       : super(key: key);
 
   @override
-  createState() => _BasePage(selectedIndex, children);
+  createState() => _BasePage();
 }
 
 class _BasePage extends State<BasePage> {
-  List<Widget> children;
-  int selectedIndex;
+  late List<Widget> children;
+  late int selectedIndex;
 
-  _BasePage(this.selectedIndex, this.children);
+  @override
+  void activate() {
+    this.selectedIndex = widget.selectedIndex;
+    this.children = widget.children;
+  }
 
   void _handleNav(int value) {
     setState(() {
