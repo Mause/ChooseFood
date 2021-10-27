@@ -19,17 +19,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: |
-          wget https://github.com/google/bundletool/releases/download/1.8.1/bundletool-all-1.8.1.jar
-          java -jar bundletool-all.1.8.1.jar -v
       - uses: Mause/ChooseFood/.github/workflows/build.yaml@apks
-      - name: Build
-        run: flutter build appbundle
+      - uses: actions/upload-artifact@v2
+      - run: flutter build appbundle --build-number ${{ github.run_number }}
+      - run: |
+          gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
+          java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
+          unzip apks.apks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: java -jar bundletool-all.1.8.1.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks
       - uses: actions/upload-artifact@v2
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
-      - run: java -jar bundletool-all.1.8.1.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks
+      - uses: actions/upload-artifact@v2
+        with:
+          path: universal.apk
       - uses: "marvinpinto/action-automatic-releases@latest"
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
@@ -39,7 +45,7 @@ jobs:
           title: "Development Build"
           files: |
             build/app/outputs/bundle/release/app-release.aab
-            apks/*
+            unniversal.apk
 
   build_web:
     runs-on: ubuntu-latest
