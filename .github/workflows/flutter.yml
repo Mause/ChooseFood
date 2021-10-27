@@ -32,7 +32,7 @@ jobs:
       - name: Prebuild
         run: flutter pub run build_runner build
       - name: Build ${{ matrix.target }}
-        run: flutter build ${{ matrix.target }}
+        run: flutter build ${{ matrix.target }} --build-number ${{ github.run_number }}
       - run: |
           wget https://github.com/google/bundletool/releases/download/1.8.1/bundletool-all-1.8.1.jar
           java -jar bundletool-all-1.8.1.jar version
