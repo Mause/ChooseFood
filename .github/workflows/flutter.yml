@@ -13,7 +13,9 @@ on:
 
 jobs:
   build:
-    uses: Mause/ChooseFood/.github/workflows/build.yaml@apks
+    runs-on: ubuntu-latest
+    steps:
+     - uses: Mause/ChooseFood/.github/actions/build@apks
 
   build_appbundle:
     runs-on: ubuntu-latest
