@@ -55,7 +55,7 @@ jobs:
           title: "Development Build"
           files: |
             build/app/outputs/bundle/release/app-release.aab
-            *.apk
+            standalones/*.apk
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
