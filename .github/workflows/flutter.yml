@@ -34,7 +34,7 @@ jobs:
       - name: Build ${{ matrix.target }}
         run: flutter build ${{ matrix.target }}
       - if: ${{ matrix.target == 'appbundle' }}
-      - run: |
+        run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
           java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
           unzip apks.apks
