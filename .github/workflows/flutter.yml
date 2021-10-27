@@ -38,7 +38,7 @@ jobs:
           java -jar bundletool-all-1.8.1.jar version
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
-          java -jar bundletool-all-1.8.1.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks
+          java -jar bundletool-all-1.8.1.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
           unzip apks.apks
       - if: ${{ matrix.target == 'appbundle' }}
         uses: actions/upload-artifact@v2
@@ -55,7 +55,7 @@ jobs:
           title: "Development Build"
           files: |
             build/app/outputs/bundle/release/app-release.aab
-            standalones/*.apk
+            universal.apk
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
