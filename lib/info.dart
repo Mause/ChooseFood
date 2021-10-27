@@ -20,8 +20,8 @@ class _InfoPage extends State<InfoPage> {
   List<Text> rows = [const Text("loading...")];
 
   @override
-  void activate() {
-    super.activate();
+  void initState() {
+    super.initState();
     PackageInfo.fromPlatform().then((packageInfo) {
       setState(() {
         rows = [

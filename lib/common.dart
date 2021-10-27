@@ -24,8 +24,8 @@ class _BasePage extends State<BasePage> {
   late int selectedIndex;
 
   @override
-  void activate() {
-    super.activate();
+  void initState() {
+    super.initState();
     selectedIndex = widget.selectedIndex;
   }
 
