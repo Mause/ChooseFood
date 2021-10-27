@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart'
 import 'package:flutter/material.dart' show AppBar, Scaffold, Text, Theme;
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'common.dart' show title;
+import 'common.dart' show BasePage;
 
 class InfoPage extends StatefulWidget {
   static const routeName = "/info";
@@ -36,13 +36,9 @@ class _InfoPage extends State<InfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text(title),
-        ),
-        body: Center(
-            child: Column(
-          children: rows,
-        )));
+    return BasePage(
+      selectedIndex: 3,
+      children: rows,
+    );
   }
 }
