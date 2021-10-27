@@ -13,34 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: 'beta'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build
-        run: flutter pub run build_runner build
-
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      # - name: Verify formatting
-      #   run: flutter format --output=none --set-exit-if-changed .
-
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: flutter analyze
-
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
-      - name: Run tests
-        run: flutter test
+    uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
 
   build_releases:
     runs-on: ubuntu-latest
@@ -66,7 +39,30 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
           packageName: me.mause.choosefood
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: internalsharing
+          track: internal
+      - run: |
+          wget https://github.com/google/bundletool/releases/download/1.8.1/bundletool-all-1.8.1.jar
+          java -jar bundletool-all-1.8.1.jar version
+      - if: ${{ matrix.target == 'appbundle' }}
+        run: |
+          java -jar bundletool-all-1.8.1.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
+          unzip apks.apks
+      - if: ${{ matrix.target == 'appbundle' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            build/app/outputs/bundle/release/app-release.aab
+            universal.apk
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:

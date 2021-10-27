@@ -1,1 +1,7 @@
-repos: []
+ci:
+  skip: [flutter-format]
+repos:
+  - repo: https://github.com/Cretezy/flutter-format-pre-commit
+    rev: 4a1df67
+    hooks:
+      - id: flutter-format

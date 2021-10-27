@@ -13,6 +13,7 @@ import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'dart:async' show Future;
 
+import 'platform_colours.dart' show getThemeData;
 import 'info.dart' show InfoPage;
 import 'common.dart' show title;
 
@@ -30,29 +31,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: title,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: const LoaderOverlay(child: MyHomePage(title: title)),
-      routes: {
-        InfoPage.routeName: (context) => const InfoPage(),
-      },
-    );
+    return FutureBuilder<ThemeData>(
+        future: getThemeData(),
+        builder: (context, snapshot) => MaterialApp(
+              title: title,
+              theme: snapshot.data ?? ThemeData(),
+              home: const LoaderOverlay(child: MyHomePage(title: title)),
+              routes: {
+                InfoPage.routeName: (context) => const InfoPage(),
+              },
+            ));
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  static const routeName = '/';
+
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -78,10 +72,10 @@ class _MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = GoogleMapsPlaces();
 
   _MyHomePageState() {
-    AndroidMetadata.metaDataAsMap.then(
-        (value) {
-          places = GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
-        },
+    AndroidMetadata.metaDataAsMap.then((value) {
+      places =
+          GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
+    },
         onError: (error, stackTrace) async =>
             log.e("Failed to get google maps api key", error, stackTrace));
   }
@@ -208,6 +202,16 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+              child: const Text('Login'),
+              onPressed: () {
+                _login().whenComplete(() => log.i("login complete?"));
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Increment'),
+              onPressed: _incrementCounter,
+            ),
             const Text(
               'You have clicked the button this many times:',
             ),
