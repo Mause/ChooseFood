@@ -24,9 +24,10 @@ jobs:
 
     steps:
       - run: |
-          gh auth login
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
           java -jar bundletool-all-1.8.1.jar version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
         with:
