@@ -31,8 +31,10 @@ jobs:
         run: flutter pub get
       - name: Prebuild
         run: flutter pub run build_runner build
-      - name: Build ${{ matrix.target }}
-        run: flutter build ${{ matrix.target }}
+      - if: ${{ matrix.target == 'appbundle' }}
+        run: flutter build appbundle --build-number ${{ github.run_number }}
+      - if: ${{ matrix.target == 'web' }}
+        run: flutter build web
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
