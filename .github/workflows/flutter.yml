@@ -40,6 +40,7 @@ jobs:
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
           java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
           unzip apks.apks
+          mv universal.apk choose-food-1.0.${{ github.run_number }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{ matrix.target == 'appbundle' }}
@@ -57,7 +58,7 @@ jobs:
           title: "Development Build"
           files: |
             build/app/outputs/bundle/release/app-release.aab
-            universal.apk
+            *.apk
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
