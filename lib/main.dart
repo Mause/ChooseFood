@@ -202,6 +202,16 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+              child: const Text('Login'),
+              onPressed: () {
+                _login().whenComplete(() => log.i("login complete?"));
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Increment'),
+              onPressed: _incrementCounter,
+            ),
             const Text(
               'You have clicked the button this many times:',
             ),
