@@ -17,15 +17,21 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPage extends State<InfoPage> {
-  List<Text> rows = [];
+  List<Text> rows = [const Text("loading...")];
 
-  _InfoPage() {
+  @override
+  void initState() {
+    super.initState();
     PackageInfo.fromPlatform().then((packageInfo) {
       setState(() {
         rows = [
           text("appName", packageInfo.appName),
           text('version', packageInfo.version),
         ];
+      });
+    }, onError: (error) {
+      setState(() {
+        rows = [Text(error.toString())];
       });
     });
   }

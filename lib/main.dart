@@ -1,11 +1,25 @@
 import 'dart:math';
 
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        BuildContext,
+        ElevatedButton,
+        FutureBuilder,
+        Key,
+        MaterialApp,
+        State,
+        StatefulWidget,
+        StatelessWidget,
+        Text,
+        Theme,
+        ThemeData,
+        Widget,
+        runApp;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth;
-import 'package:loader_overlay/loader_overlay.dart';
+import 'package:loader_overlay/loader_overlay.dart'
+    show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
@@ -15,7 +29,7 @@ import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
 import 'info.dart' show InfoPage;
-import 'common.dart' show title;
+import 'common.dart' show BasePage, title;
 
 var log = Logger();
 
@@ -45,7 +59,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = "/";
 
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -142,25 +156,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _handleNav(int value) {
-    switch (value) {
-      case 0:
-        _incrementCounter();
-        break;
-      case 1:
-        _login().whenComplete(() => log.i("complete login"));
-        break;
-      case 2:
-        getPlaces().whenComplete(() => log.i("complete get Places"));
-        break;
-      case 3:
-        Navigator.pushNamed(context, InfoPage.routeName);
-        break;
-      default:
-        log.e("fell through", value);
-    }
-  }
-
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -185,73 +180,29 @@ class _MyHomePageState extends State<MyHomePage> {
         .sublist(0, min(results.length, 10))
         .map((e) => Text(e.name, style: Theme.of(context).textTheme.headline4));
 
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              child: const Text('Login'),
-              onPressed: () {
-                _login().whenComplete(() => log.i("login complete?"));
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Increment'),
-              onPressed: _incrementCounter,
-            ),
-            const Text(
-              'You have clicked the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            const Text('Matching locations'),
-            ...locations,
-          ],
+    return BasePage(
+      selectedIndex: 0,
+      children: <Widget>[
+        ElevatedButton(
+          child: const Text('Login'),
+          onPressed: () {
+            _login().whenComplete(() => log.i("login complete?"));
+          },
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          onDestinationSelected: _handleNav,
-          selectedIndex: 0,
-          destinations: const [
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.add), label: 'Increment'),
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.person), label: 'Login'),
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.placemark), label: 'Get Places'),
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.info), label: "Info"),
-          ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        ElevatedButton(
+          child: const Text('Increment'),
+          onPressed: _incrementCounter,
+        ),
+        const Text(
+          'You have clicked the button this many times:',
+        ),
+        Text(
+          '$_counter',
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        const Text('Matching locations'),
+        ...locations,
+      ],
     );
   }
 }
