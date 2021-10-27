@@ -46,6 +46,11 @@ jobs:
       - if: ${{ matrix.target == 'appbundle' }}
         uses: actions/upload-artifact@v2
         with:
+          path: '*.apk'
+
+      - if: ${{ matrix.target == 'appbundle' }}
+        uses: actions/upload-artifact@v2
+        with:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
 
