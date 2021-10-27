@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart'
-    show BuildContext, Center, Column, Key, State, StatefulWidget, Widget;
-import 'package:flutter/material.dart' show AppBar, Scaffold, Text, Theme;
-import 'package:package_info_plus/package_info_plus.dart';
+    show BuildContext, Key, State, StatefulWidget, Widget;
+import 'package:flutter/material.dart' show Text, Theme;
+import 'package:package_info_plus/package_info_plus.dart' show PackageInfo;
 
 import 'common.dart' show BasePage;
 
