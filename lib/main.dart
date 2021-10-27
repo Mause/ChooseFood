@@ -136,9 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    log.w('Calling express login');
-
-    await FacebookAuth.i.autoLogAppEventsEnabled(true);
+    log.w('Calling login');
 
     var accessToken = await FacebookAuth.i.accessToken;
     if (accessToken == null) {
