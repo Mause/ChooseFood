@@ -20,7 +20,7 @@ void main() {
     expect(find.text('1'), findsNothing);
 
     // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byText('Increment'));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Increment'));
     await tester.pump();
 
     // Verify that our counter has incremented.
