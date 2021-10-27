@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    uses: Mause/ChooseFood/.github/workflows/build@98e5e79
+    uses: Mause/ChooseFood/.github/workflows/build@apks
 
   build_appbundle:
     runs-on: ubuntu-latest
