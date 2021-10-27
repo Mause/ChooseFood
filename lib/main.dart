@@ -122,14 +122,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    log.w('Calling express login');
-    var loginResult = await FacebookAuth.instance.expressLogin();
+    log.w('Calling login');
 
-    log.w("loginResult",
-        {"status": loginResult.status, "message": loginResult.message});
+    var accessToken = await FacebookAuth.i.accessToken;
+    if (accessToken == null) {
+      var loginResult =
+          await FacebookAuth.instance.login(permissions: ["email"]);
+      log.w({"status": loginResult.status, "message": loginResult.message});
+      accessToken = loginResult.accessToken;
+    }
+
+    if (accessToken == null) {
+      log.e("failed to login");
+      return;
+    }
 
     setState(() {
-      userId = loginResult.accessToken?.userId;
+      userId = accessToken?.userId;
     });
   }
 
