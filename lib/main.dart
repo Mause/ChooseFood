@@ -30,7 +30,7 @@ import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
-import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
+// import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
@@ -40,11 +40,14 @@ import 'common.dart' show BasePage, title;
 var log = Logger();
 
 Future<void> main() async {
+  log.i(EnvironmentConfig.sentryDsn);
+  /*
   await SentryFlutter.init((options) {
     options.dsn = EnvironmentConfig.sentryDsn;
   }, appRunner: () {
+  */
     runApp(const MyApp());
-  });
+  //});
 }
 
 class MyApp extends StatelessWidget {
