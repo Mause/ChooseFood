@@ -1,13 +1,17 @@
 import 'dart:math';
 
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
+import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show
+        AlertDialog,
         BuildContext,
         ElevatedButton,
         FutureBuilder,
         Key,
+        ListBody,
         MaterialApp,
+        SingleChildScrollView,
         State,
         StatefulWidget,
         StatelessWidget,
@@ -15,9 +19,11 @@ import 'package:flutter/material.dart'
         Theme,
         ThemeData,
         Widget,
-        runApp;
+        debugPrint,
+        runApp,
+        showDialog;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
-    show FacebookAuth;
+    show FacebookAuth, LoginStatus;
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
@@ -25,6 +31,8 @@ import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
+import 'package:sentry_flutter/sentry_flutter.dart'
+    show Sentry, SentryFlutter, SentryNavigatorObserver;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
@@ -33,10 +41,22 @@ import 'common.dart' show BasePage, title;
 
 var log = Logger();
 
-void main() {
-  FacebookAuth.instance.autoLogAppEventsEnabled(true);
+Future<void> main() async {
+  try {
+    await SentryFlutter.init((options) {
+      options.dsn = EnvironmentConfig.sentryDsn;
+    });
+  } catch (e) {
+    debugPrint("Failed to setup sentry: $e");
+  }
 
   runApp(const MyApp());
+}
+
+Widget Function(BuildContext) makeErrorDialog(String error) {
+  return (BuildContext context) => AlertDialog(
+      title: const Text('Login failed'),
+      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
 
 class MyApp extends StatelessWidget {
@@ -51,6 +71,9 @@ class MyApp extends StatelessWidget {
               title: title,
               theme: snapshot.data ?? ThemeData(),
               home: const LoaderOverlay(child: MyHomePage(title: title)),
+              navigatorObservers: [
+                SentryNavigatorObserver(),
+              ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
               },
@@ -136,6 +159,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
+    if (!Sentry.isEnabled) {
+      await showDialog(
+          context: context, builder: makeErrorDialog("Sentry not enabled"));
+    }
+
     log.w('Calling login');
 
     var accessToken = await FacebookAuth.i.accessToken;
@@ -143,6 +171,10 @@ class _MyHomePageState extends State<MyHomePage> {
       var loginResult =
           await FacebookAuth.instance.login(permissions: ["email"]);
       log.w({"status": loginResult.status, "message": loginResult.message});
+      if (loginResult.status != LoginStatus.success) {
+        await showDialog(
+            context: context, builder: makeErrorDialog(loginResult.message!));
+      }
       accessToken = loginResult.accessToken;
     }
 
