@@ -19,6 +19,7 @@ import 'package:flutter/material.dart'
         Theme,
         ThemeData,
         Widget,
+        debugPrint,
         runApp,
         showDialog;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
@@ -31,7 +32,7 @@ import 'package:google_maps_webservice/places.dart'
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show SentryFlutter, SentryNavigatorObserver;
+    show Sentry, SentryFlutter, SentryNavigatorObserver;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
@@ -41,11 +42,21 @@ import 'common.dart' show BasePage, title;
 var log = Logger();
 
 Future<void> main() async {
-  await SentryFlutter.init((options) {
-    options.dsn = EnvironmentConfig.sentryDsn;
-  }, appRunner: () {
-    runApp(const MyApp());
-  });
+  try {
+    await SentryFlutter.init((options) {
+      options.dsn = EnvironmentConfig.sentryDsn;
+    });
+  } catch (e) {
+    debugPrint("Failed to setup sentry: $e");
+  }
+
+  runApp(const MyApp());
+}
+
+Widget Function(BuildContext) makeErrorDialog(String error) {
+  return (BuildContext context) => AlertDialog(
+      title: const Text('Login failed'),
+      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
 
 class MyApp extends StatelessWidget {
@@ -54,6 +65,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    if (!Sentry.isEnabled) {
+      showDialog(
+          context: context, builder: makeErrorDialog("Sentry not enabled"));
+    }
+
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
         builder: (context, snapshot) => MaterialApp(
@@ -170,13 +186,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       userId = accessToken?.userId;
     });
-  }
-
-  makeErrorDialog(String error) {
-    return (BuildContext context) => AlertDialog(
-        title: const Text('Login failed'),
-        content:
-            SingleChildScrollView(child: ListBody(children: [Text(error)])));
   }
 
   void _incrementCounter() {
