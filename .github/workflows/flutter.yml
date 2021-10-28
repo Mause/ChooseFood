@@ -50,6 +50,7 @@ jobs:
           java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
           unzip apks.apks
           mv universal.apk choose-food-1.0.${{ github.run_number }}.apk
+          find . -name "*.apk" -exec echo "APK: {}" \; -exec sh -c 'keytool -printcert -jarfile "{}"' \;
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{ matrix.target == 'appbundle' }}
