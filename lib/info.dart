@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart'
     show BuildContext, Key, State, StatefulWidget, Widget;
-import 'package:flutter/material.dart' show Text, Theme;
+import 'package:flutter/material.dart' show AboutListTile, Text;
 import 'package:package_info_plus/package_info_plus.dart' show PackageInfo;
+import 'package:loader_overlay/loader_overlay.dart'
+    show OverlayControllerWidgetExtension;
 
 import 'common.dart' show BasePage;
 
@@ -17,27 +19,27 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPage extends State<InfoPage> {
-  List<Text> rows = [const Text("loading...")];
+  List<Widget> rows = [];
 
   @override
   void initState() {
+    context.loaderOverlay.show();
     super.initState();
     PackageInfo.fromPlatform().then((packageInfo) {
+      context.loaderOverlay.hide();
       setState(() {
         rows = [
-          text("appName", packageInfo.appName),
-          text('version', packageInfo.version),
+          AboutListTile(
+              applicationName: packageInfo.appName,
+              applicationVersion: packageInfo.version)
         ];
       });
     }, onError: (error) {
       setState(() {
+        context.loaderOverlay.hide();
         rows = [Text(error.toString())];
       });
     });
-  }
-
-  Text text(String label, dynamic value) {
-    return Text('$label: $value', style: Theme.of(context).textTheme.headline6);
   }
 
   @override
