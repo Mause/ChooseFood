@@ -11,9 +11,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-
 jobs:
   build:
     uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
