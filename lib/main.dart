@@ -7,6 +7,7 @@ import 'package:flutter/material.dart'
         AlertDialog,
         BuildContext,
         Card,
+        Column,
         ElevatedButton,
         Expanded,
         FutureBuilder,
