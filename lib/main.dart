@@ -222,6 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: const Text('Increment'),
           onPressed: _incrementCounter,
         ),
+        ElevatedButton(child: const Text('Get places'), onPressed: getPlaces),
         Text(Sentry.isEnabled ? 'Sentry enabled' : 'Sentry disabled: $error'),
         const Text(
           'You have clicked the button this many times:',
