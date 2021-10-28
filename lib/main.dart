@@ -4,11 +4,14 @@ import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show
+        AlertDialog,
         BuildContext,
         ElevatedButton,
         FutureBuilder,
         Key,
+        ListBody,
         MaterialApp,
+        SingleChildScrollView,
         State,
         StatefulWidget,
         StatelessWidget,
@@ -16,9 +19,10 @@ import 'package:flutter/material.dart'
         Theme,
         ThemeData,
         Widget,
-        runApp;
+        runApp,
+        showDialog;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
-    show FacebookAuth;
+    show FacebookAuth, LoginStatus;
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
@@ -150,6 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
       var loginResult =
           await FacebookAuth.instance.login(permissions: ["email"]);
       log.w({"status": loginResult.status, "message": loginResult.message});
+      if (loginResult.status != LoginStatus.success) {
+        await showDialog(
+            context: context, builder: makeErrorDialog(loginResult.message!));
+      }
       accessToken = loginResult.accessToken;
     }
 
@@ -161,6 +169,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       userId = accessToken?.userId;
     });
+  }
+
+  makeErrorDialog(String error) {
+    return (BuildContext context) => AlertDialog(
+        title: const Text('Login failed'),
+        content:
+            SingleChildScrollView(child: ListBody(children: [Text(error)])));
   }
 
   void _incrementCounter() {
