@@ -26,7 +26,7 @@ import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
-import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
+// import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
