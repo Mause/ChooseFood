@@ -65,11 +65,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if (!Sentry.isEnabled) {
-      showDialog(
-          context: context, builder: makeErrorDialog("Sentry not enabled"));
-    }
-
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
         builder: (context, snapshot) => MaterialApp(
@@ -164,6 +159,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
+    if (!Sentry.isEnabled) {
+      await showDialog(
+          context: context, builder: makeErrorDialog("Sentry not enabled"));
+    }
+
     log.w('Calling login');
 
     var accessToken = await FacebookAuth.i.accessToken;
