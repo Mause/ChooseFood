@@ -57,6 +57,7 @@ jobs:
           packageName: me.mause.choosefood
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: internal
+          status: draft
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
