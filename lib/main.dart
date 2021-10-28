@@ -6,9 +6,13 @@ import 'package:flutter/material.dart'
     show
         AlertDialog,
         BuildContext,
+        Card,
+        Column,
         ElevatedButton,
+        Expanded,
         FutureBuilder,
         Key,
+        Image,
         ListBody,
         MaterialApp,
         SingleChildScrollView,
@@ -205,9 +209,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    var locations = results
-        .sublist(0, min(results.length, 10))
-        .map((e) => Text(e.name, style: Theme.of(context).textTheme.headline4));
+    var locations = results.sublist(0, min(results.length, 10)).map(
+          (e) => Card(
+            elevation: 5,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image.network(e.photos[0].photoReference),
+                ),
+                Text(e.name),
+              ],
+            ),
+          ),
+        );
 
     return BasePage(
       selectedIndex: 0,
