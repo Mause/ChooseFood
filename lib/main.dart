@@ -36,11 +36,14 @@ import 'common.dart' show BasePage, title;
 var log = Logger();
 
 Future<void> main() async {
+  log.info(EnvironmentConfig.sentryDsn);
+  /*
   await SentryFlutter.init((options) {
     options.dsn = EnvironmentConfig.sentryDsn;
   }, appRunner: () {
+  */
     runApp(const MyApp());
-  });
+  //});
 }
 
 class MyApp extends StatelessWidget {
