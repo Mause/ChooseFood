@@ -38,18 +38,15 @@ jobs:
       - name: Prebuild
         run: flutter pub run build_runner build
       - if: ${{ matrix.target == 'appbundle' }}
+        run: echo "${{ secrets.SIGNING_KEY }}" | openssl base64 -d > key.store
+      - if: ${{ matrix.target == 'appbundle' }}
         run: flutter build appbundle --build-number ${{ github.run_number }} --dart-define=SPLUNK_DSN=${{ secrets.SENTRY_DSN }}
+        env:
+          SIGNING_KEY: key.store
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - if: ${{ matrix.target == 'web' }}
         run: flutter build web
-      - if: ${{ matrix.target == 'appbundle' }}
-        name: Sign Android release
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: build/app/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: upload
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
       - if: ${{ matrix.target == 'appbundle' }}
         uses: r0adkll/upload-google-play@v1
         with:
