@@ -214,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               children: <Widget>[
                 Expanded(
-                  child: Image.network(e.photos[0]),
+                  child: Image.network(e.photos[0].photoReference),
                 ),
                 Text(e.name),
               ],
