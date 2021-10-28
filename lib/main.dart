@@ -31,7 +31,7 @@ import 'package:google_maps_webservice/places.dart'
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show SentryFlutter;
+    show SentryFlutter, SentryNavigatorObserver;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
@@ -60,6 +60,9 @@ class MyApp extends StatelessWidget {
               title: title,
               theme: snapshot.data ?? ThemeData(),
               home: const LoaderOverlay(child: MyHomePage(title: title)),
+              navigatorObservers: [
+                SentryNavigatorObserver(),
+              ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
               },
