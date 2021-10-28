@@ -5,18 +5,9 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart'
-    show
-        WidgetTester,
-        expect,
-        find,
-        findsNothing,
-        findsOneWidget,
-        test,
-        testWidgets;
-import 'package:test/expect.dart' show startsWith;
+import 'package:flutter_test/flutter_test.dart';
+
 import 'package:choose_food/main.dart';
 
 void main() {
@@ -35,9 +26,5 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
-  });
-
-  test("test sentry dsn is available", () {
-    expect(EnvironmentConfig.sentryDsn, startsWith("https://sentry"));
   });
 }
