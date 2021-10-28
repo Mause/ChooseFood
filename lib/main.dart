@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
+import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show
         BuildContext,
@@ -25,6 +26,7 @@ import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
+import 'package:sentry_flutter/sentry_flutter.dart' show SentryFlutter;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
@@ -33,10 +35,12 @@ import 'common.dart' show BasePage, title;
 
 var log = Logger();
 
-void main() {
-  FacebookAuth.instance.autoLogAppEventsEnabled(true);
-
-  runApp(const MyApp());
+Future<void> main() async {
+  await SentryFlutter.init((options) {
+    options.dsn = EnvironmentConfig.sentryDsn;
+  }, appRunner: () {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
