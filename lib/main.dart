@@ -40,6 +40,7 @@ import 'info.dart' show InfoPage;
 import 'common.dart' show BasePage, title;
 
 var log = Logger();
+String? error;
 
 Future<void> main() async {
   try {
@@ -47,6 +48,7 @@ Future<void> main() async {
       options.dsn = EnvironmentConfig.sentryDsn;
     });
   } catch (e) {
+    error = e.toString();
     debugPrint("Failed to setup sentry: $e");
   }
 
@@ -159,11 +161,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    if (!Sentry.isEnabled) {
-      await showDialog(
-          context: context, builder: makeErrorDialog("Sentry not enabled"));
-    }
-
     log.w('Calling login');
 
     var accessToken = await FacebookAuth.i.accessToken;
@@ -225,6 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: const Text('Increment'),
           onPressed: _incrementCounter,
         ),
+        Text(Sentry.isEnabled ? 'Sentry enabled' : 'Sentry disabled: $error'),
         const Text(
           'You have clicked the button this many times:',
         ),
