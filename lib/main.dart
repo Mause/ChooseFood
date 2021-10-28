@@ -6,9 +6,13 @@ import 'package:flutter/material.dart'
     show
         AlertDialog,
         BuildContext,
+        Card,
+        Column,
         ElevatedButton,
+        Expanded,
         FutureBuilder,
         Key,
+        Image,
         ListBody,
         MaterialApp,
         SingleChildScrollView,
@@ -40,6 +44,7 @@ import 'info.dart' show InfoPage;
 import 'common.dart' show BasePage, title;
 
 var log = Logger();
+String? error;
 
 Future<void> main() async {
   try {
@@ -47,6 +52,7 @@ Future<void> main() async {
       options.dsn = EnvironmentConfig.sentryDsn;
     });
   } catch (e) {
+    error = e.toString();
     debugPrint("Failed to setup sentry: $e");
   }
 
@@ -159,11 +165,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    if (!Sentry.isEnabled) {
-      await showDialog(
-          context: context, builder: makeErrorDialog("Sentry not enabled"));
-    }
-
     log.w('Calling login');
 
     var accessToken = await FacebookAuth.i.accessToken;
@@ -208,9 +209,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    var locations = results
-        .sublist(0, min(results.length, 10))
-        .map((e) => Text(e.name, style: Theme.of(context).textTheme.headline4));
+    var locations = results.sublist(0, min(results.length, 10)).map(
+          (e) => Card(
+            elevation: 5,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Image.network(e.photos[0].photoReference),
+                ),
+                Text(e.name),
+              ],
+            ),
+          ),
+        );
 
     return BasePage(
       selectedIndex: 0,
@@ -225,6 +236,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: const Text('Increment'),
           onPressed: _incrementCounter,
         ),
+        ElevatedButton(child: const Text('Get places'), onPressed: getPlaces),
+        Text(Sentry.isEnabled ? 'Sentry enabled' : 'Sentry disabled: $error'),
         const Text(
           'You have clicked the button this many times:',
         ),
