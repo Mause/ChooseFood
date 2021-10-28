@@ -36,7 +36,7 @@ import 'common.dart' show BasePage, title;
 var log = Logger();
 
 Future<void> main() async {
-  log.info(EnvironmentConfig.sentryDsn);
+  log.i(EnvironmentConfig.sentryDsn);
   /*
   await SentryFlutter.init((options) {
     options.dsn = EnvironmentConfig.sentryDsn;
