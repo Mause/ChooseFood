@@ -18,7 +18,9 @@ jobs:
         run: flutter pub get
 
       - name: Build
-        run: flutter pub run build_runner build
+        run: |
+          flutter pub run build_runner build
+          flutter pub run environment_config:generate --splunkDsn=${{ secrets.SENTRY_DSN }}
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
       # - name: Verify formatting
@@ -29,4 +31,4 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test --dart-define=SPLUNK_DSN=${{ secrets.SENTRY_DSN }}
+        run: flutter test
