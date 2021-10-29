@@ -5,7 +5,6 @@ import 'package:flutter/material.dart'
         AlertDialog,
         BuildContext,
         Card,
-        Column,
         ElevatedButton,
         Expanded,
         FutureBuilder,
@@ -212,6 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Image.network(e.photos[0].photoReference),
             ),
             Text(e.name),
+            Text(e.photos[0].photoReference)
           ],
         ),
       ),
