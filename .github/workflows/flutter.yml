@@ -61,7 +61,7 @@ jobs:
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
-          java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal --ks key.store --ks-key-alias upload --ks-pass ${{ secrets.KEY_STORE_PASSWORD}} --key-pass ${{ secrets.KEY_PASSWORD }}
+          java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal --ks key.store --ks-key-alias upload --ks-pass pass:${{ secrets.KEY_STORE_PASSWORD}} --key-pass pass:${{ secrets.KEY_PASSWORD }}
           unzip apks.apks
           mv universal.apk choose-food-1.0.${{ github.run_number }}.apk
           find . -name "*.apk" -exec echo "APK: {}" \; -exec sh -c 'keytool -printcert -jarfile "{}"' \;
