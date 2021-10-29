@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
@@ -205,19 +203,18 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    var locations = results.sublist(0, min(results.length, 10)).map(
-          (e) => Card(
-            elevation: 5,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Image.network(e.photos[0].photoReference),
-                ),
-                Text(e.name),
-              ],
+    var locations = results.map(
+      (e) => Card(
+        child: Column(
+          children: [
+            Expanded(
+              child: Image.network(e.photos[0].photoReference),
             ),
-          ),
-        );
+            Text(e.name),
+          ],
+        ),
+      ),
+    );
 
     return BasePage(
       selectedIndex: 0,
@@ -241,6 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
           style: Theme.of(context).textTheme.headline4,
         ),
         const Text('Matching locations'),
+        Text('Number: ${locations.length}'),
         ...locations,
       ],
     );
