@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' show AboutListTile, Text;
 import 'package:package_info_plus/package_info_plus.dart' show PackageInfo;
 import 'package:loader_overlay/loader_overlay.dart'
     show OverlayControllerWidgetExtension;
+import 'package:sentry_flutter/sentry_flutter.dart' show Sentry;
 
 import 'common.dart' show BasePage;
 
@@ -34,7 +35,8 @@ class _InfoPage extends State<InfoPage> {
               applicationVersion: packageInfo.version)
         ];
       });
-    }, onError: (error) {
+    }, onError: (error) async {
+      await Sentry.captureException(error);
       setState(() {
         context.loaderOverlay.hide();
         rows = [Text(error.toString())];
