@@ -208,10 +208,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Expanded(
-              child: Image.network(e.photos[0].photoReference),
+              child: Image.network(
+                  // TODO: photo sizes
+                  places.buildPhotoUrl(
+                      photoReference: e.photos[0].photoReference)),
             ),
             Text(e.name),
-            Text(e.photos[0].photoReference)
           ],
         ),
       ),
