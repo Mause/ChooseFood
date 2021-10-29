@@ -3,26 +3,29 @@ import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show
         AlertDialog,
-        BuildContext,
         Card,
         ElevatedButton,
+        MaterialApp,
+        Theme,
+        ThemeData,
+        showDialog;
+import 'package:flutter/widgets.dart'
+    show
+        BuildContext,
         Expanded,
         FutureBuilder,
-        Row,
-        Key,
         Image,
+        Key,
         ListBody,
-        MaterialApp,
+        MediaQuery,
+        Row,
         SingleChildScrollView,
         State,
         StatefulWidget,
         StatelessWidget,
         Text,
-        Theme,
-        ThemeData,
         Widget,
-        runApp,
-        showDialog;
+        runApp;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth, LoginStatus;
 import 'package:loader_overlay/loader_overlay.dart'
@@ -208,10 +211,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: [
             Expanded(
-              child: Image.network(
-                  // TODO: photo sizes
-                  places.buildPhotoUrl(
-                      photoReference: e.photos[0].photoReference)),
+              child: Image.network(places.buildPhotoUrl(
+                  maxWidth: MediaQuery.of(context).size.width as int,
+                  photoReference: e.photos[0].photoReference)),
             ),
             Text(e.name),
           ],
