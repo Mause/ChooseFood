@@ -11,6 +11,7 @@ import 'package:flutter/material.dart'
         showDialog;
 import 'package:flutter/widgets.dart'
     show
+        Axis,
         BuildContext,
         Expanded,
         FutureBuilder,
@@ -26,6 +27,7 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         Widget,
+        Wrap,
         runApp;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth, LoginStatus;
@@ -138,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
       geoposition = await geolocatorPlatform.getCurrentPosition(
           timeLimit: const Duration(seconds: 10));
     } catch (e, s) {
+      showDialog(context: context, builder: makeErrorDialog(e.toString()));
       await Sentry.captureException(e, stackTrace: s);
       log.e("timed out", e, s);
       return;
@@ -185,6 +188,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       userId = accessToken?.userId;
     });
+
+    log.i("login complete?");
   }
 
   void _incrementCounter() {
@@ -220,17 +225,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return BasePage(
       selectedIndex: 0,
       children: <Widget>[
-        ElevatedButton(
-          child: const Text('Login'),
-          onPressed: () {
-            _login().whenComplete(() => log.i("login complete?"));
-          },
+        Wrap(
+          direction: Axis.horizontal,
+          children: [
+            ElevatedButton(
+              child: const Text('Login'),
+              onPressed: _login,
+            ),
+            ElevatedButton(
+              child: const Text('Increment'),
+              onPressed: _incrementCounter,
+            ),
+            ElevatedButton(
+                child: const Text('Get places'), onPressed: getPlaces),
+          ],
         ),
-        ElevatedButton(
-          child: const Text('Increment'),
-          onPressed: _incrementCounter,
-        ),
-        ElevatedButton(child: const Text('Get places'), onPressed: getPlaces),
         const Text(
           'You have clicked the button this many times:',
         ),
