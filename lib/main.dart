@@ -9,6 +9,7 @@ import 'package:flutter/material.dart'
         ElevatedButton,
         Expanded,
         FutureBuilder,
+        Row,
         Key,
         Image,
         ListBody,
@@ -205,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var locations = results.map(
       (e) => Card(
-        child: Column(
+        child: Row(
           children: [
             Expanded(
               child: Image.network(e.photos[0].photoReference),
