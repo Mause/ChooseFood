@@ -52,7 +52,7 @@ jobs:
       - if: ${{ matrix.target == 'web' }}
         run: flutter build web
       - if: ${{ matrix.target == 'appbundle' }}
-        uses: r0adkll/upload-google-play@v1.0.15
+        uses: r0adkll/upload-google-play@v1.0.16
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
           packageName: me.mause.choosefood
