@@ -44,19 +44,11 @@ import 'info.dart' show InfoPage;
 import 'common.dart' show BasePage, title;
 
 var log = Logger();
-String? error;
 
 Future<void> main() async {
-  try {
-    await SentryFlutter.init((options) {
-      options.dsn = EnvironmentConfig.sentryDsn;
-    });
-  } catch (e) {
-    error = e.toString();
-    debugPrint("Failed to setup sentry: $e");
-  }
-
-  runApp(const MyApp());
+  await SentryFlutter.init((options) {
+    options.dsn = EnvironmentConfig.sentryDsn;
+  }, appRunner: () => runApp(const MyApp()));
 }
 
 Widget Function(BuildContext) makeErrorDialog(String error) {
@@ -118,9 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
     AndroidMetadata.metaDataAsMap.then((value) {
       places =
           GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
-    },
-        onError: (error, stackTrace) async =>
-            log.e("Failed to get google maps api key", error, stackTrace));
+    }, onError: (error, stackTrace) async {
+      await Sentry.captureException(error, stackTrace: stackTrace);
+      log.e("Failed to get google maps api key", error, stackTrace);
+    });
   }
 
   getPlaces() async {
@@ -144,6 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
       geoposition = await geolocatorPlatform.getCurrentPosition(
           timeLimit: const Duration(seconds: 10));
     } catch (e, s) {
+      await Sentry.captureException(e, stackTrace: s);
       log.e("timed out", e, s);
       return;
     }
@@ -153,6 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
+      await Sentry.captureMessage(response.errorMessage);
       log.e(response.errorMessage);
     } else {
       log.i("found places", response.results.length);
@@ -173,6 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
           await FacebookAuth.instance.login(permissions: ["email"]);
       log.w({"status": loginResult.status, "message": loginResult.message});
       if (loginResult.status != LoginStatus.success) {
+        await Sentry.captureMessage(loginResult.message!);
         await showDialog(
             context: context, builder: makeErrorDialog(loginResult.message!));
       }
@@ -180,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (accessToken == null) {
+      await Sentry.captureMessage('failed to login');
       log.e("failed to login");
       return;
     }
