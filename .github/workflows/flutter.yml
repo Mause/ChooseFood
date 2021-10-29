@@ -23,6 +23,12 @@ jobs:
         target: [appbundle, web]
 
     steps:
+      - name: Cache debug signing key
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.android/debug.keystore
+          key: ${{ runner.os }}-1
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
         with:
@@ -32,15 +38,40 @@ jobs:
       - name: Prebuild
         run: flutter pub run build_runner build
       - if: ${{ matrix.target == 'appbundle' }}
-        run: flutter build appbundle --build-number ${{ github.run_number }}
+        run: echo "$SIGNING_KEY" | openssl base64 -d > android/app/key.store
+        shell: bash
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      - if: ${{ matrix.target == 'appbundle' }}
+        run: flutter build appbundle --build-number ${{ github.run_number }} --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --no-shrink
+        env:
+          SIGNING_KEY: key.store
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - if: ${{ matrix.target == 'web' }}
         run: flutter build web
       - if: ${{ matrix.target == 'appbundle' }}
+        uses: r0adkll/upload-google-play@v1.0.15
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
+          packageName: me.mause.choosefood
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: internal
+          status: draft
+      - if: ${{ matrix.target == 'appbundle' }}
         run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
-          java -jar bundletool*.jar build-apks --bundle=build/app/outputs/bundle/release/app-release.aab --output=apks.apks --mode=universal
+          java -jar bundletool*.jar build-apks \
+             --bundle=build/app/outputs/bundle/release/app-release.aab \
+             --output=apks.apks \
+             --mode=universal \
+             --ks android/app/key.store \
+             --ks-key-alias upload \
+             --ks-pass pass:${{ secrets.KEY_STORE_PASSWORD}} \
+             --key-pass pass:${{ secrets.KEY_PASSWORD }}
           unzip apks.apks
           mv universal.apk choose-food-1.0.${{ github.run_number }}.apk
+          find . -name "*.apk" -exec echo "APK: {}" \; -exec sh -c 'keytool -printcert -jarfile "{}"' \;
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{ matrix.target == 'appbundle' }}

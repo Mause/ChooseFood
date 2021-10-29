@@ -21,14 +21,12 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePage extends State<BasePage> {
-  late List<Widget> children;
   late int selectedIndex;
 
   @override
-  void activate() {
-    super.activate();
+  void initState() {
+    super.initState();
     selectedIndex = widget.selectedIndex;
-    children = widget.children;
   }
 
   void _handleNav(int value) {
@@ -74,7 +72,7 @@ class _BasePage extends State<BasePage> {
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: children,
+          children: widget.children,
         ),
       ),
       bottomNavigationBar: NavigationBar(

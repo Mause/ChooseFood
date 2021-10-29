@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart'
     show BuildContext, Key, State, StatefulWidget, Widget;
-import 'package:flutter/material.dart' show Text, Theme;
+import 'package:flutter/material.dart' show AboutListTile, Text;
 import 'package:package_info_plus/package_info_plus.dart' show PackageInfo;
+import 'package:loader_overlay/loader_overlay.dart'
+    show OverlayControllerWidgetExtension;
+import 'package:sentry_flutter/sentry_flutter.dart' show Sentry;
 
 import 'common.dart' show BasePage;
 
@@ -17,21 +20,28 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPage extends State<InfoPage> {
-  List<Text> rows = [];
+  List<Widget> rows = [];
 
-  _InfoPage() {
+  @override
+  void initState() {
+    context.loaderOverlay.show();
+    super.initState();
     PackageInfo.fromPlatform().then((packageInfo) {
+      context.loaderOverlay.hide();
       setState(() {
         rows = [
-          text("appName", packageInfo.appName),
-          text('version', packageInfo.version),
+          AboutListTile(
+              applicationName: packageInfo.appName,
+              applicationVersion: packageInfo.version)
         ];
       });
+    }, onError: (error) async {
+      await Sentry.captureException(error);
+      setState(() {
+        context.loaderOverlay.hide();
+        rows = [Text(error.toString())];
+      });
     });
-  }
-
-  Text text(String label, dynamic value) {
-    return Text('$label: $value', style: Theme.of(context).textTheme.headline6);
   }
 
   @override

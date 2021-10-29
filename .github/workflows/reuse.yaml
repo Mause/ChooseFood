@@ -29,4 +29,4 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }}

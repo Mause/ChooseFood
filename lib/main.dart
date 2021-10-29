@@ -1,28 +1,57 @@
-import 'dart:math';
-
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:choose_food/environment_config.dart';
+import 'package:flutter/material.dart'
+    show
+        AlertDialog,
+        BuildContext,
+        Card,
+        Column,
+        ElevatedButton,
+        Expanded,
+        FutureBuilder,
+        Key,
+        Image,
+        ListBody,
+        MaterialApp,
+        SingleChildScrollView,
+        State,
+        StatefulWidget,
+        StatelessWidget,
+        Text,
+        Theme,
+        ThemeData,
+        Widget,
+        runApp,
+        showDialog;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
-    show FacebookAuth;
-import 'package:loader_overlay/loader_overlay.dart';
+    show FacebookAuth, LoginStatus;
+import 'package:loader_overlay/loader_overlay.dart'
+    show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
+import 'package:sentry_flutter/sentry_flutter.dart'
+    show Sentry, SentryFlutter, SentryNavigatorObserver;
 import 'dart:async' show Future;
 
 import 'platform_colours.dart' show getThemeData;
 import 'info.dart' show InfoPage;
-import 'common.dart' show title;
+import 'common.dart' show BasePage, title;
 
 var log = Logger();
 
-void main() {
-  FacebookAuth.instance.autoLogAppEventsEnabled(true);
+Future<void> main() async {
+  await SentryFlutter.init((options) {
+    options.dsn = EnvironmentConfig.sentryDsn;
+  }, appRunner: () => runApp(const MyApp()));
+}
 
-  runApp(const MyApp());
+Widget Function(BuildContext) makeErrorDialog(String error) {
+  return (BuildContext context) => AlertDialog(
+      title: const Text('Login failed'),
+      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
 
 class MyApp extends StatelessWidget {
@@ -37,6 +66,9 @@ class MyApp extends StatelessWidget {
               title: title,
               theme: snapshot.data ?? ThemeData(),
               home: const LoaderOverlay(child: MyHomePage(title: title)),
+              navigatorObservers: [
+                SentryNavigatorObserver(),
+              ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
               },
@@ -45,7 +77,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = "/";
 
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -75,9 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
     AndroidMetadata.metaDataAsMap.then((value) {
       places =
           GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
-    },
-        onError: (error, stackTrace) async =>
-            log.e("Failed to get google maps api key", error, stackTrace));
+    }, onError: (error, stackTrace) async {
+      await Sentry.captureException(error, stackTrace: stackTrace);
+      log.e("Failed to get google maps api key", error, stackTrace);
+    });
   }
 
   getPlaces() async {
@@ -101,6 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
       geoposition = await geolocatorPlatform.getCurrentPosition(
           timeLimit: const Duration(seconds: 10));
     } catch (e, s) {
+      await Sentry.captureException(e, stackTrace: s);
       log.e("timed out", e, s);
       return;
     }
@@ -110,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
+      await Sentry.captureMessage(response.errorMessage);
       log.e(response.errorMessage);
     } else {
       log.i("found places", response.results.length);
@@ -129,10 +164,16 @@ class _MyHomePageState extends State<MyHomePage> {
       var loginResult =
           await FacebookAuth.instance.login(permissions: ["email"]);
       log.w({"status": loginResult.status, "message": loginResult.message});
+      if (loginResult.status != LoginStatus.success) {
+        await Sentry.captureMessage(loginResult.message!);
+        await showDialog(
+            context: context, builder: makeErrorDialog(loginResult.message!));
+      }
       accessToken = loginResult.accessToken;
     }
 
     if (accessToken == null) {
+      await Sentry.captureMessage('failed to login');
       log.e("failed to login");
       return;
     }
@@ -140,25 +181,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       userId = accessToken?.userId;
     });
-  }
-
-  void _handleNav(int value) {
-    switch (value) {
-      case 0:
-        _incrementCounter();
-        break;
-      case 1:
-        _login().whenComplete(() => log.i("complete login"));
-        break;
-      case 2:
-        getPlaces().whenComplete(() => log.i("complete get Places"));
-        break;
-      case 3:
-        Navigator.pushNamed(context, InfoPage.routeName);
-        break;
-      default:
-        log.e("fell through", value);
-    }
   }
 
   void _incrementCounter() {
@@ -181,77 +203,44 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
 
-    var locations = results
-        .sublist(0, min(results.length, 10))
-        .map((e) => Text(e.name, style: Theme.of(context).textTheme.headline4));
-
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+    var locations = results.map(
+      (e) => Card(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              child: const Text('Login'),
-              onPressed: () {
-                _login().whenComplete(() => log.i("login complete?"));
-              },
+          children: [
+            Expanded(
+              child: Image.network(e.photos[0].photoReference),
             ),
-            ElevatedButton(
-              child: const Text('Increment'),
-              onPressed: _incrementCounter,
-            ),
-            const Text(
-              'You have clicked the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            const Text('Matching locations'),
-            ...locations,
+            Text(e.name),
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          onDestinationSelected: _handleNav,
-          selectedIndex: 0,
-          destinations: const [
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.add), label: 'Increment'),
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.person), label: 'Login'),
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.placemark), label: 'Get Places'),
-            NavigationDestination(
-                icon: Icon(CupertinoIcons.info), label: "Info"),
-          ]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+
+    return BasePage(
+      selectedIndex: 0,
+      children: <Widget>[
+        ElevatedButton(
+          child: const Text('Login'),
+          onPressed: () {
+            _login().whenComplete(() => log.i("login complete?"));
+          },
+        ),
+        ElevatedButton(
+          child: const Text('Increment'),
+          onPressed: _incrementCounter,
+        ),
+        ElevatedButton(child: const Text('Get places'), onPressed: getPlaces),
+        const Text(
+          'You have clicked the button this many times:',
+        ),
+        Text(
+          '$_counter',
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        const Text('Matching locations'),
+        Text('Number: ${locations.length}'),
+        ...locations,
+      ],
     );
   }
 }
