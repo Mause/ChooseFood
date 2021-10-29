@@ -28,5 +28,13 @@ jobs:
       - name: Analyze project source
         run: flutter analyze
 
-      - name: Run tests
+      - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+
+      - uses: nanasess/setup-chromedriver@b392eaf
+      - run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+      - name: Integration tests
+        run: flutter drive  -d web-server
