@@ -27,4 +27,13 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+  testWidgets('Places load', (tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Get places'));
+    await tester.pump();
+
+    expect(find.byType(ListView), findsOneWidget);
+  });
 }
