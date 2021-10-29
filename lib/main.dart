@@ -17,6 +17,7 @@ import 'package:flutter/widgets.dart'
         Image,
         Key,
         ListBody,
+        ListView,
         MediaQuery,
         Row,
         SingleChildScrollView,
@@ -199,27 +200,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-
-    var locations = results.map(
-      (e) => Card(
-        child: Row(
-          children: [
-            Expanded(
-              child: Image.network(places.buildPhotoUrl(
-                  maxWidth: MediaQuery.of(context).size.width.truncate(),
-                  photoReference: e.photos[0].photoReference)),
+    var locations = results
+        .map(
+          (e) => Card(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Image.network(places.buildPhotoUrl(
+                      maxWidth: MediaQuery.of(context).size.width.truncate(),
+                      photoReference: e.photos[0].photoReference)),
+                ),
+                Text(e.name),
+              ],
             ),
-            Text(e.name),
-          ],
-        ),
-      ),
-    );
+          ),
+        )
+        .toList();
 
     return BasePage(
       selectedIndex: 0,
@@ -243,8 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
           style: Theme.of(context).textTheme.headline4,
         ),
         const Text('Matching locations'),
-        Text('Number: ${locations.length}'),
-        ...locations,
+        ListView(children: locations),
       ],
     );
   }
