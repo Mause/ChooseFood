@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart'
     show
         Axis,
         BuildContext,
+        EdgeInsets,
         Expanded,
         FutureBuilder,
         Image,
@@ -20,6 +21,7 @@ import 'package:flutter/widgets.dart'
         ListBody,
         ListView,
         MediaQuery,
+        Padding,
         Row,
         SingleChildScrollView,
         State,
@@ -228,16 +230,9 @@ class _MyHomePageState extends State<MyHomePage> {
         Wrap(
           direction: Axis.horizontal,
           children: [
-            ElevatedButton(
-              child: const Text('Login'),
-              onPressed: _login,
-            ),
-            ElevatedButton(
-              child: const Text('Increment'),
-              onPressed: _incrementCounter,
-            ),
-            ElevatedButton(
-                child: const Text('Get places'), onPressed: getPlaces),
+            elevatedButton('Login', _login),
+            elevatedButton('Increment', _incrementCounter),
+            elevatedButton('Get places', getPlaces),
           ],
         ),
         const Text(
@@ -252,6 +247,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
+}
+
+Padding elevatedButton(String label, void Function() onPressed) {
+  return Padding(
+    padding: const EdgeInsets.all(20),
+    child: ElevatedButton(
+      child: Text(label),
+      onPressed: onPressed,
+    ),
+  );
 }
 
 bool isAllowed(LocationPermission index) {
