@@ -212,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Expanded(
               child: Image.network(places.buildPhotoUrl(
-                  maxWidth: MediaQuery.of(context).size.width as int,
+                  maxWidth: MediaQuery.of(context).size.width.truncate(),
                   photoReference: e.photos[0].photoReference)),
             ),
             Text(e.name),
