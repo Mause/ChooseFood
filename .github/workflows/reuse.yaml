@@ -31,7 +31,7 @@ jobs:
       - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
-      - uses: nanasess/setup-chromedriver@b392eaf
+      - uses: nanasess/setup-chromedriver@b392eaf03aa077c2e929bc94c71b65dc91ef1923
       - run: |
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
