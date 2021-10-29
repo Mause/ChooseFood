@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
