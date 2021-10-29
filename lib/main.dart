@@ -243,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
           style: Theme.of(context).textTheme.headline4,
         ),
         const Text('Matching locations'),
-        ListView(shrinkWrap: true, children: locations, primary: true),
+        Expanded(child: ListView(children: locations, primary: true)),
       ],
     );
   }
