@@ -23,7 +23,6 @@ import 'package:flutter/material.dart'
         Theme,
         ThemeData,
         Widget,
-        debugPrint,
         runApp,
         showDialog;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
@@ -234,7 +233,6 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: _incrementCounter,
         ),
         ElevatedButton(child: const Text('Get places'), onPressed: getPlaces),
-        Text(Sentry.isEnabled ? 'Sentry enabled' : 'Sentry disabled: $error'),
         const Text(
           'You have clicked the button this many times:',
         ),
