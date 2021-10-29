@@ -18,7 +18,8 @@ import 'package:integration_test/integration_test.dart'
 
 void main() {
   final IntegrationTestWidgetsFlutterBinding binding =
-      IntegrationTestWidgetsFlutterBinding();
+      IntegrationTestWidgetsFlutterBinding.ensureInitialized()
+          as IntegrationTestWidgetsFlutterBinding;
 
   testWidgets('Places load', (tester) async {
     await tester.pumpWidget(const MyApp());
