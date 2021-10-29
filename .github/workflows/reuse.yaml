@@ -29,7 +29,7 @@ jobs:
         run: flutter analyze
 
       - name: Unit tests
-        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
       - uses: nanasess/setup-chromedriver@b392eaf
       - run: |
