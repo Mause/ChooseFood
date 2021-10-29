@@ -241,6 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
           style: Theme.of(context).textTheme.headline4,
         ),
         const Text('Matching locations'),
+        Text('Number: ${locations.length}'),
         ...locations,
       ],
     );
