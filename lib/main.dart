@@ -1,3 +1,5 @@
+import 'dart:async' show Future, FutureOr;
+
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
@@ -33,20 +35,19 @@ import 'package:flutter/widgets.dart'
         runApp;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth, LoginStatus;
+import 'package:geolocator/geolocator.dart'
+    show GeolocatorPlatform, LocationPermission, Position;
+import 'package:google_maps_webservice/places.dart'
+    show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
-import 'package:google_maps_webservice/places.dart'
-    show GoogleMapsPlaces, Location, PlacesSearchResult;
-import 'package:geolocator/geolocator.dart'
-    show GeolocatorPlatform, LocationPermission, Position;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show Sentry, SentryFlutter, SentryNavigatorObserver;
-import 'dart:async' show Future;
+    show Sentry, SentryEvent, SentryFlutter, SentryNavigatorObserver;
 
-import 'platform_colours.dart' show getThemeData;
-import 'info.dart' show InfoPage;
 import 'common.dart' show BasePage, title;
+import 'info.dart' show InfoPage;
+import 'platform_colours.dart' show getThemeData;
 
 var log = Logger();
 
