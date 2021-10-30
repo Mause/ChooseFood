@@ -199,36 +199,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Card? location;
+    LocationCard? location;
 
     if (results.isNotEmpty) {
-      var e = results[index];
-      location = Card(
-        child: Row(
-          children: [
-            Expanded(
-              child: Image.network(places.buildPhotoUrl(
-                  maxWidth: MediaQuery.of(context).size.width.truncate(),
-                  photoReference: e.photos[0].photoReference)),
-            ),
-            Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
-            Wrap(direction: Axis.horizontal, children: [
-              elevatedButton('No', () {
-                setState(() {
-                  decision[e.reference] = false;
-                  index++;
-                });
-              }),
-              elevatedButton('Yes', () {
-                setState(() {
-                  decision[e.reference] = true;
-                  index++;
-                });
-              })
-            ])
-          ],
-        ),
-      );
+      location = LocationCard(
+          location: results[index],
+          callback: (location, state) {
+            setState(() {
+              decision[location.reference] = state;
+              index++;
+            });
+          });
     }
 
     return BasePage(
@@ -249,6 +230,38 @@ class _MyHomePageState extends State<MyHomePage> {
         location ?? const Text('No locations loaded yet'),
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
+    );
+  }
+}
+
+class LocationCard extends StatelessWidget {
+  final PlacesSearchResult location;
+  final void Function(PlacesSearchResult searchResult, bool state) callback;
+
+  const LocationCard({Key? key, required this.location, required this.callback})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Row(
+        children: [
+          Expanded(
+            child: Image.network(GoogleMapsPlaces().buildPhotoUrl(
+                maxWidth: MediaQuery.of(context).size.width.truncate(),
+                photoReference: location.photos[0].photoReference)),
+          ),
+          Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
+          Wrap(direction: Axis.horizontal, children: [
+            elevatedButton('No', () {
+              callback(location, false);
+            }),
+            elevatedButton('Yes', () {
+              callback(location, true);
+            })
+          ])
+        ],
+      ),
     );
   }
 }
