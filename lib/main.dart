@@ -1,6 +1,5 @@
 import 'dart:async' show Future;
 
-import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show
@@ -110,17 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String? userId;
   List<PlacesSearchResult> results = [];
 
-  GoogleMapsPlaces places = GoogleMapsPlaces();
-
-  _MyHomePageState() {
-    AndroidMetadata.metaDataAsMap.then((value) {
-      places =
-          GoogleMapsPlaces(apiKey: value!['com.google.android.geo.API_KEY']);
-    }, onError: (error, stackTrace) async {
-      await Sentry.captureException(error, stackTrace: stackTrace);
-      log.e("Failed to get google maps api key", error, stackTrace);
-    });
-  }
+  GoogleMapsPlaces places =
+      GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey);
 
   getPlaces() async {
     context.loaderOverlay.show();
