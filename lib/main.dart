@@ -255,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Padding elevatedButton(String label, void Function() onPressed) {
   return Padding(
-    padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.all(10),
     child: ElevatedButton(
       child: Text(label),
       onPressed: onPressed,
