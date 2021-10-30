@@ -217,7 +217,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       maxWidth: MediaQuery.of(context).size.width.truncate(),
                       photoReference: e.photos[0].photoReference)),
                 ),
-                Text(e.name),
+                Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
+                Wrap(direction: Axis.horizontal, children: [
+                  elevatedButton('No', () {}),
+                  elevatedButton('Yes', () {})
+                ])
               ],
             ),
           ),
