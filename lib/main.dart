@@ -200,22 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var locations = results
         .map(
-          (e) => Card(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Image.network(places.buildPhotoUrl(
-                      maxWidth: MediaQuery.of(context).size.width.truncate(),
-                      photoReference: e.photos[0].photoReference)),
-                ),
-                Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
-                Wrap(direction: Axis.horizontal, children: [
-                  elevatedButton('No', () {}),
-                  elevatedButton('Yes', () {})
-                ])
-              ],
-            ),
-          ),
+          (e) => LocationCard(location: e),
         )
         .toList();
 
@@ -240,6 +225,32 @@ class _MyHomePageState extends State<MyHomePage> {
         const Text('Matching locations'),
         Expanded(child: ListView(children: locations, primary: true)),
       ],
+    );
+  }
+}
+
+class LocationCard extends StatelessWidget {
+  final PlacesSearchResult location;
+
+  const LocationCard({Key? key, required this.location}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Row(
+        children: [
+          Expanded(
+            child: Image.network(GoogleMapsPlaces().buildPhotoUrl(
+                maxWidth: MediaQuery.of(context).size.width.truncate(),
+                photoReference: location.photos[0].photoReference)),
+          ),
+          Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
+          Wrap(direction: Axis.horizontal, children: [
+            elevatedButton('No', () {}),
+            elevatedButton('Yes', () {})
+          ])
+        ],
+      ),
     );
   }
 }
