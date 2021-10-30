@@ -1,4 +1,4 @@
-import 'dart:async' show Future, FutureOr;
+import 'dart:async' show Future;
 
 import 'package:android_metadata/android_metadata.dart' show AndroidMetadata;
 import 'package:choose_food/environment_config.dart';
@@ -43,7 +43,7 @@ import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show Sentry, SentryEvent, SentryFlutter, SentryNavigatorObserver;
+    show Sentry, SentryFlutter, SentryNavigatorObserver;
 
 import 'common.dart' show BasePage, title;
 import 'info.dart' show InfoPage;
