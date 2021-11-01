@@ -34,8 +34,8 @@ jobs:
       - name: Analyze project source
         run: flutter analyze
 
-#       - name: Unit tests
-#         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
+      - name: Unit tests
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
       - run: |
           export DISPLAY=:99

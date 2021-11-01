@@ -16,9 +16,6 @@ import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
 
 void main() {
-  final IntegrationTestWidgetsFlutterBinding binding =
-      IntegrationTestWidgetsFlutterBinding();
-
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
@@ -43,12 +40,5 @@ void main() {
     await tester.pump();
 
     expect(find.byType(ListView), findsOneWidget);
-
-    if (!kIsWeb) {
-      // Not required for the web. This is required prior to taking the screenshot.
-      await binding.convertFlutterSurfaceToImage();
-    }
-
-    await binding.takeScreenshot('screenshot-$Platform.operatingSystem');
   });
 }
