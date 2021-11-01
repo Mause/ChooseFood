@@ -215,13 +215,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Wrap(direction: Axis.horizontal, children: [
               elevatedButton('No', () {
                 setState(() {
-                  decision[e.id!] = false;
+                  decision[e.reference] = false;
                   index++;
                 });
               }),
               elevatedButton('Yes', () {
                 setState(() {
-                  decision[e.id!] = true;
+                  decision[e.reference] = true;
                   index++;
                 });
               })
