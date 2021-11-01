@@ -1,6 +1,7 @@
 import 'dart:async' show Future;
 
 import 'package:choose_food/environment_config.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -36,8 +37,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth, LoginStatus;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
-import 'package:google_maps_webservice/places.dart'
-    show GoogleMapsPlaces, Location, PlacesSearchResult;
+import 'package:google_maps_webservice/places.dart' show Location;
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
@@ -45,6 +45,7 @@ import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
 
 import 'common.dart' show BasePage, title;
+import 'compat.dart';
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
 
@@ -107,10 +108,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
-  List<PlacesSearchResult> results = [];
+  List<Place> results = [];
 
-  GoogleMapsPlaces places =
-      GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey);
+  Compat places = kIsWeb ? Web() : Android();
 
   getPlaces() async {
     context.loaderOverlay.show();
@@ -141,8 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
-    var response =
-        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
+    var response = await places.getPlaces(location, 3000, "restaurant");
+
     if (response.errorMessage != null) {
       await Sentry.captureMessage(response.errorMessage);
       log.e(response.errorMessage);
@@ -230,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class LocationCard extends StatelessWidget {
-  final PlacesSearchResult location;
+  final Place location;
 
   const LocationCard({Key? key, required this.location}) : super(key: key);
 
@@ -240,10 +240,8 @@ class LocationCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Image.network(GoogleMapsPlaces().buildPhotoUrl(
-                maxWidth: MediaQuery.of(context).size.width.truncate(),
-                photoReference: location.photos[0].photoReference)),
-          ),
+              child: Image.network(location.buildPhotoUrl(
+                  MediaQuery.of(context).size.width.truncate()))),
           Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
           Wrap(direction: Axis.horizontal, children: [
             elevatedButton('No', () {}),
