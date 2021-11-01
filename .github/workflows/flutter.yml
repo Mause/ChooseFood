@@ -49,7 +49,7 @@ jobs:
           flutter build appbundle \
             --build-number ${{ github.run_number }} \
             --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
-            --dart-define=GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+            --dart-define=GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} \
             --no-shrink
         env:
           SIGNING_KEY: key.store
