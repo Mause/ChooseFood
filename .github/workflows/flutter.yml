@@ -64,6 +64,7 @@ jobs:
           packageName: me.mause.choosefood
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: internal
+          changesNotSentForReview: true
           status: draft
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
