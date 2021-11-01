@@ -129,4 +129,4 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
 
-      - run: bundle exec supply --track internal build/app/outputs/bundle/release/app-release.aab
+      - run: bundle exec supply --track rollout build/app/outputs/bundle/release/app-release.aab
