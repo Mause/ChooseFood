@@ -20,7 +20,6 @@ import 'package:flutter/widgets.dart'
         Image,
         Key,
         ListBody,
-        ListView,
         MediaQuery,
         Padding,
         Row,
@@ -107,7 +106,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
-  Map<String, boolean> decision = Map();
+  Map<String, bool> decision = {};
   int index = 0;
   List<PlacesSearchResult> results = [];
 
@@ -202,28 +201,29 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var location;
 
-    if (results) {
+    if (results.length > 0) {
       var e = results[index];
       location = Card(
         child: Row(
           children: [
-            Wrap(
-                child: Expanded(
-              child: Image.network(places.buildPhotoUrl(
-                  maxWidth: MediaQuery.of(context).size.width.truncate(),
-                  photoReference: e.photos[0].photoReference)),
-            )),
+            Wrap(direction: Axis.horizontal, children: [
+              Expanded(
+                child: Image.network(places.buildPhotoUrl(
+                    maxWidth: MediaQuery.of(context).size.width.truncate(),
+                    photoReference: e.photos[0].photoReference)),
+              )
+            ]),
             Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
             Wrap(direction: Axis.horizontal, children: [
               elevatedButton('No', () {
                 setState(() {
-                  decision[e.id] = false;
+                  decision[e.id!] = false;
                   index++;
                 });
               }),
               elevatedButton('Yes', () {
                 setState(() {
-                  decision[e.id] = true;
+                  decision[e.id!] = true;
                   index++;
                 });
               })
