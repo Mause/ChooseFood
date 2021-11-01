@@ -124,7 +124,7 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - run: la
+      - run: ls -a
       - run: cat secrets.json | jq
       - run: cat secrets.json | jq .client_email
 
@@ -147,7 +147,7 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - run: la
+      - run: ls -a
       - run: cat secrets.json | jq
       - run: cat secrets.json | jq .client_email
 
