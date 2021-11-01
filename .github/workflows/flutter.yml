@@ -133,7 +133,6 @@ jobs:
 
       - name: Integration tests
         uses: reactivecircus/android-emulator-runner@v2
-        continue-on-error: true
         timeout-minutes: 10
         with:
           api-level: 31
@@ -141,4 +140,4 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           script: |
-            flutter drive integration_test -d android
+            flutter drive integration_test/* -d android
