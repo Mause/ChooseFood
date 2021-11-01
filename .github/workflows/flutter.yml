@@ -119,12 +119,13 @@ jobs:
         with:
           ruby-version: 2.6
           bundler-cache: true
-      - run: |
-          echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
-          cat secrets.json | jq .client_email
+      - run: echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
         shell: bash
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+
+      - run: ls
+      - run: cat secrets.json | jq .client_email
       - run: |
           bundle exec fastlane actions
           bundle exec fastlane supply init
