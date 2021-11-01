@@ -145,6 +145,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
+          avd-name: android
           script: echo "Generated AVD snapshot for caching."
           target: google_apis
           arch: x86_64
@@ -177,5 +178,6 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: Nexus 6
+          avd-name: android
           script: |
             flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart -d android
