@@ -199,9 +199,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Card location;
+    Card? location;
 
-    if (results.isNotEmpty()) {
+    if (results.isNotEmpty) {
       var e = results[index];
       location = Card(
         child: Row(
