@@ -136,5 +136,8 @@ jobs:
         timeout-minutes: 10
         with:
           api-level: 31
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 6
           script: |
             flutter drive --target=integration_test/main_test.dart -d android
