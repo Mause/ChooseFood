@@ -140,4 +140,4 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           script: |
-            flutter drive --target=integration_test/main_test.dart -d android
+            flutter drive --target=integration_test/main.dart -d android
