@@ -20,7 +20,6 @@ import 'package:flutter/widgets.dart'
         Image,
         Key,
         ListBody,
-        ListView,
         MediaQuery,
         Padding,
         Row,
@@ -107,6 +106,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
+  Map<String, bool> decision = {};
+  int index = 0;
   List<PlacesSearchResult> results = [];
 
   GoogleMapsPlaces places =
@@ -198,26 +199,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var locations = results
-        .map(
-          (e) => Card(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Image.network(places.buildPhotoUrl(
-                      maxWidth: MediaQuery.of(context).size.width.truncate(),
-                      photoReference: e.photos[0].photoReference)),
-                ),
-                Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
-                Wrap(direction: Axis.horizontal, children: [
-                  elevatedButton('No', () {}),
-                  elevatedButton('Yes', () {})
-                ])
-              ],
-            ),
-          ),
-        )
-        .toList();
+    Card? location;
+
+    if (results.isNotEmpty) {
+      var e = results[index];
+      location = Card(
+        child: Row(
+          children: [
+            Wrap(direction: Axis.horizontal, children: [
+              Expanded(
+                child: Image.network(places.buildPhotoUrl(
+                    maxWidth: MediaQuery.of(context).size.width.truncate(),
+                    photoReference: e.photos[0].photoReference)),
+              )
+            ]),
+            Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
+            Wrap(direction: Axis.horizontal, children: [
+              elevatedButton('No', () {
+                setState(() {
+                  decision[e.id!] = false;
+                  index++;
+                });
+              }),
+              elevatedButton('Yes', () {
+                setState(() {
+                  decision[e.id!] = true;
+                  index++;
+                });
+              })
+            ])
+          ],
+        ),
+      );
+    }
 
     return BasePage(
       selectedIndex: 0,
@@ -230,15 +244,12 @@ class _MyHomePageState extends State<MyHomePage> {
             elevatedButton('Get places', getPlaces),
           ],
         ),
-        const Text(
-          'You have clicked the button this many times:',
-        ),
         Text(
           '$_counter',
           style: Theme.of(context).textTheme.headline4,
         ),
-        const Text('Matching locations'),
-        Expanded(child: ListView(children: locations, primary: true)),
+        location ?? const Text('No locations loaded yet'),
+        //Expanded(child: ListView(children: locations, primary: true)),
       ],
     );
   }
