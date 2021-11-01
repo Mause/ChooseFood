@@ -34,6 +34,7 @@ void main() {
     await tester.tap(find.widgetWithText(ElevatedButton, 'Get places'));
     await tester.pump();
 
-    expect(find.byType(Card), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
+//    expect(find.byType(Card), findsOneWidget);
   });
 }
