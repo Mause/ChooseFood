@@ -1,4 +1,4 @@
-
+on: push
 
 jobs:
   publish:
@@ -12,3 +12,10 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
       - run: bundle exec supply init
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - run: bundle exec supply
