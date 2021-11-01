@@ -206,13 +206,11 @@ class _MyHomePageState extends State<MyHomePage> {
       location = Card(
         child: Row(
           children: [
-            Wrap(direction: Axis.horizontal, children: [
-              Expanded(
-                child: Image.network(places.buildPhotoUrl(
-                    maxWidth: MediaQuery.of(context).size.width.truncate(),
-                    photoReference: e.photos[0].photoReference)),
-              )
-            ]),
+            Expanded(
+              child: Image.network(places.buildPhotoUrl(
+                  maxWidth: MediaQuery.of(context).size.width.truncate(),
+                  photoReference: e.photos[0].photoReference)),
+            ),
             Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
             Wrap(direction: Axis.horizontal, children: [
               elevatedButton('No', () {
