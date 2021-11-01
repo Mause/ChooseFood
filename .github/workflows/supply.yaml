@@ -1,0 +1,14 @@
+
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: actions/checkout@v2
+      - run: bundle install
+      - run: echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
+        shell: bash
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+      - run: bundle exec supply init
