@@ -130,8 +130,8 @@ jobs:
 
       - run: |
           bundle exec fastlane actions
-          bundle exec fastlane supply init --track rollout
-          bundle exec fastlane android validate --track rollout
+          bundle exec fastlane supply init --track beta
+          bundle exec fastlane android validate --track beta
 
   publish:
     runs-on: ubuntu-latest
@@ -157,4 +157,4 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
 
-      - run: bundle exec supply --track rollout build/app/outputs/bundle/release/app-release.aab
+      - run: bundle exec supply --track beta build/app/outputs/bundle/release/app-release.aab
