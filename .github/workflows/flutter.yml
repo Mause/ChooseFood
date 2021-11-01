@@ -109,6 +109,23 @@ jobs:
           name: web
           path: build/web
 
+  validate_fastlane:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - run: |
+          echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
+          cat secrets.json
+        shell: bash
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+      - run: bundle exec fastlane run validate_play_store_json_key json_key:secrets.json
+
   publish:
     runs-on: ubuntu-latest
     needs: build_releases
