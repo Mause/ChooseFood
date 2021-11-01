@@ -107,6 +107,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
+  Map<String, boolean> decision = Map();
+  int index = 0;
   List<PlacesSearchResult> results = [];
 
   GoogleMapsPlaces places =
@@ -198,26 +200,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var locations = results
-        .map(
-          (e) => Card(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Image.network(places.buildPhotoUrl(
-                      maxWidth: MediaQuery.of(context).size.width.truncate(),
-                      photoReference: e.photos[0].photoReference)),
-                ),
-                Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
-                Wrap(direction: Axis.horizontal, children: [
-                  elevatedButton('No', () {}),
-                  elevatedButton('Yes', () {})
-                ])
-              ],
-            ),
-          ),
-        )
-        .toList();
+    var location;
+
+    if (results) {
+      var e = results[index];
+      location = Card(
+        child: Row(
+          children: [
+            Wrap(
+                child: Expanded(
+              child: Image.network(places.buildPhotoUrl(
+                  maxWidth: MediaQuery.of(context).size.width.truncate(),
+                  photoReference: e.photos[0].photoReference)),
+            )),
+            Wrap(direction: Axis.horizontal, children: [Text(e.name)]),
+            Wrap(direction: Axis.horizontal, children: [
+              elevatedButton('No', () {}),
+              elevatedButton('Yes', () {})
+            ])
+          ],
+        ),
+      );
+    }
 
     return BasePage(
       selectedIndex: 0,
@@ -230,15 +234,12 @@ class _MyHomePageState extends State<MyHomePage> {
             elevatedButton('Get places', getPlaces),
           ],
         ),
-        const Text(
-          'You have clicked the button this many times:',
-        ),
         Text(
           '$_counter',
           style: Theme.of(context).textTheme.headline4,
         ),
-        const Text('Matching locations'),
-        Expanded(child: ListView(children: locations, primary: true)),
+        location,
+        //Expanded(child: ListView(children: locations, primary: true)),
       ],
     );
   }
