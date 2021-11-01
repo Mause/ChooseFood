@@ -130,7 +130,8 @@ jobs:
 
       - run: |
           bundle exec fastlane actions
-          bundle exec fastlane supply init
+          bundle exec fastlane supply init --track rollout
+          bundle exec fastlane android validate --track rollout
 
   publish:
     runs-on: ubuntu-latest
