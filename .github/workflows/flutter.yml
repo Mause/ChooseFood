@@ -126,7 +126,7 @@ jobs:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
       - run: |
           bundle exec fastlane actions
-          bundle exec fastlane run validate_play_store_json_key json_key:secrets.json
+          bundle exec fastlane validate
 
   publish:
     runs-on: ubuntu-latest
