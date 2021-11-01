@@ -120,7 +120,7 @@ jobs:
           bundler-cache: true
       - run: |
           echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
-          cat secrets.json
+          cat secrets.json | jq .client_email
         shell: bash
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
