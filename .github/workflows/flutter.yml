@@ -126,7 +126,7 @@ jobs:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
       - run: |
           bundle exec fastlane actions
-          bundle exec fastlane validate
+          bundle exec fastlane supply init
 
   publish:
     runs-on: ubuntu-latest
