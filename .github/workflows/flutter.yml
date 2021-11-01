@@ -109,7 +109,7 @@ jobs:
           path: build/web
 
   integration_tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -130,15 +130,11 @@ jobs:
       - name: Build
         run: flutter pub run build_runner build
 
-      - run: |
-          export DISPLAY=:99
-          chromedriver --whitelisted-ips --port=4444 &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
       - name: Integration tests
+        uses: reactivecircus/android-emulator-runner@v2
         continue-on-error: true
-        timeout-minutes: 5
-        run: |
-            flutter drive \
-              --driver=test_driver/integration_test.dart \
-              --target=integration_test/main_test.dart \
-              -d web-server
+        timeout-minutes: 10
+        with:
+          api-level: 31
+          script: |
+            flutter drive --target=integration_test/main_test.dart -d android
