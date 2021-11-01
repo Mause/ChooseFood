@@ -119,7 +119,9 @@ jobs:
         with:
           ruby-version: 2.6
           bundler-cache: true
-      - run: echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
+      - run: |
+          echo "$SERVICE_TOKEN" | openssl base64 -d > secrets.json
+          cat secrets.json
         shell: bash
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
