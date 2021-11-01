@@ -124,7 +124,7 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - run: ls
+      - run: la
       - run: cat secrets.json | jq .client_email
       - run: |
           bundle exec fastlane actions
@@ -145,7 +145,7 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - run: ls
+      - run: la
       - run: cat secrets.json | jq .client_email
 
       - uses: actions/download-artifact@v2
