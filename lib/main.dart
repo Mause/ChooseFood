@@ -248,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
           '$_counter',
           style: Theme.of(context).textTheme.headline4,
         ),
-        location,
+        location ?? const Text('No locations loaded yet'),
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
     );
