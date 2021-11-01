@@ -139,12 +139,16 @@ jobs:
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 15
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 6
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v1
