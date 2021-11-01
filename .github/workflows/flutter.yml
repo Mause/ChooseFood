@@ -57,15 +57,15 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - if: ${{ matrix.target == 'web' }}
         run: flutter build web
-      - if: ${{ matrix.target == 'appbundle' }}
-        uses: r0adkll/upload-google-play@v1.0.15
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
-          packageName: me.mause.choosefood
-          releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: internal
-          changesNotSentForReview: true
-          status: draft
+#       - if: ${{ matrix.target == 'appbundle' }}
+#         uses: r0adkll/upload-google-play@v1.0.15
+#         with:
+#           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
+#           packageName: me.mause.choosefood
+#           releaseFiles: build/app/outputs/bundle/release/app-release.aab
+#           track: internal
+#           changesNotSentForReview: true
+#           status: draft
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
