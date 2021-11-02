@@ -2,14 +2,7 @@ import 'dart:async' show Future;
 
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show
-        AlertDialog,
-        Card,
-        ElevatedButton,
-        MaterialApp,
-        Theme,
-        ThemeData,
-        showDialog;
+    show AlertDialog, Card, ElevatedButton, Theme, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -42,6 +35,7 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
+import 'package:get/get.dart';
 
 import 'common.dart' show BasePage, title;
 import 'info.dart' show InfoPage;
@@ -67,9 +61,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Get.isLogEnable = true;
+    Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
+
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
-        builder: (context, snapshot) => MaterialApp(
+        builder: (context, snapshot) => GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
               home: const LoaderOverlay(child: MyHomePage(title: title)),
@@ -110,8 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
   List<PlacesSearchResult> results = [];
 
-  GoogleMapsPlaces places =
-      GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey);
+  GoogleMapsPlaces places = Get.find();
 
   getPlaces() async {
     context.loaderOverlay.show();
@@ -236,9 +232,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class LocationCard extends StatelessWidget {
   final PlacesSearchResult location;
+  final GoogleMapsPlaces places = Get.find();
   final void Function(PlacesSearchResult searchResult, bool state) callback;
 
-  const LocationCard({Key? key, required this.location, required this.callback})
+  LocationCard({Key? key, required this.location, required this.callback})
       : super(key: key);
 
   @override
@@ -247,7 +244,7 @@ class LocationCard extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Image.network(GoogleMapsPlaces().buildPhotoUrl(
+            child: Image.network(places.buildPhotoUrl(
                 maxWidth: MediaQuery.of(context).size.width.truncate(),
                 photoReference: location.photos[0].photoReference)),
           ),
