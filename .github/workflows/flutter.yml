@@ -182,4 +182,6 @@ jobs:
           profile: Nexus 6
           avd-name: android
           script: |
+            flutter doctor
+            flutter emulators
             flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart -d android
