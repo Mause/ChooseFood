@@ -50,3 +50,4 @@ app.*.map.json
 *.mocks.dart
 vendor/
 secrets.json
+.bundle/
