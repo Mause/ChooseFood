@@ -50,6 +50,8 @@ jobs:
             --build-number ${{ github.run_number }} \
             --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
             --dart-define=GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_KEY=${{ secrets.SUPABASE_KEY }} \
             --no-shrink
         env:
           SIGNING_KEY: key.store
