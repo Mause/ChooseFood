@@ -135,4 +135,4 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
 
-      - run: bundle exec fastlane android deploy --track beta
+      - run: bundle exec fastlane android deploy
