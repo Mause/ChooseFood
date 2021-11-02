@@ -6,7 +6,7 @@
 name: Fastlane supply init
 
 on:
-  workflow_trigger:
+  workflow_dispatch:
 
 jobs:
 
