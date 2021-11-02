@@ -17,19 +17,21 @@ jobs:
 
   build_releases:
     runs-on: ubuntu-latest
+    needs: build
 
     strategy:
       matrix:
         target: [appbundle, web]
 
     steps:
-      - name: Cache debug signing key
+      - uses: actions/checkout@v2
+
+      - name: Cache Flutter dependencies
         uses: actions/cache@v2
         with:
-          path: |
-            ~/.android/debug.keystore
-          key: ${{ runner.os }}-1
-      - uses: actions/checkout@v2
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
@@ -43,21 +45,29 @@ jobs:
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
       - if: ${{ matrix.target == 'appbundle' }}
-        run: flutter build appbundle --build-number ${{ github.run_number }} --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --no-shrink
+        run: |
+          flutter build appbundle \
+            --build-number ${{ github.run_number }} \
+            --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} \
+            --dart-define=GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_KEY=${{ secrets.SUPABASE_KEY }} \
+            --no-shrink
         env:
           SIGNING_KEY: key.store
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       - if: ${{ matrix.target == 'web' }}
         run: flutter build web
-      - if: ${{ matrix.target == 'appbundle' }}
-        uses: r0adkll/upload-google-play@v1.0.15
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
-          packageName: me.mause.choosefood
-          releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: internal
-          status: draft
+#       - if: ${{ matrix.target == 'appbundle' }}
+#         uses: r0adkll/upload-google-play@v1.0.15
+#         with:
+#           serviceAccountJsonPlainText: ${{ secrets.SERVICE_TOKEN }}
+#           packageName: me.mause.choosefood
+#           releaseFiles: build/app/outputs/bundle/release/app-release.aab
+#           track: internal
+#           changesNotSentForReview: true
+#           status: draft
       - if: ${{ matrix.target == 'appbundle' }}
         run: |
           gh release download 1.8.1 --pattern '*.jar' --repo google/bundletool
@@ -100,3 +110,32 @@ jobs:
         with:
           name: web
           path: build/web
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build_releases
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - run: echo $SERVICE_TOKEN > secrets.json
+        shell: bash
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+
+      - run: ls -a
+      - run: cat secrets.json | jq
+      - run: cat secrets.json | jq .client_email
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/
+
+      - run: ls -a build/app/outputs/bundle/release/
+
+      - run: bundle exec fastlane android deploy
