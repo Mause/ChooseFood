@@ -48,3 +48,5 @@ app.*.map.json
 # generated files
 *.g.dart
 *.mocks.dart
+vendor/
+secrets.json
