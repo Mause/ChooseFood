@@ -1,4 +1,5 @@
 import 'dart:async' show Future;
+import 'dart:collection';
 
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
@@ -36,6 +37,7 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
 import 'package:get/get.dart';
+import 'package:supabase/supabase.dart';
 
 import 'common.dart' show BasePage, title;
 import 'info.dart' show InfoPage;
@@ -62,6 +64,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
+    Get.put(SupabaseClient(
+        EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
     return FutureBuilder<ThemeData>(
@@ -103,13 +107,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
-  Map<String, bool> decision = {};
   int index = 0;
   List<PlacesSearchResult> results = [];
+  String? sessionId;
 
   GoogleMapsPlaces places = Get.find();
 
   getPlaces() async {
+    SupabaseClient supabase = Get.find();
+    var session = await supabase.from(TableNames.session).insert({}).execute();
+    setState(() {
+      sessionId = ((session.data as List<dynamic>)[0]
+          as LinkedHashMap<String, dynamic>)['id'];
+    });
+
+    log.i("started new session: $sessionId");
+
     context.loaderOverlay.show();
     var geolocatorPlatform = GeolocatorPlatform.instance;
     var locationServiceEnabled =
@@ -200,9 +213,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (results.isNotEmpty) {
       location = LocationCard(
           location: results[index],
-          callback: (location, state) {
+          callback: (location, state) async {
+            await createDecision(location.reference, state);
             setState(() {
-              decision[location.reference] = state;
               index++;
             });
           });
@@ -228,6 +241,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
+
+  Future<void> createDecision(String reference, bool state) async {
+    SupabaseClient supabaseClient = Get.find();
+
+    await supabaseClient.from(TableNames.decision).insert({
+      "sessionId": sessionId!,
+      "placeReference": reference,
+      "decision": state
+    }).execute();
+  }
+}
+
+class TableNames {
+  static const String decision = "decision";
+  static const String session = "session";
 }
 
 class LocationCard extends StatelessWidget {
