@@ -20,6 +20,7 @@ platform :android do
   lane :deploy do
     # google_play_track_version_codes
     # google_play_track_release_names
+    isReleasable = analyze_commits()
     notes = conventional_changelog(format: 'markdown', debug: true)
     upload_to_play_store(
       aab: "build/app/outputs/bundle/release/app-release.aab",
