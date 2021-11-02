@@ -27,6 +27,7 @@ jobs:
       - uses: technote-space/create-pr-action@v2
         with:
           EXECUTE_COMMANDS: |
+            bundle config unset deployment
             bundle exec fastlane add_plugin semantic_release
           COMMIT_MESSAGE: "chore: update"
           COMMIT_NAME: "GitHub Actions"
