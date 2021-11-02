@@ -185,3 +185,32 @@ jobs:
             flutter doctor
             flutter emulators
             flutter drive --driver=test_driver/integration_test.dart --target=integration_test/main_test.dart -d android
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build_releases
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - run: echo $SERVICE_TOKEN > secrets.json
+        shell: bash
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+
+      - run: ls -a
+      - run: cat secrets.json | jq
+      - run: cat secrets.json | jq .client_email
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/
+
+      - run: ls -a build/app/outputs/bundle/release/
+
+      - run: bundle exec fastlane android deploy
