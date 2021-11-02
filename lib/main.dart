@@ -114,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = Get.find();
 
   getPlaces() async {
+    context.loaderOverlay.show();
     SupabaseClient supabase = Get.find();
     var session = await supabase.from(TableNames.session).insert({}).execute();
     setState(() {
@@ -123,7 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     log.i("started new session: $sessionId");
 
-    context.loaderOverlay.show();
     var geolocatorPlatform = GeolocatorPlatform.instance;
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
