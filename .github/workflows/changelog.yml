@@ -24,4 +24,10 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - run: bundle exec fastlane supply init
+      - uses: technote-space/create-pr-action@v2
+        with:
+          EXECUTE_COMMANDS: |
+            bundle exec fastlane supply init
+          COMMIT_MESSAGE: "chore: update"
+          COMMIT_NAME: "GitHub Actions"
+          COMMIT_EMAIL: "example@example.com"
