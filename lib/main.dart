@@ -111,12 +111,14 @@ class _MyHomePageState extends State<MyHomePage> {
   List<PlacesSearchResult> results = [];
   String? sessionId;
 
+  GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
   GoogleMapsPlaces places = Get.find();
+  SupabaseClient supabaseClient = Get.find();
 
   getPlaces() async {
     context.loaderOverlay.show();
-    SupabaseClient supabase = Get.find();
-    var session = await supabase.from(TableNames.session).insert({}).execute();
+    var session =
+        await supabaseClient.from(TableNames.session).insert({}).execute();
     setState(() {
       sessionId = ((session.data as List<dynamic>)[0]
           as LinkedHashMap<String, dynamic>)['id'];
@@ -124,7 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     log.i("started new session: $sessionId");
 
-    var geolocatorPlatform = GeolocatorPlatform.instance;
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
     var permission = await geolocatorPlatform.requestPermission();
@@ -243,8 +244,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> createDecision(String reference, bool state) async {
-    SupabaseClient supabaseClient = Get.find();
-
     await supabaseClient.from(TableNames.decision).insert({
       "sessionId": sessionId!,
       "placeReference": reference,
