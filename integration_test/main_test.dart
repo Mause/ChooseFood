@@ -7,10 +7,8 @@
 
 import 'dart:io';
 
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart' show ElevatedButton, ListView;
-import 'package:flutter_test/flutter_test.dart'
-    show expect, find, findsOneWidget, testWidgets;
+// import 'package:flutter/material.dart' show ElevatedButton, ListView;
+import 'package:flutter_test/flutter_test.dart' show testWidgets;
 
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:integration_test/integration_test.dart'
@@ -22,15 +20,20 @@ void main() {
           as IntegrationTestWidgetsFlutterBinding;
 
   testWidgets('Places load', (tester) async {
+    tester.printToConsole("pumping");
     await tester.pumpWidget(const MyApp());
+    tester.printToConsole("pumped");
 
 //    await tester.tap(find.widgetWithText(ElevatedButton, 'Get places'));
 //    await tester.pump();
 
 //    expect(find.byType(ListView), findsOneWidget);
 
+    tester.printToConsole("converting");
     await binding.convertFlutterSurfaceToImage();
+    tester.printToConsole("converted");
 
     await binding.takeScreenshot('screenshot-$Platform.operatingSystem');
+    tester.printToConsole("screenshot");
   });
 }
