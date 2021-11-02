@@ -1,0 +1,27 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Fastlane supply init
+
+on:
+  workflow_trigger:
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+      - run: echo $SERVICE_TOKEN > secrets.json
+        shell: bash
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+
+      - run: bundle exec fastlane supply init
