@@ -33,5 +33,5 @@ jobs:
           COMMIT_EMAIL: "example@example.com"
           PR_BRANCH_NAME: "chore-update-${PR_ID}"
           PR_TITLE: "chore: update"
-          PR_BODY:
+          PR_BODY: empty
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
