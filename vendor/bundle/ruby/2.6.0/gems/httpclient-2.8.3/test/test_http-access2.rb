@@ -423,7 +423,7 @@ private
   end
 
   def do_redirect1(req, res)
-    res.set_redirect(WEBrick::HTTPStatus::MovedPermanently, serverurl + "hello") 
+    res.set_redirect(WEBrick::HTTPStatus::MovedPermanently, serverurl + "hello")
   end
 
   def do_redirect2(req, res)
@@ -431,15 +431,15 @@ private
   end
 
   def do_redirect3(req, res)
-    res.set_redirect(WEBrick::HTTPStatus::Found, serverurl + "hello") 
+    res.set_redirect(WEBrick::HTTPStatus::Found, serverurl + "hello")
   end
 
   def do_redirect_self(req, res)
-    res.set_redirect(WEBrick::HTTPStatus::Found, serverurl + "redirect_self") 
+    res.set_redirect(WEBrick::HTTPStatus::Found, serverurl + "redirect_self")
   end
 
   def do_relative_redirect(req, res)
-    res.set_redirect(WEBrick::HTTPStatus::Found, "hello") 
+    res.set_redirect(WEBrick::HTTPStatus::Found, "hello")
   end
 
   class TestServlet < WEBrick::HTTPServlet::AbstractServlet

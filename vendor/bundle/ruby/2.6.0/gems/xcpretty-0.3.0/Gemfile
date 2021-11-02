@@ -6,4 +6,3 @@ gemspec
 group :test do
   gem 'kicker'
 end
-

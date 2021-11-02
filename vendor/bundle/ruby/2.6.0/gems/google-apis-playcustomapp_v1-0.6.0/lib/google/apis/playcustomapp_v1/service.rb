@@ -48,7 +48,7 @@ module Google
                 client_version: Google::Apis::PlaycustomappV1::GEM_VERSION)
           @batch_path = 'batch'
         end
-        
+
         # Creates a new custom app.
         # @param [Fixnum] account
         #   Developer account ID.

@@ -98,7 +98,7 @@ puts album.inspect
 
 reset_representer(SongRepresenter)
 
-######### using helpers (customizing the rendering/parsing) 
+######### using helpers (customizing the rendering/parsing)
 module AlbumRepresenter
   include Representable::JSON
 
@@ -246,7 +246,7 @@ module AlbumRepresenter
   include Representable::Hash
 
   property :name
-  collection :songs, 
+  collection :songs,
     :extend => lambda { |song| song.is_a?(CoverSong) ? CoverSongRepresenter : SongRepresenter },
     :class  => lambda { |hsh| hsh.has_key?("copyright") ? CoverSong : Song } #=> {"title"=>"Weirdo", "track"=>5}
 end
@@ -260,7 +260,7 @@ module AlbumRepresenter
   include Representable::Hash
 
   property :name
-  collection :songs, 
+  collection :songs,
     :extend   => lambda { |song| song.is_a?(CoverSong) ? CoverSongRepresenter : SongRepresenter },
     :instance => lambda { |hsh| hsh.has_key?("copyright") ? CoverSong.new : Song.new(original: true) }
 end

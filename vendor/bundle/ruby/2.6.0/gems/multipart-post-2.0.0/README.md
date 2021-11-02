@@ -12,7 +12,7 @@ supports other methods besides POST.
 #### FEATURES/PROBLEMS:
 
 * Appears to actually work. A good feature to have.
-* Encapsulates posting of file/binary parts and name/value parameter parts, similar to 
+* Encapsulates posting of file/binary parts and name/value parameter parts, similar to
   most browsers' file upload forms.
 * Provides an UploadIO helper class to prepare IO objects for inclusion in the params
   hash of the multipart post object.

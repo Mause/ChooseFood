@@ -61,4 +61,3 @@ end
 #### 3. Implement your awesome contribution
 
 - This should fix unit tests one-by-one, and finally your `feature` will be passing
-

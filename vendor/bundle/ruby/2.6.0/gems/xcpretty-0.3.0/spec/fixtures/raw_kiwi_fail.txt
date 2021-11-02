@@ -50,7 +50,7 @@ PhaseScriptExecution Check\ Pods\ Manifest.lock /Users/musalj/Library/Developer/
     setenv BUILD_COMPONENTS "headers build"
     setenv BUILD_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
     setenv BUILD_ROOT /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
-    setenv BUILD_STYLE 
+    setenv BUILD_STYLE
     setenv BUILD_VARIANTS normal
     setenv BUILT_PRODUCTS_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator
     setenv CACHE_ROOT /var/folders/dp/3hrp_j_j04b6gxk5tybq0lz80000gp/C/com.apple.DeveloperTools/5.0.2-5A3005/Xcode
@@ -385,7 +385,7 @@ PhaseScriptExecution Copy\ Pods\ Resources /Users/musalj/Library/Developer/Xcode
     setenv BUILD_COMPONENTS "headers build"
     setenv BUILD_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
     setenv BUILD_ROOT /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
-    setenv BUILD_STYLE 
+    setenv BUILD_STYLE
     setenv BUILD_VARIANTS normal
     setenv BUILT_PRODUCTS_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator
     setenv CACHE_ROOT /var/folders/dp/3hrp_j_j04b6gxk5tybq0lz80000gp/C/com.apple.DeveloperTools/5.0.2-5A3005/Xcode
@@ -728,7 +728,7 @@ PhaseScriptExecution Check\ Pods\ Manifest.lock /Users/musalj/Library/Developer/
     setenv BUILD_COMPONENTS "headers build"
     setenv BUILD_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
     setenv BUILD_ROOT /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
-    setenv BUILD_STYLE 
+    setenv BUILD_STYLE
     setenv BUILD_VARIANTS normal
     setenv BUILT_PRODUCTS_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator
     setenv BUNDLE_LOADER /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator/SampleProject.app/SampleProject
@@ -1063,7 +1063,7 @@ PhaseScriptExecution Run\ Script /Users/musalj/Library/Developer/Xcode/DerivedDa
     setenv BUILD_COMPONENTS "headers build"
     setenv BUILD_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
     setenv BUILD_ROOT /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
-    setenv BUILD_STYLE 
+    setenv BUILD_STYLE
     setenv BUILD_VARIANTS normal
     setenv BUILT_PRODUCTS_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator
     setenv BUNDLE_LOADER /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator/SampleProject.app/SampleProject
@@ -1398,7 +1398,7 @@ PhaseScriptExecution Copy\ Pods\ Resources /Users/musalj/Library/Developer/Xcode
     setenv BUILD_COMPONENTS "headers build"
     setenv BUILD_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
     setenv BUILD_ROOT /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products
-    setenv BUILD_STYLE 
+    setenv BUILD_STYLE
     setenv BUILD_VARIANTS normal
     setenv BUILT_PRODUCTS_DIR /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator
     setenv BUNDLE_LOADER /Users/musalj/Library/Developer/Xcode/DerivedData/SampleProject-fwkvzpjqvgdogxbyowspkqajeecg/Build/Products/Debug-iphonesimulator/SampleProject.app/SampleProject

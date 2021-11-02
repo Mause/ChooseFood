@@ -4,4 +4,3 @@ require "support/matchers/colors"
 require "fixtures/constants"
 
 include XCPretty::ANSI
-

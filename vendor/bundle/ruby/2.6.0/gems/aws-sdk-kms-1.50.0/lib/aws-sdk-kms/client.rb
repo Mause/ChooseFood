@@ -979,8 +979,8 @@ module Aws::KMS
     #     grantee_principal: "arn:aws:iam::111122223333:role/ExampleRole", # The identity that is given permission to perform the operations specified in the grant.
     #     key_id: "arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab", # The identifier of the KMS key to which the grant applies. You can use the key ID or the Amazon Resource Name (ARN) of the KMS key.
     #     operations: [
-    #       "Encrypt", 
-    #       "Decrypt", 
+    #       "Encrypt",
+    #       "Decrypt",
     #     ], # A list of operations that the grant allows.
     #   })
     #
@@ -1450,22 +1450,22 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       creation_date: Time.parse("2017-07-05T14:04:55-07:00"), 
-    #       customer_master_key_spec: "SYMMETRIC_DEFAULT", 
-    #       description: "", 
-    #       enabled: true, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       creation_date: Time.parse("2017-07-05T14:04:55-07:00"),
+    #       customer_master_key_spec: "SYMMETRIC_DEFAULT",
+    #       description: "",
+    #       enabled: true,
     #       encryption_algorithms: [
-    #         "SYMMETRIC_DEFAULT", 
-    #       ], 
-    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "SYMMETRIC_DEFAULT", 
-    #       key_state: "Enabled", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: false, 
-    #       origin: "AWS_KMS", 
+    #         "SYMMETRIC_DEFAULT",
+    #       ],
+    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "SYMMETRIC_DEFAULT",
+    #       key_state: "Enabled",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: false,
+    #       origin: "AWS_KMS",
     #     }, # Detailed information about the KMS key that this operation creates.
     #   }
     #
@@ -1482,23 +1482,23 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       creation_date: Time.parse("2021-04-05T14:04:55-07:00"), 
-    #       customer_master_key_spec: "RSA_4096", 
-    #       description: "", 
-    #       enabled: true, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       creation_date: Time.parse("2021-04-05T14:04:55-07:00"),
+    #       customer_master_key_spec: "RSA_4096",
+    #       description: "",
+    #       enabled: true,
     #       encryption_algorithms: [
-    #         "RSAES_OAEP_SHA_1", 
-    #         "RSAES_OAEP_SHA_256", 
-    #       ], 
-    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "RSA_4096", 
-    #       key_state: "Enabled", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: false, 
-    #       origin: "AWS_KMS", 
+    #         "RSAES_OAEP_SHA_1",
+    #         "RSAES_OAEP_SHA_256",
+    #       ],
+    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "RSA_4096",
+    #       key_state: "Enabled",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: false,
+    #       origin: "AWS_KMS",
     #     }, # Detailed information about the KMS key that this operation creates.
     #   }
     #
@@ -1516,22 +1516,22 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       creation_date: Time.parse("2019-12-02T07:48:55-07:00"), 
-    #       customer_master_key_spec: "ECC_NIST_P521", 
-    #       description: "", 
-    #       enabled: true, 
-    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "ECC_NIST_P521", 
-    #       key_state: "Enabled", 
-    #       key_usage: "SIGN_VERIFY", 
-    #       multi_region: false, 
-    #       origin: "AWS_KMS", 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       creation_date: Time.parse("2019-12-02T07:48:55-07:00"),
+    #       customer_master_key_spec: "ECC_NIST_P521",
+    #       description: "",
+    #       enabled: true,
+    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "ECC_NIST_P521",
+    #       key_state: "Enabled",
+    #       key_usage: "SIGN_VERIFY",
+    #       multi_region: false,
+    #       origin: "AWS_KMS",
     #       signing_algorithms: [
-    #         "ECDSA_SHA_512", 
-    #       ], 
+    #         "ECDSA_SHA_512",
+    #       ],
     #     }, # Detailed information about the KMS key that this operation creates.
     #   }
     #
@@ -1547,38 +1547,38 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef12345678990ab", 
-    #       creation_date: Time.parse("2021-09-02T016:15:21-09:00"), 
-    #       customer_master_key_spec: "SYMMETRIC_DEFAULT", 
-    #       description: "", 
-    #       enabled: true, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef12345678990ab",
+    #       creation_date: Time.parse("2021-09-02T016:15:21-09:00"),
+    #       customer_master_key_spec: "SYMMETRIC_DEFAULT",
+    #       description: "",
+    #       enabled: true,
     #       encryption_algorithms: [
-    #         "SYMMETRIC_DEFAULT", 
-    #       ], 
-    #       key_id: "mrk-1234abcd12ab34cd56ef12345678990ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "SYMMETRIC_DEFAULT", 
-    #       key_state: "Enabled", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: true, 
+    #         "SYMMETRIC_DEFAULT",
+    #       ],
+    #       key_id: "mrk-1234abcd12ab34cd56ef12345678990ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "SYMMETRIC_DEFAULT",
+    #       key_state: "Enabled",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: true,
     #       multi_region_configuration: {
-    #         multi_region_key_type: "PRIMARY", 
+    #         multi_region_key_type: "PRIMARY",
     #         primary_key: {
-    #           arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef12345678990ab", 
-    #           region: "us-west-2", 
-    #         }, 
+    #           arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef12345678990ab",
+    #           region: "us-west-2",
+    #         },
     #         replica_keys: [
-    #         ], 
-    #       }, 
-    #       origin: "AWS_KMS", 
+    #         ],
+    #       },
+    #       origin: "AWS_KMS",
     #     }, # Detailed information about the KMS key that this operation creates.
     #   }
     #
     # @example Example: To create a KMS key for imported key material
     #
     #   # This example creates a KMS key with no key material. When the operation is complete, you can import your own key
-    #   # material into the KMS key. To create this KMS key, set the Origin parameter to EXTERNAL. 
+    #   # material into the KMS key. To create this KMS key, set the Origin parameter to EXTERNAL.
     #
     #   resp = client.create_key({
     #     origin: "EXTERNAL", # The source of the key material for the KMS key.
@@ -1587,22 +1587,22 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       creation_date: Time.parse("2019-12-02T07:48:55-07:00"), 
-    #       customer_master_key_spec: "SYMMETRIC_DEFAULT", 
-    #       description: "", 
-    #       enabled: false, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       creation_date: Time.parse("2019-12-02T07:48:55-07:00"),
+    #       customer_master_key_spec: "SYMMETRIC_DEFAULT",
+    #       description: "",
+    #       enabled: false,
     #       encryption_algorithms: [
-    #         "SYMMETRIC_DEFAULT", 
-    #       ], 
-    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "SYMMETRIC_DEFAULT", 
-    #       key_state: "PendingImport", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: false, 
-    #       origin: "EXTERNAL", 
+    #         "SYMMETRIC_DEFAULT",
+    #       ],
+    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "SYMMETRIC_DEFAULT",
+    #       key_state: "PendingImport",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: false,
+    #       origin: "EXTERNAL",
     #     }, # Detailed information about the KMS key that this operation creates.
     #   }
     #
@@ -1620,24 +1620,24 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       cloud_hsm_cluster_id: "cluster-1a23b4cdefg", 
-    #       creation_date: Time.parse("2019-12-02T07:48:55-07:00"), 
-    #       custom_key_store_id: "cks-1234567890abcdef0", 
-    #       customer_master_key_spec: "SYMMETRIC_DEFAULT", 
-    #       description: "", 
-    #       enabled: true, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       cloud_hsm_cluster_id: "cluster-1a23b4cdefg",
+    #       creation_date: Time.parse("2019-12-02T07:48:55-07:00"),
+    #       custom_key_store_id: "cks-1234567890abcdef0",
+    #       customer_master_key_spec: "SYMMETRIC_DEFAULT",
+    #       description: "",
+    #       enabled: true,
     #       encryption_algorithms: [
-    #         "SYMMETRIC_DEFAULT", 
-    #       ], 
-    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "SYMMETRIC_DEFAULT", 
-    #       key_state: "Enabled", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: false, 
-    #       origin: "AWS_CLOUDHSM", 
+    #         "SYMMETRIC_DEFAULT",
+    #       ],
+    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "SYMMETRIC_DEFAULT",
+    #       key_state: "Enabled",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: false,
+    #       origin: "AWS_CLOUDHSM",
     #     }, # Detailed information about the KMS key that this operation creates.
     #   }
     #
@@ -2054,7 +2054,7 @@ module Aws::KMS
     #
     #   # This example deletes a custom key store from AWS KMS. This operation does not delete the AWS CloudHSM cluster that was
     #   # associated with the CloudHSM cluster. This operation doesn't return any data. To verify that the operation was
-    #   # successful, use the DescribeCustomKeyStores operation.  
+    #   # successful, use the DescribeCustomKeyStores operation.
     #
     #   resp = client.delete_custom_key_store({
     #     custom_key_store_id: "cks-1234567890abcdef0", # The ID of the custom key store to be deleted.
@@ -2261,7 +2261,7 @@ module Aws::KMS
     # @example Example: To get detailed information about a custom key store associated with a CloudHSM cluster.
     #
     #   # This example gets detailed information about a particular AWS KMS custom key store that is associate with an AWS
-    #   # CloudHSM cluster. To limit the output to a particular custom key store, provide the custom key store name or ID. 
+    #   # CloudHSM cluster. To limit the output to a particular custom key store, provide the custom key store name or ID.
     #
     #   resp = client.describe_custom_key_stores({
     #     custom_key_store_name: "ExampleKeyStore", # The friendly name of the custom key store.
@@ -2271,13 +2271,13 @@ module Aws::KMS
     #   {
     #     custom_key_stores: [
     #       {
-    #         cloud_hsm_cluster_id: "cluster-1a23b4cdefg", 
-    #         connection_state: "CONNECTED", 
-    #         creation_date: Time.parse("1.499288695918E9"), 
-    #         custom_key_store_id: "cks-1234567890abcdef0", 
-    #         custom_key_store_name: "ExampleKeyStore", 
-    #         trust_anchor_certificate: "<certificate appears here>", 
-    #       }, 
+    #         cloud_hsm_cluster_id: "cluster-1a23b4cdefg",
+    #         connection_state: "CONNECTED",
+    #         creation_date: Time.parse("1.499288695918E9"),
+    #         custom_key_store_id: "cks-1234567890abcdef0",
+    #         custom_key_store_name: "ExampleKeyStore",
+    #         trust_anchor_certificate: "<certificate appears here>",
+    #       },
     #     ], # Detailed information about the specified custom key store.
     #   }
     #
@@ -2439,22 +2439,22 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       creation_date: Time.parse("2017-07-05T14:04:55-07:00"), 
-    #       customer_master_key_spec: "SYMMETRIC_DEFAULT", 
-    #       description: "", 
-    #       enabled: true, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       creation_date: Time.parse("2017-07-05T14:04:55-07:00"),
+    #       customer_master_key_spec: "SYMMETRIC_DEFAULT",
+    #       description: "",
+    #       enabled: true,
     #       encryption_algorithms: [
-    #         "SYMMETRIC_DEFAULT", 
-    #       ], 
-    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_spec: "SYMMETRIC_DEFAULT", 
-    #       key_state: "Enabled", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: false, 
-    #       origin: "AWS_KMS", 
+    #         "SYMMETRIC_DEFAULT",
+    #       ],
+    #       key_id: "1234abcd-12ab-34cd-56ef-1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_spec: "SYMMETRIC_DEFAULT",
+    #       key_state: "Enabled",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: false,
+    #       origin: "AWS_KMS",
     #     }, # An object that contains information about the specified KMS key.
     #   }
     #
@@ -4373,8 +4373,8 @@ module Aws::KMS
     #   {
     #     customer_master_key_spec: "RSA_4096", # The key spec of the asymmetric KMS key from which the public key was downloaded.
     #     encryption_algorithms: [
-    #       "RSAES_OAEP_SHA_1", 
-    #       "RSAES_OAEP_SHA_256", 
+    #       "RSAES_OAEP_SHA_1",
+    #       "RSAES_OAEP_SHA_256",
     #     ], # The encryption algorithms supported by the asymmetric KMS key that was downloaded.
     #     key_id: "arn:aws:kms:us-west-2:111122223333:key/0987dcba-09fe-87dc-65ba-ab0987654321", # The key ARN of the asymmetric KMS key from which the public key was downloaded.
     #     key_usage: "ENCRYPT_DECRYPT", # The key usage of the asymmetric KMS key from which the public key was downloaded.
@@ -4651,45 +4651,45 @@ module Aws::KMS
     #   {
     #     aliases: [
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/acm", 
-    #         alias_name: "alias/aws/acm", 
-    #         target_key_id: "da03f6f7-d279-427a-9cae-de48d07e5b66", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/acm",
+    #         alias_name: "alias/aws/acm",
+    #         target_key_id: "da03f6f7-d279-427a-9cae-de48d07e5b66",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/ebs", 
-    #         alias_name: "alias/aws/ebs", 
-    #         target_key_id: "25a217e7-7170-4b8c-8bf6-045ea5f70e5b", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/ebs",
+    #         alias_name: "alias/aws/ebs",
+    #         target_key_id: "25a217e7-7170-4b8c-8bf6-045ea5f70e5b",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/rds", 
-    #         alias_name: "alias/aws/rds", 
-    #         target_key_id: "7ec3104e-c3f2-4b5c-bf42-bfc4772c6685", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/rds",
+    #         alias_name: "alias/aws/rds",
+    #         target_key_id: "7ec3104e-c3f2-4b5c-bf42-bfc4772c6685",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/redshift", 
-    #         alias_name: "alias/aws/redshift", 
-    #         target_key_id: "08f7a25a-69e2-4fb5-8f10-393db27326fa", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/redshift",
+    #         alias_name: "alias/aws/redshift",
+    #         target_key_id: "08f7a25a-69e2-4fb5-8f10-393db27326fa",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/s3", 
-    #         alias_name: "alias/aws/s3", 
-    #         target_key_id: "d2b0f1a3-580d-4f79-b836-bc983be8cfa5", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/aws/s3",
+    #         alias_name: "alias/aws/s3",
+    #         target_key_id: "d2b0f1a3-580d-4f79-b836-bc983be8cfa5",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/example1", 
-    #         alias_name: "alias/example1", 
-    #         target_key_id: "4da1e216-62d0-46c5-a7c0-5f3a3d2f8046", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/example1",
+    #         alias_name: "alias/example1",
+    #         target_key_id: "4da1e216-62d0-46c5-a7c0-5f3a3d2f8046",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/example2", 
-    #         alias_name: "alias/example2", 
-    #         target_key_id: "f32fef59-2cc2-445b-8573-2d73328acbee", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/example2",
+    #         alias_name: "alias/example2",
+    #         target_key_id: "f32fef59-2cc2-445b-8573-2d73328acbee",
+    #       },
     #       {
-    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/example3", 
-    #         alias_name: "alias/example3", 
-    #         target_key_id: "1374ef38-d34e-4d5f-b2c9-4e0daee38855", 
-    #       }, 
+    #         alias_arn: "arn:aws:kms:us-east-2:111122223333:alias/example3",
+    #         alias_name: "alias/example3",
+    #         target_key_id: "1374ef38-d34e-4d5f-b2c9-4e0daee38855",
+    #       },
     #     ], # A list of aliases, including the key ID of the KMS key that each alias refers to.
     #     truncated: false, # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
     #   }
@@ -4823,56 +4823,56 @@ module Aws::KMS
     #   {
     #     grants: [
     #       {
-    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"), 
-    #         grant_id: "91ad875e49b04a9d1f3bdeb84d821f9db6ea95e1098813f6d47f0c65fbe2a172", 
-    #         grantee_principal: "acm.us-east-2.amazonaws.com", 
-    #         issuing_account: "arn:aws:iam::111122223333:root", 
-    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"),
+    #         grant_id: "91ad875e49b04a9d1f3bdeb84d821f9db6ea95e1098813f6d47f0c65fbe2a172",
+    #         grantee_principal: "acm.us-east-2.amazonaws.com",
+    #         issuing_account: "arn:aws:iam::111122223333:root",
+    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
     #         operations: [
-    #           "Encrypt", 
-    #           "ReEncryptFrom", 
-    #           "ReEncryptTo", 
-    #         ], 
-    #         retiring_principal: "acm.us-east-2.amazonaws.com", 
-    #       }, 
+    #           "Encrypt",
+    #           "ReEncryptFrom",
+    #           "ReEncryptTo",
+    #         ],
+    #         retiring_principal: "acm.us-east-2.amazonaws.com",
+    #       },
     #       {
-    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"), 
-    #         grant_id: "a5d67d3e207a8fc1f4928749ee3e52eb0440493a8b9cf05bbfad91655b056200", 
-    #         grantee_principal: "acm.us-east-2.amazonaws.com", 
-    #         issuing_account: "arn:aws:iam::111122223333:root", 
-    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"),
+    #         grant_id: "a5d67d3e207a8fc1f4928749ee3e52eb0440493a8b9cf05bbfad91655b056200",
+    #         grantee_principal: "acm.us-east-2.amazonaws.com",
+    #         issuing_account: "arn:aws:iam::111122223333:root",
+    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
     #         operations: [
-    #           "ReEncryptFrom", 
-    #           "ReEncryptTo", 
-    #         ], 
-    #         retiring_principal: "acm.us-east-2.amazonaws.com", 
-    #       }, 
+    #           "ReEncryptFrom",
+    #           "ReEncryptTo",
+    #         ],
+    #         retiring_principal: "acm.us-east-2.amazonaws.com",
+    #       },
     #       {
-    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"), 
-    #         grant_id: "c541aaf05d90cb78846a73b346fc43e65be28b7163129488c738e0c9e0628f4f", 
-    #         grantee_principal: "acm.us-east-2.amazonaws.com", 
-    #         issuing_account: "arn:aws:iam::111122223333:root", 
-    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"),
+    #         grant_id: "c541aaf05d90cb78846a73b346fc43e65be28b7163129488c738e0c9e0628f4f",
+    #         grantee_principal: "acm.us-east-2.amazonaws.com",
+    #         issuing_account: "arn:aws:iam::111122223333:root",
+    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
     #         operations: [
-    #           "Encrypt", 
-    #           "ReEncryptFrom", 
-    #           "ReEncryptTo", 
-    #         ], 
-    #         retiring_principal: "acm.us-east-2.amazonaws.com", 
-    #       }, 
+    #           "Encrypt",
+    #           "ReEncryptFrom",
+    #           "ReEncryptTo",
+    #         ],
+    #         retiring_principal: "acm.us-east-2.amazonaws.com",
+    #       },
     #       {
-    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"), 
-    #         grant_id: "dd2052c67b4c76ee45caf1dc6a1e2d24e8dc744a51b36ae2f067dc540ce0105c", 
-    #         grantee_principal: "acm.us-east-2.amazonaws.com", 
-    #         issuing_account: "arn:aws:iam::111122223333:root", 
-    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #         creation_date: Time.parse("2016-10-25T14:37:41-07:00"),
+    #         grant_id: "dd2052c67b4c76ee45caf1dc6a1e2d24e8dc744a51b36ae2f067dc540ce0105c",
+    #         grantee_principal: "acm.us-east-2.amazonaws.com",
+    #         issuing_account: "arn:aws:iam::111122223333:root",
+    #         key_id: "arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
     #         operations: [
-    #           "Encrypt", 
-    #           "ReEncryptFrom", 
-    #           "ReEncryptTo", 
-    #         ], 
-    #         retiring_principal: "acm.us-east-2.amazonaws.com", 
-    #       }, 
+    #           "Encrypt",
+    #           "ReEncryptFrom",
+    #           "ReEncryptTo",
+    #         ],
+    #         retiring_principal: "acm.us-east-2.amazonaws.com",
+    #       },
     #     ], # A list of grants.
     #     truncated: true, # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
     #   }
@@ -4986,7 +4986,7 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     policy_names: [
-    #       "default", 
+    #       "default",
     #     ], # A list of key policy names.
     #     truncated: false, # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
     #   }
@@ -5071,33 +5071,33 @@ module Aws::KMS
     #   {
     #     keys: [
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/0d990263-018e-4e65-a703-eff731de951e", 
-    #         key_id: "0d990263-018e-4e65-a703-eff731de951e", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/0d990263-018e-4e65-a703-eff731de951e",
+    #         key_id: "0d990263-018e-4e65-a703-eff731de951e",
+    #       },
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/144be297-0ae1-44ac-9c8f-93cd8c82f841", 
-    #         key_id: "144be297-0ae1-44ac-9c8f-93cd8c82f841", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/144be297-0ae1-44ac-9c8f-93cd8c82f841",
+    #         key_id: "144be297-0ae1-44ac-9c8f-93cd8c82f841",
+    #       },
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/21184251-b765-428e-b852-2c7353e72571", 
-    #         key_id: "21184251-b765-428e-b852-2c7353e72571", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/21184251-b765-428e-b852-2c7353e72571",
+    #         key_id: "21184251-b765-428e-b852-2c7353e72571",
+    #       },
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/214fe92f-5b03-4ae1-b350-db2a45dbe10c", 
-    #         key_id: "214fe92f-5b03-4ae1-b350-db2a45dbe10c", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/214fe92f-5b03-4ae1-b350-db2a45dbe10c",
+    #         key_id: "214fe92f-5b03-4ae1-b350-db2a45dbe10c",
+    #       },
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/339963f2-e523-49d3-af24-a0fe752aa458", 
-    #         key_id: "339963f2-e523-49d3-af24-a0fe752aa458", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/339963f2-e523-49d3-af24-a0fe752aa458",
+    #         key_id: "339963f2-e523-49d3-af24-a0fe752aa458",
+    #       },
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/b776a44b-df37-4438-9be4-a27494e4271a", 
-    #         key_id: "b776a44b-df37-4438-9be4-a27494e4271a", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/b776a44b-df37-4438-9be4-a27494e4271a",
+    #         key_id: "b776a44b-df37-4438-9be4-a27494e4271a",
+    #       },
     #       {
-    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/deaf6c9e-cf2c-46a6-bf6d-0b6d487cffbb", 
-    #         key_id: "deaf6c9e-cf2c-46a6-bf6d-0b6d487cffbb", 
-    #       }, 
+    #         key_arn: "arn:aws:kms:us-east-2:111122223333:key/deaf6c9e-cf2c-46a6-bf6d-0b6d487cffbb",
+    #         key_id: "deaf6c9e-cf2c-46a6-bf6d-0b6d487cffbb",
+    #       },
     #     ], # A list of KMS keys, including the key ID and Amazon Resource Name (ARN) of each one.
     #     truncated: false, # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
     #   }
@@ -5204,17 +5204,17 @@ module Aws::KMS
     #   {
     #     tags: [
     #       {
-    #         tag_key: "CostCenter", 
-    #         tag_value: "87654", 
-    #       }, 
+    #         tag_key: "CostCenter",
+    #         tag_value: "87654",
+    #       },
     #       {
-    #         tag_key: "CreatedBy", 
-    #         tag_value: "ExampleUser", 
-    #       }, 
+    #         tag_key: "CreatedBy",
+    #         tag_value: "ExampleUser",
+    #       },
     #       {
-    #         tag_key: "Purpose", 
-    #         tag_value: "Test", 
-    #       }, 
+    #         tag_key: "Purpose",
+    #         tag_value: "Test",
+    #       },
     #     ], # A list of tags.
     #     truncated: false, # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
     #   }
@@ -5332,17 +5332,17 @@ module Aws::KMS
     #   {
     #     grants: [
     #       {
-    #         creation_date: Time.parse("2016-12-07T11:09:35-08:00"), 
-    #         grant_id: "0c237476b39f8bc44e45212e08498fbe3151305030726c0590dd8d3e9f3d6a60", 
-    #         grantee_principal: "arn:aws:iam::111122223333:role/ExampleRole", 
-    #         issuing_account: "arn:aws:iam::444455556666:root", 
-    #         key_id: "arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab", 
+    #         creation_date: Time.parse("2016-12-07T11:09:35-08:00"),
+    #         grant_id: "0c237476b39f8bc44e45212e08498fbe3151305030726c0590dd8d3e9f3d6a60",
+    #         grantee_principal: "arn:aws:iam::111122223333:role/ExampleRole",
+    #         issuing_account: "arn:aws:iam::444455556666:root",
+    #         key_id: "arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab",
     #         operations: [
-    #           "Decrypt", 
-    #           "Encrypt", 
-    #         ], 
-    #         retiring_principal: "arn:aws:iam::111122223333:role/ExampleRole", 
-    #       }, 
+    #           "Decrypt",
+    #           "Encrypt",
+    #         ],
+    #         retiring_principal: "arn:aws:iam::111122223333:role/ExampleRole",
+    #       },
     #     ], # A list of grants that the specified principal can retire.
     #     truncated: false, # A boolean that indicates whether there are more items in the list. Returns true when there are more items, or false when there are not.
     #   }
@@ -6050,7 +6050,7 @@ module Aws::KMS
     #
     # @example Example: To replicate a multi-Region key in a different AWS Region
     #
-    #   # This example creates a multi-Region replica key in us-west-2 of a multi-Region primary key in us-east-1. 
+    #   # This example creates a multi-Region replica key in us-west-2 of a multi-Region primary key in us-east-1.
     #
     #   resp = client.replicate_key({
     #     key_id: "arn:aws:kms:us-east-1:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab", # The key ID or key ARN of the multi-Region primary key
@@ -6060,34 +6060,34 @@ module Aws::KMS
     #   resp.to_h outputs the following:
     #   {
     #     replica_key_metadata: {
-    #       aws_account_id: "111122223333", 
-    #       arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab", 
-    #       creation_date: Time.parse(1607472987.918), 
-    #       customer_master_key_spec: "SYMMETRIC_DEFAULT", 
-    #       description: "", 
-    #       enabled: true, 
+    #       aws_account_id: "111122223333",
+    #       arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab",
+    #       creation_date: Time.parse(1607472987.918),
+    #       customer_master_key_spec: "SYMMETRIC_DEFAULT",
+    #       description: "",
+    #       enabled: true,
     #       encryption_algorithms: [
-    #         "SYMMETRIC_DEFAULT", 
-    #       ], 
-    #       key_id: "mrk-1234abcd12ab34cd56ef1234567890ab", 
-    #       key_manager: "CUSTOMER", 
-    #       key_state: "Enabled", 
-    #       key_usage: "ENCRYPT_DECRYPT", 
-    #       multi_region: true, 
+    #         "SYMMETRIC_DEFAULT",
+    #       ],
+    #       key_id: "mrk-1234abcd12ab34cd56ef1234567890ab",
+    #       key_manager: "CUSTOMER",
+    #       key_state: "Enabled",
+    #       key_usage: "ENCRYPT_DECRYPT",
+    #       multi_region: true,
     #       multi_region_configuration: {
-    #         multi_region_key_type: "REPLICA", 
+    #         multi_region_key_type: "REPLICA",
     #         primary_key: {
-    #           arn: "arn:aws:kms:us-east-1:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab", 
-    #           region: "us-east-1", 
-    #         }, 
+    #           arn: "arn:aws:kms:us-east-1:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab",
+    #           region: "us-east-1",
+    #         },
     #         replica_keys: [
     #           {
-    #             arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab", 
-    #             region: "us-west-2", 
-    #           }, 
-    #         ], 
-    #       }, 
-    #       origin: "AWS_KMS", 
+    #             arn: "arn:aws:kms:us-west-2:111122223333:key/mrk-1234abcd12ab34cd56ef1234567890ab",
+    #             region: "us-west-2",
+    #           },
+    #         ],
+    #       },
+    #       origin: "AWS_KMS",
     #     }, # An object that displays detailed information about the replica key.
     #     replica_policy: "{\n  \"Version\" : \"2012-10-17\",\n  \"Id\" : \"key-default-1\",...}", # The key policy of the replica key. If you don't specify a key policy, the replica key gets the default key policy for a KMS key.
     #     replica_tags: [
@@ -6735,9 +6735,9 @@ module Aws::KMS
     #     key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", # The identifier of the KMS key you are tagging. You can use the key ID or the Amazon Resource Name (ARN) of the KMS key.
     #     tags: [
     #       {
-    #         tag_key: "Purpose", 
-    #         tag_value: "Test", 
-    #       }, 
+    #         tag_key: "Purpose",
+    #         tag_value: "Test",
+    #       },
     #     ], # A list of tags.
     #   })
     #
@@ -6837,8 +6837,8 @@ module Aws::KMS
     #   resp = client.untag_resource({
     #     key_id: "1234abcd-12ab-34cd-56ef-1234567890ab", # The identifier of the KMS key whose tags you are removing.
     #     tag_keys: [
-    #       "Purpose", 
-    #       "CostCenter", 
+    #       "Purpose",
+    #       "CostCenter",
     #     ], # A list of tag keys. Provide only the tag keys, not the tag values.
     #   })
     #
@@ -7466,7 +7466,7 @@ module Aws::KMS
     # @example Example: To use an asymmetric KMS key to verify a digital signature
     #
     #   # This operation uses the public key in an elliptic curve (ECC) asymmetric key to verify a digital signature within AWS
-    #   # KMS. 
+    #   # KMS.
     #
     #   resp = client.verify({
     #     key_id: "alias/ECC_signing_key", # The asymmetric KMS key to be used to verify the digital signature. This example uses an alias to identify the KMS key.

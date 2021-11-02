@@ -6,7 +6,7 @@
 		Specifies an array of servers
 	.EXAMPLE
 		Get-IPv4Scopes
-        
+
 		Will prompt for all inputs
 #>
 {

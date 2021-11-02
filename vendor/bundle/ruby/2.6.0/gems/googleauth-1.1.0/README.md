@@ -180,7 +180,7 @@ drive = Drive::DriveService.new
 # Auths with ENV vars:
 # "GOOGLE_CLIENT_ID",
 # "GOOGLE_CLIENT_EMAIL",
-# "GOOGLE_ACCOUNT_TYPE", 
+# "GOOGLE_ACCOUNT_TYPE",
 # "GOOGLE_PRIVATE_KEY"
 auth = ::Google::Auth::ServiceAccountCredentials
   .make_creds(scope: 'https://www.googleapis.com/auth/drive')

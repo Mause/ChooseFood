@@ -21,4 +21,3 @@ CompileC /Users/musalj/Library/Developer/Xcode/DerivedData/ObjectiveSugar-ayzdhq
     return (self.floatValue * 60);
            ^~~~~~~~~~~~~~~~~~~~~~
 2 errors generated.
-

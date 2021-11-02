@@ -7,4 +7,3 @@ require 'rspec/autorun'
 RSpec.configure do |config|
   config.expect_with :rspec, :stdlib # enable `should` OR `assert`
 end
-

@@ -4,23 +4,23 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* None.  
+* None.
 
 
 ## 0.2.6 (2018-07-01)
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
 * Fix parse errors crashing when attempting to show context when the error
-  occurs on the first character in the plist.  
+  occurs on the first character in the plist.
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -28,11 +28,11 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Fix parsing arrays that contain a comment after a trailing comma.  
+* Fix parsing arrays that contain a comment after a trailing comma.
   [Samuel Giddins](https://github.com/segiddins)
   [#26](https://github.com/CocoaPods/Nanaimo/issues/26)
 
@@ -41,23 +41,23 @@
 
 ##### Enhancements
 
-* Enable frozen string literals to improve performance.  
+* Enable frozen string literals to improve performance.
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
-* None.  
+* None.
 
 
 ## 0.2.3 (2016-11-30)
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Quote the empty string `nil` is implicitly written as in non-strict mode.  
+* Quote the empty string `nil` is implicitly written as in non-strict mode.
   [Samuel Giddins](https://github.com/segiddins)
   [Xcodeproj#453](https://github.com/CocoaPods/Xcodeproj/issues/453)
 
@@ -66,15 +66,15 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Fix extraneously escaping single quotes when writing quoted strings.  
+* Fix extraneously escaping single quotes when writing quoted strings.
   [Samuel Giddins](https://github.com/segiddins)
 
 * Properly align the `^` in parse error messages when the line with the syntax
-  error contains tabs.  
+  error contains tabs.
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -82,11 +82,11 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Fix reading all supported characters in unquoted strings.  
+* Fix reading all supported characters in unquoted strings.
   [Samuel Giddins](https://github.com/segiddins)
   [#13](https://github.com/CocoaPods/Nanaimo/issues/13)
 
@@ -95,28 +95,28 @@
 
 ##### Enhancements
 
-* Add context to parse errors.  
+* Add context to parse errors.
   [Samuel Giddins](https://github.com/segiddins)
   [#5](https://github.com/CocoaPods/Nanaimo/issues/5)
 
 * Allow disabling 'strict' mode when writing plists, allowing unknown object
-  types to be serialized as their string representations.  
+  types to be serialized as their string representations.
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
-* None.  
+* None.
 
 
 ## 0.1.4 (2016-11-01)
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Allow reading unquoted strings that contain `-`.  
+* Allow reading unquoted strings that contain `-`.
   [Samuel Giddins](https://github.com/segiddins)
   [Xcodeproj#438](https://github.com/CocoaPods/Xcodeproj/issues/438)
 
@@ -125,11 +125,11 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Fix unquoting a sequence of backslashes.  
+* Fix unquoting a sequence of backslashes.
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#6108](https://github.com/CocoaPods/CocoaPods/issues/6108)
 
@@ -138,11 +138,11 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Add support for unquoted strings that contain a `$`.  
+* Add support for unquoted strings that contain a `$`.
   [Danielle Tomlinson](https://github.com/dantoml)
   [CocoaPods#6101](https://github.com/CocoaPods/CocoaPods/issues/6101)
 
@@ -151,11 +151,11 @@
 
 ##### Enhancements
 
-* None.  
+* None.
 
 ##### Bug Fixes
 
-* Ensure all required classes are required before being used.  
+* Ensure all required classes are required before being used.
   [Samuel Giddins](https://github.com/segiddins)
   [Xcodeproj#435](https://github.com/CocoaPods/Xcodeproj/issues/435)
 
@@ -164,5 +164,5 @@
 
 ##### Enhancements
 
-* Initial implementation.  
+* Initial implementation.
   [Samuel Giddins](https://github.com/segiddins)

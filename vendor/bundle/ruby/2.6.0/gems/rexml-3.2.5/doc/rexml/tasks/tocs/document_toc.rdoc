@@ -27,4 +27,3 @@ Tasks on this page:
   - {Task: Get the Root Element}[#label-Task-3A+Get+the+Root+Element]
   - {Task: Determine Whether Stand-Alone}[#label-Task-3A+Determine+Whether+Stand-Alone]
   - {Task: Get the Version}[#label-Task-3A+Get+the+Version]
-

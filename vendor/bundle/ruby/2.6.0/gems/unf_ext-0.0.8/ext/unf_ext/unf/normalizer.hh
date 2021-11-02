@@ -44,7 +44,7 @@ namespace UNF {
       const char* beg = next_invalid_char(src, nf);
       if(*beg=='\0')
 	return src;
-      
+
       buffer.assign(src, beg);
       do {
 	const char* end = next_valid_starter(beg, nf);
@@ -52,8 +52,8 @@ namespace UNF {
 	beg = next_invalid_char(end, nf);
 	buffer.append(end, beg);
       } while(*beg!='\0');
-      
-      return buffer.c_str();      
+
+      return buffer.c_str();
     }
 
     void decompose_one(const char* beg, const char* end, const Trie::NormalizationForm& nf, std::string& buf) {
@@ -67,7 +67,7 @@ namespace UNF {
       const char* beg = next_invalid_char(src, nf);
       if(*beg=='\0')
 	return src;
-      
+
       buffer.assign(src, beg);
       while(*beg!='\0') {
 	const char* end = next_valid_starter(beg, nf);
@@ -78,7 +78,7 @@ namespace UNF {
 	buffer.append(end, beg);
       }
 
-      return buffer.c_str();      
+      return buffer.c_str();
     }
 
     const char* compose_one(const char* starter, const char* rest_starter, std::string& buf) {
@@ -97,7 +97,7 @@ namespace UNF {
       int last_canonical_class = 0;
       const char* cur = Util::nearest_utf8_char_start_point(src);
       const char* starter = cur;
-      
+
       for(; *cur != '\0'; cur = Util::nearest_utf8_char_start_point(cur+1)) {
 	int canonical_class = ccc.get_class(cur);
 	if(last_canonical_class > canonical_class && canonical_class != 0)
@@ -128,7 +128,7 @@ namespace UNF {
     const Trie::NormalizationForm nf_c_qc;
     const Trie::NormalizationForm nf_kc_qc;
     const Trie::CanonicalCombiningClass ccc;
-    
+
     std::string buffer;
     std::string buffer2;
     std::string buffer3;

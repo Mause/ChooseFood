@@ -27,4 +27,3 @@ recipe :ignore
 ignore(/.*\/?tags/)
 ignore(/.*\/?\.git/)
 ignore(/^tmp/)
-

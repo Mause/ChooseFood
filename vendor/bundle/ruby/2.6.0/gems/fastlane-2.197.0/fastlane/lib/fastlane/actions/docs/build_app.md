@@ -150,7 +150,7 @@ build_app(
   scheme: "Release",
   export_method: "app-store",
   export_options: {
-    provisioningProfiles: { 
+    provisioningProfiles: {
       "com.example.bundleid" => "Provisioning Profile Name",
       "com.example.bundleid2" => "Provisioning Profile Name 2"
     }
@@ -184,10 +184,10 @@ end
 error do |lane, exception|
   slack(
     # message with short human friendly message
-    message: exception.to_s, 
-    success: false, 
+    message: exception.to_s,
+    success: false,
     # Output containing extended log output
-    payload: { "Output" => exception.error_info.to_s } 
+    payload: { "Output" => exception.error_info.to_s }
   )
 end
 ```

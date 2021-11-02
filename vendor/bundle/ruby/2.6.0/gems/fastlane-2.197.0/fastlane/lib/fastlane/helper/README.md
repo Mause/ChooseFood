@@ -2,7 +2,7 @@
 
 You can put shared code into this folder. Use this if you need to access the same code from multiple actions or to just clean up the actual action.
 
-To create a new helper, duplicate the `podspec_helper.rb`, rename the class and put your code inside the class. 
+To create a new helper, duplicate the `podspec_helper.rb`, rename the class and put your code inside the class.
 
 Make sure it's structured like this:
 

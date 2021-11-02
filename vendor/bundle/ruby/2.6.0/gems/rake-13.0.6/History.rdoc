@@ -37,7 +37,7 @@
 
 ==== Bug fixes
 
-* Fixed bug: Reenabled task raises previous exception on second invokation 
+* Fixed bug: Reenabled task raises previous exception on second invokation
   Pull Request #271 by thorsteneckel
 * Fix an incorrectly resolved arg pattern
   Pull Request #327 by mjbellantoni
@@ -48,7 +48,7 @@
 
 * Follows recent changes on keyword arguments in ruby 2.7.
   Pull Request #326 by nobu
-* Make `PackageTask` be able to omit parent directory while packing files 
+* Make `PackageTask` be able to omit parent directory while packing files
   Pull Request #310 by tonytonyjan
 * Add order only dependency
   Pull Request #269 by take-cheeze

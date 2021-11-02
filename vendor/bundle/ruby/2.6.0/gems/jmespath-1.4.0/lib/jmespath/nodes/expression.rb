@@ -22,4 +22,3 @@ module JMESPath
     end
   end
 end
-

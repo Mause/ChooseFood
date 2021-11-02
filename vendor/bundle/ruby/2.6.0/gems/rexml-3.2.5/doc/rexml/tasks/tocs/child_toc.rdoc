@@ -9,4 +9,3 @@ Tasks on this page:
   - {Task: Replace Child}[#label-Task-3A+Replace+Child]
 - {Document}[#label-Document]
   - {Task: Get the Document}[#label-Task-3A+Get+the+Document]
-

@@ -17,7 +17,7 @@
 <% unless @options.empty? -%>
   Global Options:
 <% for option in @options -%>
-    <%= "%-20s %s" % [option[:switches].join(', '), option[:description]] -%> 
+    <%= "%-20s %s" % [option[:switches].join(', '), option[:description]] -%>
 <% end -%>
 <% end -%>
 <% if program :help -%>
@@ -26,4 +26,3 @@
     <%= body %>
   <% end %>
 <% end -%>
-

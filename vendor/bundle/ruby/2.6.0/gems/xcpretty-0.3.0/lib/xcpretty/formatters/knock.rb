@@ -32,4 +32,3 @@ module XCPretty
   end
 
 end
-

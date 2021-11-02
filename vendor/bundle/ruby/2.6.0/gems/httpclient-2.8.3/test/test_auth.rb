@@ -465,7 +465,7 @@ class TestAuth < Test::Unit::TestCase
       raise if retry_times > 5
       retry_times += 1
       sleep 1
-      retry 
+      retry
     end
   end
 

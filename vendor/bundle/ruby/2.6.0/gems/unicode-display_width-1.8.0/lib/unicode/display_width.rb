@@ -48,4 +48,3 @@ end
 unless defined?(Unicode::DisplayWidth::NO_STRING_EXT) && Unicode::DisplayWidth::NO_STRING_EXT
   require_relative 'display_width/string_ext'
 end
-

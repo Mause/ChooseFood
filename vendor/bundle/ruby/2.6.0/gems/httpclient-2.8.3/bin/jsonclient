@@ -10,7 +10,7 @@
 # JSONClient as 'self'.  You can call JSONClient instance methods like;
 # > post "https://www.example.com/resource", {'hello' => 'world'}
 require 'jsonclient'
- 
+
 method = ARGV.shift
 url = ARGV.shift
 body = []

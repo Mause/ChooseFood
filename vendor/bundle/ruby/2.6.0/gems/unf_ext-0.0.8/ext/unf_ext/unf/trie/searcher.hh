@@ -17,26 +17,26 @@ namespace UNF {
 	for(CharStream in(key);; in.read()) {
 	  node_index = nodes[node_index].jump(in.peek());
 	  if(nodes[node_index].check_char()==in.peek()) {
-	    unsigned terminal_index = nodes[node_index].jump('\0'); 
+	    unsigned terminal_index = nodes[node_index].jump('\0');
 	    if(nodes[terminal_index].check_char()=='\0') {
 	      return nodes[terminal_index].value();
             }
 	  } else
 	    return default_value;
 	}
-      }     
+      }
 
     protected:
       const Node* nodes;
       const unsigned root;
       const char* value;
-    }; 
-    
+    };
+
     class CanonicalCombiningClass : private Searcher {
     public:
       CanonicalCombiningClass(const unsigned* node_uints, unsigned root)
 	: Searcher(Node::from_uint_array(node_uints), root) {}
-      
+
       unsigned get_class(const char* str) const { return find_value(str,0); }
 
       void sort(char* str, std::vector<unsigned char>& classes) const {
@@ -47,19 +47,19 @@ namespace UNF {
 
       loop_head:
 	unsigned beg = in.cur()-str;
-	
+
 	for(unsigned node_index=root;;){
 	  node_index = nodes[node_index].jump(in.read());
-	  
+
 	  if(nodes[node_index].check_char()==in.prev()) {
 	    unsigned terminal_index = nodes[node_index].jump('\0');
 	    if(nodes[terminal_index].check_char()=='\0') {
 	      if((unicode_char_count++)==0)
 		sort_beg = beg;
 	      sort_end = in.cur()-str;
-	      
+
 	      unsigned char klass = nodes[terminal_index].value();
-	      for(unsigned i=beg; i < sort_end; i++) 
+	      for(unsigned i=beg; i < sort_end; i++)
 		classes[i] = klass;
  	      break;
 	    }
@@ -69,7 +69,7 @@ namespace UNF {
 	    unicode_char_count = 0;
 	    break;
 	  }
-	} 
+	}
 	Util::eat_until_utf8_char_start_point(in);
 
 	if(in.eos()==false)
@@ -77,7 +77,7 @@ namespace UNF {
 
 	if(unicode_char_count > 1)
 	  bubble_sort(str, classes, sort_beg, sort_end);
-      }      
+      }
 
     private:
       void bubble_sort(char* str, std::vector<unsigned char>& canonical_classes, unsigned beg, unsigned end) const {
@@ -96,7 +96,7 @@ namespace UNF {
     class NormalizationForm : private Searcher {
     public:
       NormalizationForm(const unsigned* node_uints, unsigned root, const char* value=NULL)
-	: Searcher(Node::from_uint_array(node_uints), root, value) {} 
+	: Searcher(Node::from_uint_array(node_uints), root, value) {}
 
       bool quick_check(const char* key) const { return find_value(key,0xFFFFFFFF)==0xFFFFFFFF; }
 
@@ -118,7 +118,7 @@ namespace UNF {
 	    buffer.append(beg, in.cur());
 	    break;
 	  }
-	}  
+	}
 
 	if(in.eos()==false)
 	  goto loop_head;
@@ -130,7 +130,7 @@ namespace UNF {
 	const char* const beg = in.cur();
 	const char* current_char_head = in.cur();
 	unsigned composed_char_info = 0;
-	
+
 	unsigned node_index = root;
 	unsigned retry_root_node = root;
 	unsigned char retry_root_class = 0;
@@ -153,7 +153,7 @@ namespace UNF {
 	    unsigned terminal_index = nodes[node_index].jump('\0');
 	    if(nodes[terminal_index].check_char()=='\0') {
 	      composed_char_info = nodes[terminal_index].value();
-              
+
 	      in.mark_as_last_valid_point();
 	      if(in.eos() || retry_root_class > in.get_canonical_class())
 		break;
@@ -161,7 +161,7 @@ namespace UNF {
 	  } else if (first==true) {
 	    // no retry if current point is a part of first starter
 	    break;
-	  } else if (in.next_combining_char(retry_root_class, current_char_head)==true) { 
+	  } else if (in.next_combining_char(retry_root_class, current_char_head)==true) {
 	    // back previous code-point and retry
 	    node_index = retry_root_node;
 	    current_char_head = in.cur();
@@ -169,8 +169,8 @@ namespace UNF {
 	  } else {
 	    break;
 	  }
-	}  
-	
+	}
+
 	if(composed_char_info != 0) {
 	  // append composed unicode-character and skipped combining-characters
 	  word_append(buf, value, composed_char_info);
@@ -182,7 +182,7 @@ namespace UNF {
 	  in.append_read_char_to_str(buf, beg);
 	}
       }
-      
+
     private:
       static void word_append(std::string& buffer, const char* base, unsigned pos_info) {
         buffer.append(base+(pos_info&0x3FFFF), pos_info>>18);

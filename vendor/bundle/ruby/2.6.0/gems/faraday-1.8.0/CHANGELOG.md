@@ -3,7 +3,7 @@
 ## [v1.3.0](https://github.com/lostisland/faraday/releases/tag/v1.3.0) (2020-12-31)
 
 ### Highlights
-Faraday v1.3.0 is the first release to officially support Ruby 3.0 in the CI pipeline 🎉 🍾! 
+Faraday v1.3.0 is the first release to officially support Ruby 3.0 in the CI pipeline 🎉 🍾!
 
 This is also the first release with a previously "included" adapter (Net::HTTP) being isolated into a [separate gem](https://github.com/lostisland/faraday-net_http) 🎊!
 The new adapter is added to Faraday as a dependency for now, so that means full backwards-compatibility, but just to be safe be careful when upgrading!
@@ -94,7 +94,7 @@ Many thanks to the Faraday Team, @JanDintel and everyone who attended the [ROSS 
 * Allows `parse` method to be private/protected in response middleware (#1123)
 * Encode Spaces in Query Strings as '%20' Instead of '+' (#1125)
 * Limits rack to v2.0.x (#1127)
-* Adapter Registry reads also use mutex (#1136) 
+* Adapter Registry reads also use mutex (#1136)
 
 ### Documentation
 

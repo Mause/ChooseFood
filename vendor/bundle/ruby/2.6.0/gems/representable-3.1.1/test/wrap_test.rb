@@ -149,4 +149,3 @@ class XMLDisableWrapTest < MiniTest::Spec
   #   album.from_hash({"albums" => {"band" => {"name"=>"Rvivr"}}}).band.name.must_equal "Rvivr"
   # end
 end
-

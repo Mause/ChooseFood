@@ -21,55 +21,55 @@ require 'google/apis/errors'
 module Google
   module Apis
     module IamcredentialsV1
-      
+
       class GenerateAccessTokenRequest
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class GenerateAccessTokenResponse
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class GenerateIdTokenRequest
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class GenerateIdTokenResponse
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class SignBlobRequest
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class SignBlobResponse
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class SignJwtRequest
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class SignJwtResponse
         class Representation < Google::Apis::Core::JsonRepresentation; end
-      
+
         include Google::Apis::Core::JsonObjectSupport
       end
-      
+
       class GenerateAccessTokenRequest
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
@@ -78,7 +78,7 @@ module Google
           collection :scope, as: 'scope'
         end
       end
-      
+
       class GenerateAccessTokenResponse
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
@@ -86,7 +86,7 @@ module Google
           property :expire_time, as: 'expireTime'
         end
       end
-      
+
       class GenerateIdTokenRequest
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
@@ -95,14 +95,14 @@ module Google
           property :include_email, as: 'includeEmail'
         end
       end
-      
+
       class GenerateIdTokenResponse
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
           property :token, as: 'token'
         end
       end
-      
+
       class SignBlobRequest
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
@@ -110,7 +110,7 @@ module Google
           property :payload, :base64 => true, as: 'payload'
         end
       end
-      
+
       class SignBlobResponse
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
@@ -118,7 +118,7 @@ module Google
           property :signed_blob, :base64 => true, as: 'signedBlob'
         end
       end
-      
+
       class SignJwtRequest
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation
@@ -126,7 +126,7 @@ module Google
           property :payload, as: 'payload'
         end
       end
-      
+
       class SignJwtResponse
         # @private
         class Representation < Google::Apis::Core::JsonRepresentation

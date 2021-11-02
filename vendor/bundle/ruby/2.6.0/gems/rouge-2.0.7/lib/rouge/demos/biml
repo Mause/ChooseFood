@@ -5,7 +5,7 @@
         <!-- Creates a connection to the Adventure Works database -->
         <Connection
             Name="AdventureWorks"
-            ConnectionString="Provider=SQLNCLI10.1;Data Source=Localhost;Persist Security Info=False;Integrated Security=SSPI;Initial Catalog=AdventureWorksDW" 
+            ConnectionString="Provider=SQLNCLI10.1;Data Source=Localhost;Persist Security Info=False;Integrated Security=SSPI;Initial Catalog=AdventureWorksDW"
             />
     </Connections>
     <!-- Packages Collection -->

@@ -698,43 +698,43 @@ module Aws::STS
     # @example Example: To assume a role
     #
     #   resp = client.assume_role({
-    #     external_id: "123ABC", 
-    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}", 
-    #     role_arn: "arn:aws:iam::123456789012:role/demo", 
-    #     role_session_name: "testAssumeRoleSession", 
+    #     external_id: "123ABC",
+    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}",
+    #     role_arn: "arn:aws:iam::123456789012:role/demo",
+    #     role_session_name: "testAssumeRoleSession",
     #     tags: [
     #       {
-    #         key: "Project", 
-    #         value: "Unicorn", 
-    #       }, 
+    #         key: "Project",
+    #         value: "Unicorn",
+    #       },
     #       {
-    #         key: "Team", 
-    #         value: "Automation", 
-    #       }, 
+    #         key: "Team",
+    #         value: "Automation",
+    #       },
     #       {
-    #         key: "Cost-Center", 
-    #         value: "12345", 
-    #       }, 
-    #     ], 
+    #         key: "Cost-Center",
+    #         value: "12345",
+    #       },
+    #     ],
     #     transitive_tag_keys: [
-    #       "Project", 
-    #       "Cost-Center", 
-    #     ], 
+    #       "Project",
+    #       "Cost-Center",
+    #     ],
     #   })
     #
     #   resp.to_h outputs the following:
     #   {
     #     assumed_role_user: {
-    #       arn: "arn:aws:sts::123456789012:assumed-role/demo/Bob", 
-    #       assumed_role_id: "ARO123EXAMPLE123:Bob", 
-    #     }, 
+    #       arn: "arn:aws:sts::123456789012:assumed-role/demo/Bob",
+    #       assumed_role_id: "ARO123EXAMPLE123:Bob",
+    #     },
     #     credentials: {
-    #       access_key_id: "AKIAIOSFODNN7EXAMPLE", 
-    #       expiration: Time.parse("2011-07-15T23:28:33.359Z"), 
-    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY", 
-    #       session_token: "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==", 
-    #     }, 
-    #     packed_policy_size: 8, 
+    #       access_key_id: "AKIAIOSFODNN7EXAMPLE",
+    #       expiration: Time.parse("2011-07-15T23:28:33.359Z"),
+    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+    #       session_token: "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==",
+    #     },
+    #     packed_policy_size: 8,
     #   }
     #
     # @example Request syntax with placeholder values
@@ -1068,30 +1068,30 @@ module Aws::STS
     # @example Example: To assume a role using a SAML assertion
     #
     #   resp = client.assume_role_with_saml({
-    #     duration_seconds: 3600, 
-    #     principal_arn: "arn:aws:iam::123456789012:saml-provider/SAML-test", 
-    #     role_arn: "arn:aws:iam::123456789012:role/TestSaml", 
-    #     saml_assertion: "VERYLONGENCODEDASSERTIONEXAMPLExzYW1sOkF1ZGllbmNlPmJsYW5rPC9zYW1sOkF1ZGllbmNlPjwvc2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPjwvc2FtbDpDb25kaXRpb25zPjxzYW1sOlN1YmplY3Q+PHNhbWw6TmFtZUlEIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOm5hbWVpZC1mb3JtYXQ6dHJhbnNpZW50Ij5TYW1sRXhhbXBsZTwvc2FtbDpOYW1lSUQ+PHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbiBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPjxzYW1sOlN1YmplY3RDb25maXJtYXRpb25EYXRhIE5vdE9uT3JBZnRlcj0iMjAxOS0xMS0wMVQyMDoyNTowNS4xNDVaIiBSZWNpcGllbnQ9Imh0dHBzOi8vc2lnbmluLmF3cy5hbWF6b24uY29tL3NhbWwiLz48L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWw6U3ViamVjdD48c2FtbDpBdXRoblN0YXRlbWVudCBBdXRoPD94bWwgdmpSZXNwb25zZT4=", 
+    #     duration_seconds: 3600,
+    #     principal_arn: "arn:aws:iam::123456789012:saml-provider/SAML-test",
+    #     role_arn: "arn:aws:iam::123456789012:role/TestSaml",
+    #     saml_assertion: "VERYLONGENCODEDASSERTIONEXAMPLExzYW1sOkF1ZGllbmNlPmJsYW5rPC9zYW1sOkF1ZGllbmNlPjwvc2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPjwvc2FtbDpDb25kaXRpb25zPjxzYW1sOlN1YmplY3Q+PHNhbWw6TmFtZUlEIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOm5hbWVpZC1mb3JtYXQ6dHJhbnNpZW50Ij5TYW1sRXhhbXBsZTwvc2FtbDpOYW1lSUQ+PHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbiBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPjxzYW1sOlN1YmplY3RDb25maXJtYXRpb25EYXRhIE5vdE9uT3JBZnRlcj0iMjAxOS0xMS0wMVQyMDoyNTowNS4xNDVaIiBSZWNpcGllbnQ9Imh0dHBzOi8vc2lnbmluLmF3cy5hbWF6b24uY29tL3NhbWwiLz48L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWw6U3ViamVjdD48c2FtbDpBdXRoblN0YXRlbWVudCBBdXRoPD94bWwgdmpSZXNwb25zZT4=",
     #   })
     #
     #   resp.to_h outputs the following:
     #   {
     #     assumed_role_user: {
-    #       arn: "arn:aws:sts::123456789012:assumed-role/TestSaml", 
-    #       assumed_role_id: "ARO456EXAMPLE789:TestSaml", 
-    #     }, 
-    #     audience: "https://signin.aws.amazon.com/saml", 
+    #       arn: "arn:aws:sts::123456789012:assumed-role/TestSaml",
+    #       assumed_role_id: "ARO456EXAMPLE789:TestSaml",
+    #     },
+    #     audience: "https://signin.aws.amazon.com/saml",
     #     credentials: {
-    #       access_key_id: "ASIAV3ZUEFP6EXAMPLE", 
-    #       expiration: Time.parse("2019-11-01T20:26:47Z"), 
-    #       secret_access_key: "8P+SQvWIuLnKhh8d++jpw0nNmQRBZvNEXAMPLEKEY", 
-    #       session_token: "IQoJb3JpZ2luX2VjEOz////////////////////wEXAMPLEtMSJHMEUCIDoKK3JH9uGQE1z0sINr5M4jk+Na8KHDcCYRVjJCZEvOAiEA3OvJGtw1EcViOleS2vhs8VdCKFJQWPQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==", 
-    #     }, 
-    #     issuer: "https://integ.example.com/idp/shibboleth", 
-    #     name_qualifier: "SbdGOnUkh1i4+EXAMPLExL/jEvs=", 
-    #     packed_policy_size: 6, 
-    #     subject: "SamlExample", 
-    #     subject_type: "transient", 
+    #       access_key_id: "ASIAV3ZUEFP6EXAMPLE",
+    #       expiration: Time.parse("2019-11-01T20:26:47Z"),
+    #       secret_access_key: "8P+SQvWIuLnKhh8d++jpw0nNmQRBZvNEXAMPLEKEY",
+    #       session_token: "IQoJb3JpZ2luX2VjEOz////////////////////wEXAMPLEtMSJHMEUCIDoKK3JH9uGQE1z0sINr5M4jk+Na8KHDcCYRVjJCZEvOAiEA3OvJGtw1EcViOleS2vhs8VdCKFJQWPQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==",
+    #     },
+    #     issuer: "https://integ.example.com/idp/shibboleth",
+    #     name_qualifier: "SbdGOnUkh1i4+EXAMPLExL/jEvs=",
+    #     packed_policy_size: 6,
+    #     subject: "SamlExample",
+    #     subject_type: "transient",
     #   }
     #
     # @example Request syntax with placeholder values
@@ -1448,30 +1448,30 @@ module Aws::STS
     # @example Example: To assume a role as an OpenID Connect-federated user
     #
     #   resp = client.assume_role_with_web_identity({
-    #     duration_seconds: 3600, 
-    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}", 
-    #     provider_id: "www.amazon.com", 
-    #     role_arn: "arn:aws:iam::123456789012:role/FederatedWebIdentityRole", 
-    #     role_session_name: "app1", 
-    #     web_identity_token: "Atza%7CIQEBLjAsAhRFiXuWpUXuRvQ9PZL3GMFcYevydwIUFAHZwXZXXXXXXXXJnrulxKDHwy87oGKPznh0D6bEQZTSCzyoCtL_8S07pLpr0zMbn6w1lfVZKNTBdDansFBmtGnIsIapjI6xKR02Yc_2bQ8LZbUXSGm6Ry6_BG7PrtLZtj_dfCTj92xNGed-CrKqjG7nPBjNIL016GGvuS5gSvPRUxWES3VYfm1wl7WTI7jn-Pcb6M-buCgHhFOzTQxod27L9CqnOLio7N3gZAGpsp6n1-AJBOCJckcyXe2c6uD0srOJeZlKUm2eTDVMf8IehDVI0r1QOnTV6KzzAI3OY87Vd_cVMQ", 
+    #     duration_seconds: 3600,
+    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}",
+    #     provider_id: "www.amazon.com",
+    #     role_arn: "arn:aws:iam::123456789012:role/FederatedWebIdentityRole",
+    #     role_session_name: "app1",
+    #     web_identity_token: "Atza%7CIQEBLjAsAhRFiXuWpUXuRvQ9PZL3GMFcYevydwIUFAHZwXZXXXXXXXXJnrulxKDHwy87oGKPznh0D6bEQZTSCzyoCtL_8S07pLpr0zMbn6w1lfVZKNTBdDansFBmtGnIsIapjI6xKR02Yc_2bQ8LZbUXSGm6Ry6_BG7PrtLZtj_dfCTj92xNGed-CrKqjG7nPBjNIL016GGvuS5gSvPRUxWES3VYfm1wl7WTI7jn-Pcb6M-buCgHhFOzTQxod27L9CqnOLio7N3gZAGpsp6n1-AJBOCJckcyXe2c6uD0srOJeZlKUm2eTDVMf8IehDVI0r1QOnTV6KzzAI3OY87Vd_cVMQ",
     #   })
     #
     #   resp.to_h outputs the following:
     #   {
     #     assumed_role_user: {
-    #       arn: "arn:aws:sts::123456789012:assumed-role/FederatedWebIdentityRole/app1", 
-    #       assumed_role_id: "AROACLKWSDQRAOEXAMPLE:app1", 
-    #     }, 
-    #     audience: "client.5498841531868486423.1548@apps.example.com", 
+    #       arn: "arn:aws:sts::123456789012:assumed-role/FederatedWebIdentityRole/app1",
+    #       assumed_role_id: "AROACLKWSDQRAOEXAMPLE:app1",
+    #     },
+    #     audience: "client.5498841531868486423.1548@apps.example.com",
     #     credentials: {
-    #       access_key_id: "AKIAIOSFODNN7EXAMPLE", 
-    #       expiration: Time.parse("2014-10-24T23:00:23Z"), 
-    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY", 
-    #       session_token: "AQoDYXdzEE0a8ANXXXXXXXXNO1ewxE5TijQyp+IEXAMPLE", 
-    #     }, 
-    #     packed_policy_size: 123, 
-    #     provider: "www.amazon.com", 
-    #     subject_from_web_identity_token: "amzn1.account.AF6RHO7KZU5XRVQJGXK6HEXAMPLE", 
+    #       access_key_id: "AKIAIOSFODNN7EXAMPLE",
+    #       expiration: Time.parse("2014-10-24T23:00:23Z"),
+    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+    #       session_token: "AQoDYXdzEE0a8ANXXXXXXXXNO1ewxE5TijQyp+IEXAMPLE",
+    #     },
+    #     packed_policy_size: 123,
+    #     provider: "www.amazon.com",
+    #     subject_from_web_identity_token: "amzn1.account.AF6RHO7KZU5XRVQJGXK6HEXAMPLE",
     #   }
     #
     # @example Request syntax with placeholder values
@@ -1566,12 +1566,12 @@ module Aws::STS
     # @example Example: To decode information about an authorization status of a request
     #
     #   resp = client.decode_authorization_message({
-    #     encoded_message: "<encoded-message>", 
+    #     encoded_message: "<encoded-message>",
     #   })
     #
     #   resp.to_h outputs the following:
     #   {
-    #     decoded_message: "{\"allowed\": \"false\",\"explicitDeny\": \"false\",\"matchedStatements\": \"\",\"failures\": \"\",\"context\": {\"principal\": {\"id\": \"AIDACKCEVSQ6C2EXAMPLE\",\"name\": \"Bob\",\"arn\": \"arn:aws:iam::123456789012:user/Bob\"},\"action\": \"ec2:StopInstances\",\"resource\": \"arn:aws:ec2:us-east-1:123456789012:instance/i-dd01c9bd\",\"conditions\": [{\"item\": {\"key\": \"ec2:Tenancy\",\"values\": [\"default\"]},{\"item\": {\"key\": \"ec2:ResourceTag/elasticbeanstalk:environment-name\",\"values\": [\"Default-Environment\"]}},(Additional items ...)]}}", 
+    #     decoded_message: "{\"allowed\": \"false\",\"explicitDeny\": \"false\",\"matchedStatements\": \"\",\"failures\": \"\",\"context\": {\"principal\": {\"id\": \"AIDACKCEVSQ6C2EXAMPLE\",\"name\": \"Bob\",\"arn\": \"arn:aws:iam::123456789012:user/Bob\"},\"action\": \"ec2:StopInstances\",\"resource\": \"arn:aws:ec2:us-east-1:123456789012:instance/i-dd01c9bd\",\"conditions\": [{\"item\": {\"key\": \"ec2:Tenancy\",\"values\": [\"default\"]},{\"item\": {\"key\": \"ec2:ResourceTag/elasticbeanstalk:environment-name\",\"values\": [\"Default-Environment\"]}},(Additional items ...)]}}",
     #   }
     #
     # @example Request syntax with placeholder values
@@ -1688,9 +1688,9 @@ module Aws::STS
     #
     #   resp.to_h outputs the following:
     #   {
-    #     account: "123456789012", 
-    #     arn: "arn:aws:iam::123456789012:user/Alice", 
-    #     user_id: "AKIAI44QH8DHBEXAMPLE", 
+    #     account: "123456789012",
+    #     arn: "arn:aws:iam::123456789012:user/Alice",
+    #     user_id: "AKIAI44QH8DHBEXAMPLE",
     #   }
     #
     # @example Example: To get details about a calling user federated with AssumeRole
@@ -1703,9 +1703,9 @@ module Aws::STS
     #
     #   resp.to_h outputs the following:
     #   {
-    #     account: "123456789012", 
-    #     arn: "arn:aws:sts::123456789012:assumed-role/my-role-name/my-role-session-name", 
-    #     user_id: "AKIAI44QH8DHBEXAMPLE:my-role-session-name", 
+    #     account: "123456789012",
+    #     arn: "arn:aws:sts::123456789012:assumed-role/my-role-name/my-role-session-name",
+    #     user_id: "AKIAI44QH8DHBEXAMPLE:my-role-session-name",
     #   }
     #
     # @example Example: To get details about a calling user federated with GetFederationToken
@@ -1718,9 +1718,9 @@ module Aws::STS
     #
     #   resp.to_h outputs the following:
     #   {
-    #     account: "123456789012", 
-    #     arn: "arn:aws:sts::123456789012:federated-user/my-federated-user-name", 
-    #     user_id: "123456789012:my-federated-user-name", 
+    #     account: "123456789012",
+    #     arn: "arn:aws:sts::123456789012:federated-user/my-federated-user-name",
+    #     user_id: "123456789012:my-federated-user-name",
     #   }
     #
     # @example Response structure
@@ -2074,34 +2074,34 @@ module Aws::STS
     # @example Example: To get temporary credentials for a role by using GetFederationToken
     #
     #   resp = client.get_federation_token({
-    #     duration_seconds: 3600, 
-    #     name: "testFedUserSession", 
-    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}", 
+    #     duration_seconds: 3600,
+    #     name: "testFedUserSession",
+    #     policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"Stmt1\",\"Effect\":\"Allow\",\"Action\":\"s3:ListAllMyBuckets\",\"Resource\":\"*\"}]}",
     #     tags: [
     #       {
-    #         key: "Project", 
-    #         value: "Pegasus", 
-    #       }, 
+    #         key: "Project",
+    #         value: "Pegasus",
+    #       },
     #       {
-    #         key: "Cost-Center", 
-    #         value: "98765", 
-    #       }, 
-    #     ], 
+    #         key: "Cost-Center",
+    #         value: "98765",
+    #       },
+    #     ],
     #   })
     #
     #   resp.to_h outputs the following:
     #   {
     #     credentials: {
-    #       access_key_id: "AKIAIOSFODNN7EXAMPLE", 
-    #       expiration: Time.parse("2011-07-15T23:28:33.359Z"), 
-    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY", 
-    #       session_token: "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==", 
-    #     }, 
+    #       access_key_id: "AKIAIOSFODNN7EXAMPLE",
+    #       expiration: Time.parse("2011-07-15T23:28:33.359Z"),
+    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+    #       session_token: "AQoDYXdzEPT//////////wEXAMPLEtc764bNrC9SAPBSM22wDOk4x4HIZ8j4FZTwdQWLWsKWHGBuFqwAeMicRXmxfpSPfIeoIYRqTflfKD8YUuwthAx7mSEI/qkPpKPi/kMcGdQrmGdeehM4IC1NtBmUpp2wUE8phUZampKsburEDy0KPkyQDYwT7WZ0wq5VSXDvp75YU9HFvlRd8Tx6q6fE8YQcHNVXAkiY9q6d+xo0rKwT38xVqr7ZD0u0iPPkUL64lIZbqBAz+scqKmlzm8FDrypNC9Yjc8fPOLn9FX9KSYvKTr4rvx3iSIlTJabIQwj2ICCR/oLxBA==",
+    #     },
     #     federated_user: {
-    #       arn: "arn:aws:sts::123456789012:federated-user/Bob", 
-    #       federated_user_id: "123456789012:Bob", 
-    #     }, 
-    #     packed_policy_size: 8, 
+    #       arn: "arn:aws:sts::123456789012:federated-user/Bob",
+    #       federated_user_id: "123456789012:Bob",
+    #     },
+    #     packed_policy_size: 8,
     #   }
     #
     # @example Request syntax with placeholder values
@@ -2251,19 +2251,19 @@ module Aws::STS
     # @example Example: To get temporary credentials for an IAM user or an AWS account
     #
     #   resp = client.get_session_token({
-    #     duration_seconds: 3600, 
-    #     serial_number: "YourMFASerialNumber", 
-    #     token_code: "123456", 
+    #     duration_seconds: 3600,
+    #     serial_number: "YourMFASerialNumber",
+    #     token_code: "123456",
     #   })
     #
     #   resp.to_h outputs the following:
     #   {
     #     credentials: {
-    #       access_key_id: "AKIAIOSFODNN7EXAMPLE", 
-    #       expiration: Time.parse("2011-07-11T19:55:29.611Z"), 
-    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY", 
-    #       session_token: "AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT+FvwqnKwRcOIfrRh3c/LTo6UDdyJwOOvEVPvLXCrrrUtdnniCEXAMPLE/IvU1dYUg2RVAJBanLiHb4IgRmpRV3zrkuWJOgQs8IZZaIv2BXIa2R4OlgkBN9bkUDNCJiBeb/AXlzBBko7b15fjrBs2+cTQtpZ3CYWFXG8C5zqx37wnOE49mRl/+OtkIKGO7fAE", 
-    #     }, 
+    #       access_key_id: "AKIAIOSFODNN7EXAMPLE",
+    #       expiration: Time.parse("2011-07-11T19:55:29.611Z"),
+    #       secret_access_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY",
+    #       session_token: "AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT+FvwqnKwRcOIfrRh3c/LTo6UDdyJwOOvEVPvLXCrrrUtdnniCEXAMPLE/IvU1dYUg2RVAJBanLiHb4IgRmpRV3zrkuWJOgQs8IZZaIv2BXIa2R4OlgkBN9bkUDNCJiBeb/AXlzBBko7b15fjrBs2+cTQtpZ3CYWFXG8C5zqx37wnOE49mRl/+OtkIKGO7fAE",
+    #     },
     #   }
     #
     # @example Request syntax with placeholder values

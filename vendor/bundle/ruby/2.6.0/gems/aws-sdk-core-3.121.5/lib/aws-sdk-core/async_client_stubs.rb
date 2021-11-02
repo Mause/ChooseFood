@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Aws
-  module AsyncClientStubs 
+  module AsyncClientStubs
 
     include Aws::ClientStubs
 
@@ -28,7 +28,7 @@ module Aws
         if input_stream = context[:input_event_stream_handler]
           stub_stream = StubStream.new
           stub_stream.send_events = send_events
-          input_stream.event_emitter.stream = stub_stream 
+          input_stream.event_emitter.stream = stub_stream
           input_stream.event_emitter.validate_event = context.config.validate_params
         end
         requests << {

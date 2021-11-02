@@ -8,7 +8,7 @@ module Representable
     end
 
     def self.build(value)
-      return ->(*) { value } unless callable?(value) # Wrap static `value` into a proc. 
+      return ->(*) { value } unless callable?(value) # Wrap static `value` into a proc.
       super
     end
   end

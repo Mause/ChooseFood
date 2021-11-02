@@ -420,7 +420,7 @@ module Google
           if client_options.transparent_gzip_decompression
             client.transparent_gzip_decompression = client_options.transparent_gzip_decompression
           end
-          
+
           client.proxy = client_options.proxy_url if client_options.proxy_url
 
           if client_options.open_timeout_sec

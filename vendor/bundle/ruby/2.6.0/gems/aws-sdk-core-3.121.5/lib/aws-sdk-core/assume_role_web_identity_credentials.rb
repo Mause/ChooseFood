@@ -17,7 +17,7 @@ module Aws
   #       ...
   #     )
   #     For full list of parameters accepted
-  #     @see Aws::STS::Client#assume_role_with_web_identity 
+  #     @see Aws::STS::Client#assume_role_with_web_identity
   #
   #
   # If you omit `:client` option, a new {STS::Client} object will be

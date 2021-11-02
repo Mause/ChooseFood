@@ -11,4 +11,3 @@ Autotest.add_hook(:initialize) {|at|
   }
   nil
 }
-

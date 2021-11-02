@@ -28,4 +28,3 @@ Then(/^the performance should be way faster than running cat$/) do
   puts "XCPretty run time: #{@xcpretty_run_time}"
   @xcpretty_run_time.should < 2
 end
-

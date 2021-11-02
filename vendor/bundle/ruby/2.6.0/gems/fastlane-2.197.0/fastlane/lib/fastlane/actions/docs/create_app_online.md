@@ -302,7 +302,7 @@ lane :release do
     app_version: '1.0',
     sku: '123',
     team_name: 'SunApps GmbH', # only necessary when in multiple teams
-    
+
     # Optional
     # App services can be enabled during app creation
     enable_services: {

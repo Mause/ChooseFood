@@ -52,4 +52,3 @@ Tasks on this page:
   - {Task: Iterate Over Elements Having Specified Text}[#label-Task-3A+Iterate+Over+Elements+Having+Specified+Text]
 - {Context}[#label-Context]
 - {Other Getters}[#label-Other+Getters]
-

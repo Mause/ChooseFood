@@ -13,4 +13,3 @@ end
 Then(/^the custom failure counter should show (\d+) tests?$/) do |fail_count|
   custom_report.should include("Much 1 FAIL.")
 end
-

@@ -9,4 +9,3 @@ script:
   - rake spec
   - rake cucumber
   - rake lint
-

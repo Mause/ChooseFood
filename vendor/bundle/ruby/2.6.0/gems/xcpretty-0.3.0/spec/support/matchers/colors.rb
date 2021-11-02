@@ -18,4 +18,3 @@ RSpec::Matchers.define :be_colored do |expected|
     "expected that #{strip(actual)} would not be colored #{expected}, but was #{effects_string(actual)}"
   end
 end
-

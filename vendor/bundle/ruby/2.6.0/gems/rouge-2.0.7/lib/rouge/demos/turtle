@@ -8,7 +8,7 @@ PREFIX  test:         <http://example.org>
 PrEfIx  insensitive:  <http://insensitive.example.org>
 
 GRAPH <https://trig.testing.graph> {
-    <https://example.org/resource/dataset> a dcat:Dataset ; 
+    <https://example.org/resource/dataset> a dcat:Dataset ;
 
 #-----Mandatory-----#
 

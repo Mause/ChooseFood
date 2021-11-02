@@ -35,4 +35,3 @@ describe 'For Linux, (Ubuntu, Ubuntu 10.04 LTS) ' do
     it { should_not be_windows }
   end
 end
-

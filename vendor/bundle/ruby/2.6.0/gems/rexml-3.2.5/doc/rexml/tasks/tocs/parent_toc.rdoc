@@ -22,4 +22,3 @@ Tasks on this page:
   - {Task: Iterate Over Child Indexes}[#label-Task-3A+Iterate+Over+Child+Indexes]
 - {Clones}[#label-Clones]
   - {Task: Clone Deeply}[#label-Task-3A+Clone+Deeply]
-

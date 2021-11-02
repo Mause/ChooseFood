@@ -36,4 +36,3 @@ Then(/^I should have a test report at "(.*?)"$/) do |path|
   doc = REXML::Document.new(File.open(path, 'r').read)
   doc.root.should_not be_nil
 end
-

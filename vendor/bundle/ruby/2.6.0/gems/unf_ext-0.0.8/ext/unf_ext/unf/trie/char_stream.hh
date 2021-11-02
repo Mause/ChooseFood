@@ -12,7 +12,7 @@ namespace UNF {
       CharStream(const char* str) : cur_(str) {}
       unsigned char read() { return eos() ? '\0' : *cur_++; }
       unsigned char prev() const { return cur_[-1]; }
-      unsigned char peek() const { return *cur_; } 
+      unsigned char peek() const { return *cur_; }
       const char*   cur() const { return cur_; }
       bool          eos() const { return *cur_ == '\0'; }
       void          setCur(const char* new_cur) { cur_ = new_cur; }
@@ -26,7 +26,7 @@ namespace UNF {
       RangeCharStream(const char* beg, const char* end) : cur_(beg), end_(end) {}
       unsigned char read() { return eos() ? '\0' : *cur_++; }
       unsigned char prev() const { return cur_[-1]; }
-      unsigned char peek() const { return *cur_; } 
+      unsigned char peek() const { return *cur_; }
       const char*   cur() const { return cur_; }
       const char*   end() const { return end_; }
       bool          eos() const { return cur_ == end_; }
@@ -38,7 +38,7 @@ namespace UNF {
 
     class CompoundCharStream {
     public:
-      CompoundCharStream(const char* first, const char* second) 
+      CompoundCharStream(const char* first, const char* second)
 	: beg1(first), beg2(second), cur1(beg1), cur2(beg2) {}
 
       unsigned char read() { return !eos1() ? read1() : read2(); }
@@ -50,7 +50,7 @@ namespace UNF {
       bool within_first() const { return !eos1(); }
 
       unsigned offset() const { return cur1-beg1 + cur2-beg2; }
-      void setCur(const char* p) { 
+      void setCur(const char* p) {
 	if(beg1 <= p && p <= cur1) {
 	  cur1=p;
 	  cur2=beg2;
@@ -64,7 +64,7 @@ namespace UNF {
       unsigned char read2() { return eos2() ? '\0' : *cur2++; }
       bool eos1() const { return *cur1=='\0'; }
       bool eos2() const { return *cur2=='\0'; }
-      
+
     protected:
       const char* beg1;
       const char* beg2;
@@ -74,13 +74,13 @@ namespace UNF {
 
     class CharStreamForComposition : public CompoundCharStream {
     public:
-      CharStreamForComposition (const char* first, const char* second, 
-				const std::vector<unsigned char>& canonical_classes, 
+      CharStreamForComposition (const char* first, const char* second,
+				const std::vector<unsigned char>& canonical_classes,
 				std::string& buf)
-	: CompoundCharStream(first, second), classes(canonical_classes), skipped(buf) 
+	: CompoundCharStream(first, second), classes(canonical_classes), skipped(buf)
       {}
-      
-      void init_skipinfo() { 
+
+      void init_skipinfo() {
 	skipped.clear();
 	skipped_tail = 0;
       }
@@ -107,17 +107,17 @@ namespace UNF {
 	s.append(skipped.begin(), skipped.begin()+skipped_tail);
       }
 
-      unsigned char get_canonical_class() const { 
+      unsigned char get_canonical_class() const {
 	return offset() < classes.size() ? classes[offset()] : 0;
       }
-      
+
       bool next_combining_char(unsigned char prev_class, const char* ppp) {
 	while(Util::is_utf8_char_start_byte(peek()) == false)
 	  read();
-	
+
 	unsigned char mid_class = get_prev_canonical_class();
 	unsigned char cur_class = get_canonical_class();
-	
+
 	if(prev_class==0 && mid_class==0 && cur_class!=0)
 	  return false;
 
@@ -134,7 +134,7 @@ namespace UNF {
       }
 
     private:
-      unsigned char get_prev_canonical_class() const { 
+      unsigned char get_prev_canonical_class() const {
 	return offset()-1 < classes.size() ? classes[offset()-1] : 0;
       }
 

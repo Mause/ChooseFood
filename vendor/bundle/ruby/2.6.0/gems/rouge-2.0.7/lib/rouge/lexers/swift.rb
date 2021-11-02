@@ -94,13 +94,13 @@ module Rouge
             groups Keyword::Declaration, Error, Keyword::Declaration
           end
         end
-        
+
         rule /#available\([^)]+\)/, Keyword::Declaration
-        
+
         rule /(#(?:selector|keyPath)\()([^)]+?(?:[(].*?[)])?)(\))/ do
           groups Keyword::Declaration, Name::Function, Keyword::Declaration
         end
-        
+
         rule /#(line|file|column|function|dsohandle)/, Keyword::Declaration
 
         rule /(let|var)\b(\s*)(#{id})/ do
@@ -114,7 +114,7 @@ module Rouge
             token Name::Function
           end
         end
-        
+
         rule /as[?!]?(?=\s)/, Keyword
         rule /try[!]?(?=\s)/, Keyword
 

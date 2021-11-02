@@ -11,4 +11,3 @@ describe Babosa::Transliterator::Romanian do
   end
 
 end
-

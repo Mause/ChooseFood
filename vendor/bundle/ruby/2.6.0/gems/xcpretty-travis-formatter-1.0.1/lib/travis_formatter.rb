@@ -41,7 +41,7 @@ class TravisFormatter < XCPretty::Simple
     if track && @currentGroup != "#{group}.#{i}" && @seenGroups.has_key?(group)
       i = @seenGroups[group] + 1
     end
-    
+
     @seenGroups[group] = i
     "#{group}.#{i}"
   end

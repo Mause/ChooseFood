@@ -1,4 +1,4 @@
-quadMultiply: i1 and: i2 
+quadMultiply: i1 and: i2
     "This method multiplies the given numbers by each other
     and the result by 4."
     | mul |

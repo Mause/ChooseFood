@@ -17,7 +17,7 @@ module JMESPath
         false
       end
     end
-    
+
     require  'jmespath/nodes/subexpression'
     require  'jmespath/nodes/and'
     require  'jmespath/nodes/comparator'

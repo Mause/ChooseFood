@@ -24,4 +24,3 @@ When(/^I pipe to xcpretty with a custom reporter$/) do
   reporter_path = File.expand_path('../../../spec/fixtures/custom_reporter.rb', __FILE__)
   run_xcpretty("-r #{reporter_path}")
 end
-

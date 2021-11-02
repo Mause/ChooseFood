@@ -19,7 +19,7 @@ module Aws
         required: false,
         doc_type: 'Aws::CredentialProvider',
         docstring: <<-DOCS
-AWS Credentials options is only required when your API uses 
+AWS Credentials options is only required when your API uses
 [AWS Signature Version 4](http://docs.aws.amazon.com/general/latest/gr/signature-version-4.html),
 more AWS Credentials Configuration Options are available [here](https://github.com/aws/aws-sdk-ruby#configuration).
         DOCS

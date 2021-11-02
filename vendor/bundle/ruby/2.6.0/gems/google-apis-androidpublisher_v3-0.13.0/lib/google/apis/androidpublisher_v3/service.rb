@@ -48,7 +48,7 @@ module Google
                 client_version: Google::Apis::AndroidpublisherV3::GEM_VERSION)
           @batch_path = 'batch'
         end
-        
+
         # Commits an app edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -86,7 +86,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes an app edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -117,7 +117,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets an app edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -150,7 +150,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new edit for an app.
         # @param [String] package_name
         #   Package name of the app.
@@ -183,7 +183,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Validates an app edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -216,7 +216,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new APK without uploading the APK itself to Google Play, instead
         # hosting the APK at a specified URL. This function is only available to
         # organizations using Managed Play whose application is configured to restrict
@@ -255,7 +255,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all current APKs of the app and edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -288,7 +288,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads an APK and adds to the current edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -331,7 +331,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all current Android App Bundles of the app and edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -364,7 +364,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads a new Android App Bundle to this edit. If you are using the Google API
         # client libraries, please increase the timeout of the http request before
         # calling this endpoint (a timeout of 2 minutes is recommended). See [Timeouts
@@ -416,7 +416,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads a new deobfuscation file and attaches to the specified APK.
         # @param [String] package_name
         #   Unique identifier for the Android app.
@@ -465,7 +465,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets details of an app.
         # @param [String] package_name
         #   Package name of the app.
@@ -498,7 +498,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches details of an app.
         # @param [String] package_name
         #   Package name of the app.
@@ -534,7 +534,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates details of an app.
         # @param [String] package_name
         #   Package name of the app.
@@ -570,7 +570,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Fetches the expansion file configuration for the specified APK.
         # @param [String] package_name
         #   Package name of the app.
@@ -610,7 +610,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches the APK's expansion file configuration to reference another APK's
         # expansion file. To add a new expansion file use the Upload method.
         # @param [String] package_name
@@ -654,7 +654,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates the APK's expansion file configuration to reference another APK's
         # expansion file. To add a new expansion file use the Upload method.
         # @param [String] package_name
@@ -698,7 +698,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads a new expansion file and attaches to the specified APK.
         # @param [String] package_name
         #   Package name of the app.
@@ -748,7 +748,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes the image (specified by id) from the edit.
         # @param [String] package_name
         #   Package name of the app.
@@ -789,7 +789,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes all images for the specified language and image type. Returns an empty
         # response if no images are found.
         # @param [String] package_name
@@ -831,7 +831,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all images. The response may be empty.
         # @param [String] package_name
         #   Package name of the app.
@@ -872,7 +872,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads an image of the specified language and image type, and adds to the
         # edit.
         # @param [String] package_name
@@ -924,7 +924,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes a localized store listing.
         # @param [String] package_name
         #   Package name of the app.
@@ -959,7 +959,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes all store listings.
         # @param [String] package_name
         #   Package name of the app.
@@ -990,7 +990,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets a localized store listing.
         # @param [String] package_name
         #   Package name of the app.
@@ -1027,7 +1027,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all localized store listings.
         # @param [String] package_name
         #   Package name of the app.
@@ -1060,7 +1060,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches a localized store listing.
         # @param [String] package_name
         #   Package name of the app.
@@ -1100,7 +1100,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates or updates a localized store listing.
         # @param [String] package_name
         #   Package name of the app.
@@ -1140,7 +1140,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets testers.
         # @param [String] package_name
         #   Package name of the app.
@@ -1176,7 +1176,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches testers.
         # @param [String] package_name
         #   Package name of the app.
@@ -1215,7 +1215,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates testers.
         # @param [String] package_name
         #   Package name of the app.
@@ -1254,7 +1254,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets a track.
         # @param [String] package_name
         #   Package name of the app.
@@ -1290,7 +1290,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all tracks.
         # @param [String] package_name
         #   Package name of the app.
@@ -1323,7 +1323,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches a track.
         # @param [String] package_name
         #   Package name of the app.
@@ -1362,7 +1362,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates a track.
         # @param [String] package_name
         #   Package name of the app.
@@ -1401,7 +1401,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Grant access for a user to the given package.
         # @param [String] parent
         #   Required. The user which needs permission. Format: developers/`developer`/
@@ -1435,7 +1435,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Removes all access for the user to the given package or developer account.
         # @param [String] name
         #   Required. The name of the grant to delete. Format: developers/`developer`/
@@ -1464,7 +1464,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates access for the user to the given package.
         # @param [String] name
         #   Required. Resource name for this grant, following the pattern "developers/`
@@ -1501,7 +1501,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes an in-app product (i.e. a managed product or a subscriptions).
         # @param [String] package_name
         #   Package name of the app.
@@ -1532,7 +1532,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets an in-app product, which can be a managed product or a subscription.
         # @param [String] package_name
         #   Package name of the app.
@@ -1565,7 +1565,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates an in-app product (i.e. a managed product or a subscriptions).
         # @param [String] package_name
         #   Package name of the app.
@@ -1603,7 +1603,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all in-app products - both managed products and subscriptions. If an app
         # has a large number of in-app products, the response may be paginated. In this
         # case the response field `tokenPagination.nextPageToken` will be set and the
@@ -1646,7 +1646,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches an in-app product (i.e. a managed product or a subscriptions).
         # @param [String] package_name
         #   Package name of the app.
@@ -1687,7 +1687,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates an in-app product (i.e. a managed product or a subscriptions).
         # @param [String] package_name
         #   Package name of the app.
@@ -1732,7 +1732,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads an APK to internal app sharing. If you are using the Google API client
         # libraries, please increase the timeout of the http request before calling this
         # endpoint (a timeout of 2 minutes is recommended). See [Timeouts and Errors](
@@ -1776,7 +1776,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Uploads an app bundle to internal app sharing. If you are using the Google API
         # client libraries, please increase the timeout of the http request before
         # calling this endpoint (a timeout of 2 minutes is recommended). See [Timeouts
@@ -1820,7 +1820,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Calculates the region prices, using today's exchange rate and country-specific
         # pricing patterns, based on the price in the request for a set of regions.
         # @param [String] package_name
@@ -1854,7 +1854,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Refunds a user's subscription or in-app purchase order. Orders older than 1
         # year cannot be refunded.
         # @param [String] package_name
@@ -1894,7 +1894,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Acknowledges a purchase of an inapp item.
         # @param [String] package_name
         #   The package name of the application the inapp product was sold in (for example,
@@ -1932,7 +1932,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Checks the purchase and consumption status of an inapp item.
         # @param [String] package_name
         #   The package name of the application the inapp product was sold in (for example,
@@ -1969,7 +1969,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Acknowledges a subscription purchase.
         # @param [String] package_name
         #   The package name of the application for which this subscription was purchased (
@@ -2007,7 +2007,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Cancels a user's subscription purchase. The subscription remains valid until
         # its expiration time.
         # @param [String] package_name
@@ -2043,7 +2043,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Defers a user's subscription purchase until a specified future expiration time.
         # @param [String] package_name
         #   The package name of the application for which this subscription was purchased (
@@ -2083,7 +2083,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Checks whether a user's subscription purchase is valid and returns its expiry
         # time.
         # @param [String] package_name
@@ -2121,7 +2121,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Refunds a user's subscription purchase, but the subscription remains valid
         # until its expiration time and it will continue to recur.
         # @param [String] package_name
@@ -2157,7 +2157,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Refunds and immediately revokes a user's subscription purchase. Access to the
         # subscription will be terminated immediately and it will stop recurring.
         # @param [String] package_name
@@ -2193,7 +2193,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists the purchases that were canceled, refunded or charged-back.
         # @param [String] package_name
         #   The package name of the application for which voided purchases need to be
@@ -2263,7 +2263,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Gets a single review.
         # @param [String] package_name
         #   Package name of the app.
@@ -2299,7 +2299,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all reviews.
         # @param [String] package_name
         #   Package name of the app.
@@ -2341,7 +2341,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Replies to a single review, or updates an existing reply.
         # @param [String] package_name
         #   Package name of the app.
@@ -2377,7 +2377,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates an APK which is suitable for inclusion in a system image from an
         # already uploaded Android App Bundle.
         # @param [String] package_name
@@ -2414,7 +2414,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Downloads a previously created system APK which is suitable for inclusion in a
         # system image.
         # @param [String] package_name
@@ -2456,7 +2456,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns a previously created system APK variant.
         # @param [String] package_name
         #   Package name of the app.
@@ -2492,7 +2492,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns the list of previously created system APK variants.
         # @param [String] package_name
         #   Package name of the app.
@@ -2525,7 +2525,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Grant access for a user to the given developer account.
         # @param [String] parent
         #   Required. The developer account to add the user to. Format: developers/`
@@ -2559,7 +2559,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Removes all access for the user to the given developer account.
         # @param [String] name
         #   Required. The name of the user to delete. Format: developers/`developer`/users/
@@ -2588,7 +2588,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Lists all users with access to a developer account.
         # @param [String] parent
         #   Required. The developer account to fetch users from. Format: developers/`
@@ -2627,7 +2627,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates access for the user to the developer account.
         # @param [String] name
         #   Required. Resource name for this user, following the pattern "developers/`

@@ -48,7 +48,7 @@ fastlane action precheck
 ```
 
 <img src="/img/actions/precheck.gif" />
-    
+
 # Example
 
 Since you might want to manually trigger _precheck_ but don't want to specify all the parameters every time, you can store your defaults in a so called `Precheckfile`.
@@ -66,9 +66,9 @@ curse_words(level: :warn)
 unreachable_urls(level: :error)
 
 # pass in whatever words you want to check for
-custom_text(data: ["chrome", "webos"], 
+custom_text(data: ["chrome", "webos"],
            level: :warn)
-``` 
+```
 
 ### Use with [_fastlane_](https://fastlane.tools)
 

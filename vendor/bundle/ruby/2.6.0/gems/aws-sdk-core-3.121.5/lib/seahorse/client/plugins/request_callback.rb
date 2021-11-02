@@ -54,9 +54,9 @@ module Seahorse
            default: nil,
            doc_type: 'Proc',
            docstring: <<-DOCS)
-When a Proc object is provided, it will be used as callback when each chunk 
+When a Proc object is provided, it will be used as callback when each chunk
 of the request body is sent. It provides three arguments: the chunk,
-the number of bytes read from the body, and the total number of 
+the number of bytes read from the body, and the total number of
 bytes in the body.
           DOCS
 

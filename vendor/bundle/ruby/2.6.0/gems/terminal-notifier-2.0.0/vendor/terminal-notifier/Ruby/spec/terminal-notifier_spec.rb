@@ -15,7 +15,7 @@ describe "TerminalNotifier" do
     IO.expects(:popen).with(command).yields(StringIO.new('output'))
     TerminalNotifier.execute(false, :message => '[ZOMG] "OH YEAH"')
   end
- 
+
   it "correctly escapes arguments that start with a dash" do
     command = [TerminalNotifier::BIN_PATH, '-message', ' -kittens', '-title', ' -rule']
     command = Shellwords.join(command) if RUBY_VERSION < '1.9'

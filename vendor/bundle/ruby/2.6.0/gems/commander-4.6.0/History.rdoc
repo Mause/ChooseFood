@@ -250,7 +250,7 @@
 * Added implied small switches so they appear in help (-h, -v, etc)
 * Added #inspect back to Commander::Command::Options [#1]
 * Added inheritance of global options for commands [#7]
-* Added #require_valid_command 
+* Added #require_valid_command
 * Renamed #call_active_command to #run_active_command
 * Changed; using same option format as command options for globals [#18]
 * Changed; program :name is now optional, and is auto-defined when not specified [#21]
@@ -458,7 +458,7 @@
 === 1.0.1 / 2008-10-31
 
 * Added shebang line to commander init
-* Added require 'rubygems' 
+* Added require 'rubygems'
 
 === 1.0.0 / 2008-10-31
 

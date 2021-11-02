@@ -13,9 +13,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://trailblazer.to/"
   spec.licenses      = ["MIT"]
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f| 
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r(^test/))
-  end 
+  end
   spec.test_files    = `git ls-files -z test`.split("\x0")
 
   spec.require_paths = ["lib"]

@@ -87,4 +87,3 @@ end
 
 printer.finish
 reporters.each(&:finish)
-

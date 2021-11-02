@@ -21,4 +21,3 @@ _fastlane_complete() {
 
   reply=( "${=completions}" )
 }
-

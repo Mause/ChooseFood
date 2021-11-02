@@ -50,7 +50,7 @@ Looking for related issues on CocoaPods/CocoaPods...
 and 10 more at:
 https://github.com/CocoaPods/CocoaPods/search?q=undefined+method+%60to_ary%27&type=Issues
 ```
-#### Presenting Your Report 
+#### Presenting Your Report
 
 The default user interface for the inspector, its public API should be
 considered the protocol for other classes wanting to provide a user interface.

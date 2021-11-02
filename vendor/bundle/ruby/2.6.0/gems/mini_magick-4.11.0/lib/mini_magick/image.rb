@@ -380,12 +380,12 @@ module MiniMagick
 
     ##
     # This is used to create image from pixels. This might be required if you
-    # create pixels for some image processing reasons and you want to form 
+    # create pixels for some image processing reasons and you want to form
     # image from those pixels.
     #
     # *DANGER*: This operation can be very expensive. Please try to use with
-    # caution. 
-    # 
+    # caution.
+    #
     # @example
     #   # It is given in readme.md file
     ##

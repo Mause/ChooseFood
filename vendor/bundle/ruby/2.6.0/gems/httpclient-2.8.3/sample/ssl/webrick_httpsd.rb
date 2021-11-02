@@ -15,7 +15,7 @@ cert = OpenSSL::X509::Certificate.new(data)
 
 s = WEBrick::HTTPServer.new(
   :BindAddress      => "localhost",
-  :Port             => $OPT_p.to_i, 
+  :Port             => $OPT_p.to_i,
   :Logger           => nil,
   :DocumentRoot     => $OPT_r || File::join(dir, "/htdocs"),
   :SSLEnable        => true,

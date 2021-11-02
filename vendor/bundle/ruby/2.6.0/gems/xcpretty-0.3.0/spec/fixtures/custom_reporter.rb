@@ -27,4 +27,3 @@ class DogeReporter < XCPretty::Reporter
 end
 
 DogeReporter
-

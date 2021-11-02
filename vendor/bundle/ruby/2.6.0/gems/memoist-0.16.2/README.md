@@ -79,7 +79,7 @@ class Person
 end
 ```
 
-When a sub-class overrides one of its parent's methods and you need to memoize both. 
+When a sub-class overrides one of its parent's methods and you need to memoize both.
 Then you can use the `:identifier` parameter in order to help _Memoist_ distinguish between the two.
 
 ```ruby

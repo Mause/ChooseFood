@@ -60,4 +60,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rspec>.freeze, [">= 2.0"])
   end
 end
-

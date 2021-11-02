@@ -13,4 +13,3 @@ Tasks on this page:
   - {Task: Represent a String}[#label-Task-3A+Represent+a+String]
 - {Parent?}[#label-Parent-3F]
   - {Task: Determine Whether the Node is a Parent}[#label-Task-3A+Determine+Whether+the+Node+is+a+Parent]
-

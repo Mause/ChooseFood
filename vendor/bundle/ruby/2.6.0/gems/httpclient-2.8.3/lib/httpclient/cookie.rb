@@ -112,7 +112,7 @@ class HTTPClient
     def cookie_to_record(cookie)
       [
         cookie.origin,
-        cookie.name, 
+        cookie.name,
         cookie.value,
         cookie.expires.to_i,
         cookie.dot_domain,

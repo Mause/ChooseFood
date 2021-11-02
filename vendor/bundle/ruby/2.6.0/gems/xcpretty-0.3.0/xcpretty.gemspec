@@ -34,4 +34,3 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "2.99.0"
   spec.add_development_dependency "cucumber", "~> 1.0"
 end
-

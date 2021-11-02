@@ -11,5 +11,5 @@ To build a new version of the gem:
 To push the new version to Rubygems:
 
   $ rake release
-  
+
 (http://rubygems.org/gems/commander)

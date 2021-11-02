@@ -383,4 +383,3 @@ end
 Then(/^I should see the no profile matching message$/) do
   run_output.should include("No profile matching 'TargetName' found:  Xcode couldn't find a profile matching 'TargetName'. Install the profile (by dragging and dropping it onto Xcode's dock item) or select a different one in the General tab of the target editor.")
 end
-

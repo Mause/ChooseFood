@@ -50,4 +50,3 @@ describe Faraday::CookieJar do
     expect(response.body).to eq('foo=bar;language=english')
   end
 end
-

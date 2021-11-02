@@ -24,4 +24,3 @@ missing credentials, provide credentials with one of the following options:
     end
   end
 end
-

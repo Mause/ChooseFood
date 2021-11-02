@@ -12,11 +12,11 @@ module Excon
               host = bind_uri.host.gsub(/[\[\]]/, '')
               bind_str = "#{host}:#{bind_uri.port}"
             end
-            args = [ 
-              'unicorn', 
-              '--no-default-middleware', 
+            args = [
+              'unicorn',
+              '--no-default-middleware',
               '-l',
-              bind_str,  
+              bind_str,
               app_str
             ]
             open_process(*args)

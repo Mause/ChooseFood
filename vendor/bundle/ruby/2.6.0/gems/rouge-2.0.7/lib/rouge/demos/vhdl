@@ -13,11 +13,11 @@ begin
 
 	data_proc : process (clk_in)
 	begin
-	
+
 		if (rising_edge(clk_in)) then
 			data <= not data;
 		end if;
-	
-	end process; 
+
+	end process;
 
 end architecture RTL;

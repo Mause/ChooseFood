@@ -58,7 +58,7 @@ module Rouge
 
         # Find Attributes
         rule /'#{id}/i, Name::Attribute
-        
+
         # Punctuations
         rule /[(),:;]/, Punctuation
 

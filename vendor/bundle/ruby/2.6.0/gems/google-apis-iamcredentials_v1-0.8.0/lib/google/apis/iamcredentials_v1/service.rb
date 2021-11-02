@@ -49,7 +49,7 @@ module Google
                 client_version: Google::Apis::IamcredentialsV1::GEM_VERSION)
           @batch_path = 'batch'
         end
-        
+
         # Generates an OAuth 2.0 access token for a service account.
         # @param [String] name
         #   Required. The resource name of the service account for which the credentials
@@ -85,7 +85,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Generates an OpenID Connect ID token for a service account.
         # @param [String] name
         #   Required. The resource name of the service account for which the credentials
@@ -121,7 +121,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Signs a blob using a service account's system-managed private key.
         # @param [String] name
         #   Required. The resource name of the service account for which the credentials
@@ -157,7 +157,7 @@ module Google
           command.query['quotaUser'] = quota_user unless quota_user.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Signs a JWT using a service account's system-managed private key.
         # @param [String] name
         #   Required. The resource name of the service account for which the credentials

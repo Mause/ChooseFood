@@ -66,7 +66,7 @@ class CompositeReadIOTest < Test::Unit::TestCase
     @io.read(32)
     assert_equal nil, @io.read(32)
   end
-  
+
   def test_second_full_read_after_rewinding
     @io.read
     @io.rewind

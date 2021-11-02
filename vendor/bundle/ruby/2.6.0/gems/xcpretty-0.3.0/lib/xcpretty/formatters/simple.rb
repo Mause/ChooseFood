@@ -197,4 +197,3 @@ module XCPretty
 
   end
 end
-

@@ -1,9 +1,9 @@
 doctype html
 html
   body
-    h1 Markup examples   
+    h1 Markup examples
     #content
-      p 
+      p
       | Slim can have #{ruby_code} interpolated!
       /[if IE]
         javascript:

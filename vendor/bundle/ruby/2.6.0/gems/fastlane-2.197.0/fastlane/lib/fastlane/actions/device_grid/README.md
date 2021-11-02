@@ -78,7 +78,7 @@ Make sure to fill in your actual workspace and scheme, or use the `project` para
 
 ### Try it
 
-Push everything to GitHub in its own branch and create a PR to trigger your CI system. 
+Push everything to GitHub in its own branch and create a PR to trigger your CI system.
 
 ### Make use of deep linking
 
@@ -100,7 +100,7 @@ To do a runtime check if if the app is running on `Appetize`, just use:
 
 ### Generate `appetize` stream, without the grid
 
-Add the following to your `Fastfile` to build and upload your app to `appetize`. 
+Add the following to your `Fastfile` to build and upload your app to `appetize`.
 
 ```ruby
 desc "Build your app and upload it to Appetize to stream it in your browser"
@@ -151,7 +151,7 @@ UI.message("Generated URL: #{url}")
 
 #### Disclaimer
 
-All product names, logos, and brands are property of their respective owners.  
+All product names, logos, and brands are property of their respective owners.
 The used device frames were provided by Facebook via the [Facebook Design Resources](https://facebook.github.io/design/devices.html). _fastlane_ is in no way affiliated with Facebook.
 
 > While Facebook has redrawn and shares these assets for the benefit of the design community, Facebook does not own any of the underlying product or user interface designs. By accessing these assets, you agree to obtain all necessary permissions from the underlying rights holders and/or adhere to any applicable brand use guidelines before using them. Facebook disclaims all express or implied warranties with respect to these assets, including non-infringement of intellectual property rights.

@@ -12,7 +12,7 @@ CFPropertyList.
 # Installation
 
 You could either use ruby gems and install it via
-    
+
 ```bash
 gem install CFPropertyList
 ```
@@ -33,7 +33,7 @@ gem 'CFPropertyList'
 # Usage
 
   ## create a arbitrary data structure of basic data types
-  
+
 ```ruby
 data = {
   'name' => 'John Doe',
@@ -47,14 +47,14 @@ data = {
 ```
 
 ## create CFPropertyList::List object
-  
+
 ```ruby
 plist = CFPropertyList::List.new
 ```
 
 ## call CFPropertyList.guess() to create corresponding CFType values
 
-```ruby  
+```ruby
 plist.value = CFPropertyList.guess(data)
 ```
 
@@ -64,7 +64,7 @@ plist.save("example.plist", CFPropertyList::List::FORMAT_BINARY)
 ```
 
 ## … later, read it again
-```ruby  
+```ruby
 plist = CFPropertyList::List.new(:file => "example.plist")
 data = CFPropertyList.native_types(plist.value)
 ```
@@ -76,4 +76,3 @@ data = CFPropertyList.native_types(plist.value)
 **Copyright:** Copyright (c) 2010
 
 **License:**   MIT License
-

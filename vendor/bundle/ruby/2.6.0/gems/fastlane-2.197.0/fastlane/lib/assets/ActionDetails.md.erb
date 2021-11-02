@@ -57,7 +57,7 @@ Key | Description | Default
 
 Actions can communicate with each other using a shared hash `lane_context`, that can be accessed in other actions, plugins or your lanes: `lane_context[SharedValues:XYZ]`. The `<%= @action.action_name %>` action generates the following Lane Variables:
 
-SharedValue | Description 
+SharedValue | Description
 ------------|-------------
 <%- (action.output || []).each do |array_item| -%>
   <%- next unless array_item.kind_of?(Array) -%>

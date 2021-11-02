@@ -6,7 +6,7 @@
 //
 
 // -----------------------------------------------------
-// IMPORTANT: When modifying this file, make sure to 
+// IMPORTANT: When modifying this file, make sure to
 //            increment the version number at the very
 //            bottom of the file to notify users about
 //            the new SnapshotHelperXcode8.swift

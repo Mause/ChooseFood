@@ -42,4 +42,3 @@ Then(/^entries with a command shouldn't have malformed "-include" directives$/) 
   entries = json_db.select { |entry| entry['command'].match(/-include\s+-/) }
   entries.length.should == 0
 end
-

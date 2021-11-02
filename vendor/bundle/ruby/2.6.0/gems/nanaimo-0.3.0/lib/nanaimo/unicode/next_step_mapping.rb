@@ -32,7 +32,7 @@ module Nanaimo
       0x9a => 0x00dc, # LATIN CAPITAL LETTER U WITH DIAERESIS
       0x9b => 0x00dd, # LATIN CAPITAL LETTER Y WITH ACUTE
       0x9c => 0x00de, # LATIN CAPITAL LETTER THORN
-      0x9d => 0x00b5, # MICRO SIGN 
+      0x9d => 0x00b5, # MICRO SIGN
       0x9e => 0x00d7, # MULTIPLICATION SIGN
       0x9f => 0x00f7, # DIVISION SIGN
       0xa0 => 0x00a9, # COPYRIGHT SIGN

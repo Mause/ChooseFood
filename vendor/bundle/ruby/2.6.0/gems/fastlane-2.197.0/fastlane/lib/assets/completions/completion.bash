@@ -23,4 +23,3 @@ _fastlane_complete() {
 
   COMPREPLY=( $(compgen -W "$completions" -- "$word") )
 }
-

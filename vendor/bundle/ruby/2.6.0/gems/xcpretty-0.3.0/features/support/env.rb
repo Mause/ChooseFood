@@ -120,4 +120,3 @@ After do
   FileUtils.rm_rf(XCPretty::Reporter::FILEPATH)
   File.delete(@screenshot_file_path) if @screenshot_file_path
 end
-

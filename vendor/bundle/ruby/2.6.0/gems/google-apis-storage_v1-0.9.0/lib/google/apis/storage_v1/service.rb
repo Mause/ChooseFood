@@ -52,7 +52,7 @@ module Google
                 client_version: Google::Apis::StorageV1::GEM_VERSION)
           @batch_path = 'batch/storage/v1'
         end
-        
+
         # Permanently deletes the ACL entry for the specified entity on the specified
         # bucket.
         # @param [String] bucket
@@ -95,7 +95,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns the ACL entry for the specified entity on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -139,7 +139,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new ACL entry on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -182,7 +182,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves ACL entries on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -222,7 +222,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches an ACL entry on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -269,7 +269,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates an ACL entry on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -316,7 +316,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Permanently deletes an empty bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -361,7 +361,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns metadata for the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -412,7 +412,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns an IAM policy for the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -457,7 +457,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new bucket.
         # @param [String] project
         #   A valid API project identifier.
@@ -510,7 +510,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves a list of buckets for a given project.
         # @param [String] project
         #   A valid API project identifier.
@@ -564,7 +564,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Locks retention policy on a bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -608,7 +608,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches a bucket. Changes to the bucket will be readable immediately after
         # writing, but configuration changes may take time to propagate.
         # @param [String] bucket
@@ -669,7 +669,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates an IAM policy for the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -712,7 +712,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Tests a set of permissions on the given bucket to see which, if any, are held
         # by the caller.
         # @param [String] bucket
@@ -756,7 +756,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates a bucket. Changes to the bucket will be readable immediately after
         # writing, but configuration changes may take time to propagate.
         # @param [String] bucket
@@ -817,7 +817,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Stop watching resources through this channel
         # @param [Google::Apis::StorageV1::Channel] channel_object
         # @param [String] fields
@@ -848,7 +848,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Permanently deletes the default object ACL entry for the specified entity on
         # the specified bucket.
         # @param [String] bucket
@@ -891,7 +891,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns the default object ACL entry for the specified entity on the specified
         # bucket.
         # @param [String] bucket
@@ -936,7 +936,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new default object ACL entry on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -979,7 +979,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves default object ACL entries on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1027,7 +1027,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches a default object ACL entry on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1074,7 +1074,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates a default object ACL entry on the specified bucket.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1121,7 +1121,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Permanently deletes a notification subscription.
         # @param [String] bucket
         #   The parent bucket of the notification.
@@ -1162,7 +1162,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # View a notification configuration.
         # @param [String] bucket
         #   The parent bucket of the notification.
@@ -1205,7 +1205,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a notification subscription for a given bucket.
         # @param [String] bucket
         #   The parent bucket of the notification.
@@ -1248,7 +1248,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves a list of notification subscriptions for a given bucket.
         # @param [String] bucket
         #   Name of a Google Cloud Storage bucket.
@@ -1288,7 +1288,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Permanently deletes the ACL entry for the specified entity on the specified
         # object.
         # @param [String] bucket
@@ -1339,7 +1339,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns the ACL entry for the specified entity on the specified object.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1391,7 +1391,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new ACL entry on the specified object.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1442,7 +1442,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves ACL entries on the specified object.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1490,7 +1490,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches an ACL entry on the specified object.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1545,7 +1545,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates an ACL entry on the specified object.
         # @param [String] bucket
         #   Name of a bucket.
@@ -1600,7 +1600,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Concatenates a list of existing objects into a new object in the same bucket.
         # @param [String] destination_bucket
         #   Name of the bucket containing the source objects. The destination object is
@@ -1665,7 +1665,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Copies a source object to a destination object. Optionally overrides metadata.
         # @param [String] source_bucket
         #   Name of the bucket in which to find the source object.
@@ -1772,7 +1772,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes an object and its metadata. Deletions are permanent if versioning is
         # not enabled for the bucket, or if the generation parameter is used.
         # @param [String] bucket
@@ -1838,7 +1838,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves an object or its metadata.
         # @param [String] bucket
         #   Name of the bucket in which the object resides.
@@ -1915,7 +1915,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Returns an IAM policy for the specified object.
         # @param [String] bucket
         #   Name of the bucket in which the object resides.
@@ -1963,7 +1963,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Stores a new object and metadata.
         # @param [String] bucket
         #   Name of the bucket in which to store the new object. Overrides the provided
@@ -2060,7 +2060,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves a list of objects matching the criteria.
         # @param [String] bucket
         #   Name of the bucket in which to look for objects.
@@ -2141,7 +2141,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Patches an object's metadata.
         # @param [String] bucket
         #   Name of the bucket in which the object resides.
@@ -2217,7 +2217,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Rewrites a source object to a destination object. Optionally overrides
         # metadata.
         # @param [String] source_bucket
@@ -2341,7 +2341,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates an IAM policy for the specified object.
         # @param [String] bucket
         #   Name of the bucket in which the object resides.
@@ -2392,7 +2392,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Tests a set of permissions on the given object to see which, if any, are held
         # by the caller.
         # @param [String] bucket
@@ -2444,7 +2444,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates an object's metadata.
         # @param [String] bucket
         #   Name of the bucket in which the object resides.
@@ -2520,7 +2520,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Watch for changes on all objects in a bucket.
         # @param [String] bucket
         #   Name of the bucket in which to look for objects.
@@ -2604,7 +2604,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Creates a new HMAC key for the specified service account.
         # @param [String] project_id
         #   Project ID owning the service account.
@@ -2643,7 +2643,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Deletes an HMAC key.
         # @param [String] project_id
         #   Project ID owning the requested key
@@ -2680,7 +2680,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves an HMAC key's metadata
         # @param [String] project_id
         #   Project ID owning the service account of the requested key.
@@ -2719,7 +2719,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Retrieves a list of HMAC keys matching the criteria.
         # @param [String] project_id
         #   Name of the project in which to look for HMAC keys.
@@ -2772,7 +2772,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Updates the state of an HMAC key. See the HMAC Key resource descriptor for
         # valid states.
         # @param [String] project_id
@@ -2815,7 +2815,7 @@ module Google
           command.query['userIp'] = user_ip unless user_ip.nil?
           execute_or_queue_command(command, &block)
         end
-        
+
         # Get the email address of this project's Google Cloud Storage service account.
         # @param [String] project_id
         #   Project ID

@@ -68,7 +68,7 @@ module Seahorse
           @block = block
         end
 
-        def call(*args) 
+        def call(*args)
           @block.call(*args)
         end
       end

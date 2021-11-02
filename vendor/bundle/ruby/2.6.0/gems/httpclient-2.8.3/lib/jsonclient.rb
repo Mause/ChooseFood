@@ -1,6 +1,6 @@
 require 'httpclient'
 require 'json'
- 
+
 # JSONClient auto-converts Hash <-> JSON in request and response.
 # * For POST or PUT request, convert Hash body to JSON String with 'application/json; charset=utf-8' header.
 # * For response, convert JSON String to Hash when content-type is '(application|text)/(x-)?json'
@@ -10,17 +10,17 @@ class JSONClient < HTTPClient
 
   attr_reader :content_type_json_request
   attr_reader :content_type_json_response_regex
- 
+
   def initialize(*args)
     super
     @content_type_json_request = CONTENT_TYPE_JSON
     @content_type_json_response_regex = CONTENT_TYPE_JSON_REGEX
   end
- 
+
   def post(uri, *args, &block)
     request(:post, uri, argument_to_hash_for_json(args), &block)
   end
- 
+
   def put(uri, *args, &block)
     request(:put, uri, argument_to_hash_for_json(args), &block)
   end
@@ -32,7 +32,7 @@ class JSONClient < HTTPClient
     end
     res
   end
- 
+
 private
 
   def argument_to_hash_for_json(args)

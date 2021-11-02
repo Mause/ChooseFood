@@ -4,7 +4,7 @@ module Aws
   module Plugins
 
     class EventStreamConfiguration < Seahorse::Client::Plugin
-      
+
       option(:event_stream_handler,
         default: nil,
         doc_type: 'Proc',
