@@ -31,3 +31,6 @@ jobs:
           COMMIT_MESSAGE: "chore: update"
           COMMIT_NAME: "GitHub Actions"
           COMMIT_EMAIL: "example@example.com"
+          PR_BRANCH_NAME: "chore-update-${PR_ID}"
+          PR_TITLE: "chore: update"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
