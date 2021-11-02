@@ -27,7 +27,7 @@ jobs:
       - uses: technote-space/create-pr-action@v2
         with:
           EXECUTE_COMMANDS: |
-            bundle exec fastlane supply init --track internal
+            bundle exec fastlane add_plugin semantic_release
           COMMIT_MESSAGE: "chore: update"
           COMMIT_NAME: "GitHub Actions"
           COMMIT_EMAIL: "example@example.com"
