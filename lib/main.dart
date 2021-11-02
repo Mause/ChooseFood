@@ -158,7 +158,7 @@ class MyHomePageState extends State<MyHomePage> {
       await Sentry.captureMessage(response.errorMessage);
       log.e(response.errorMessage);
     } else {
-      log.i("found places", response.results.length);
+      log.i("found places ${response.results.length}");
     }
 
     setState(() {
