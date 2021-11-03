@@ -193,6 +193,14 @@ jobs:
           name: screenshots
           path: screenshots/
 
+      - name: Upload failed tests
+        # if: ${{ failure() }}
+        uses: edunad/action-image@v1.0.1
+        with:
+            path: './screenshots/*'
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            title: 'Screenshots'
+
   note_changelog:
     runs-on: ubuntu-latest
 
