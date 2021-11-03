@@ -186,7 +186,7 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           avd-name: android
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554
+          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
 
   note_changelog:
     runs-on: ubuntu-latest
