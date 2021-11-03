@@ -195,7 +195,7 @@ jobs:
           path: screenshots/
 
       - name: Upload failed tests
-        if: always()
+        if: always() && github.ref != 'refs/heads/main'
         uses: edunad/actions-image@v1.0.1
         with:
             path: './screenshots/*'
