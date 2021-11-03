@@ -154,7 +154,7 @@ jobs:
           profile: Nexus 6
 
       - name: Cache Flutter dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
