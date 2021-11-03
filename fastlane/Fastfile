@@ -30,7 +30,7 @@ platform :android do
     # google_play_track_version_codes
     # google_play_track_release_names
     create_notes
-    add_git_tag(build_number: "1.0.0+#{options[:build_number]})
+    add_git_tag(build_number: "1.0.0+#{options[:build_number]}")
     push_git_tags
     upload_to_play_store(
       aab: "build/app/outputs/bundle/release/app-release.aab",
