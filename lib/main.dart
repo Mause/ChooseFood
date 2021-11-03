@@ -1,6 +1,7 @@
 import 'dart:async' show Future;
 import 'dart:collection';
 
+import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show AlertDialog, Card, ElevatedButton, Theme, ThemeData, showDialog;
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
               ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
+                FriendsSessions.routeName: (context) => const FriendsSessions()
               },
             ));
   }

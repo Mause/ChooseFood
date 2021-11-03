@@ -1,3 +1,4 @@
+import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,9 @@ class _BasePage extends State<BasePage> {
     switch (value) {
       case 0:
         Navigator.pushNamed(context, MyHomePage.routeName);
+        break;
+      case 1:
+        Navigator.pushNamed(context, FriendsSessions.routeName);
         break;
       case 3:
         Navigator.pushNamed(context, InfoPage.routeName);
@@ -83,9 +87,9 @@ class _BasePage extends State<BasePage> {
             NavigationDestination(
                 icon: Icon(CupertinoIcons.home), label: 'Home'),
             NavigationDestination(
-                icon: Icon(CupertinoIcons.person), label: 'Login'),
+                icon: Icon(CupertinoIcons.person), label: 'Friends sessions'),
             NavigationDestination(
-                icon: Icon(CupertinoIcons.placemark), label: 'Get Places'),
+                icon: Icon(CupertinoIcons.time), label: 'Past sessions'),
             NavigationDestination(
                 icon: Icon(CupertinoIcons.info), label: "Info"),
           ]),

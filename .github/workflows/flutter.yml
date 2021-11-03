@@ -189,9 +189,18 @@ jobs:
           script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
 
       - uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: screenshots
           path: screenshots/
+
+      - name: Upload failed tests
+        if: always()
+        uses: edunad/actions-image@v1.0.1
+        with:
+            path: './screenshots/*'
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            title: 'Screenshots'
 
   note_changelog:
     runs-on: ubuntu-latest
