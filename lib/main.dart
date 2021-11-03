@@ -47,9 +47,14 @@ import 'platform_colours.dart' show getThemeData;
 var log = Logger();
 
 Future<void> main() async {
-  await SentryFlutter.init((options) {
-    options.dsn = EnvironmentConfig.sentryDsn;
-  }, appRunner: () => runApp(const MyApp()));
+  if (EnvironmentConfig.sentryDsn == 'https://...') {
+    log.w("Running without sentry");
+    runApp(const MyApp());
+  } else {
+    await SentryFlutter.init((options) {
+      options.dsn = EnvironmentConfig.sentryDsn;
+    }, appRunner: () => runApp(const MyApp()));
+  }
 }
 
 Widget Function(BuildContext) makeErrorDialog(String error) {
