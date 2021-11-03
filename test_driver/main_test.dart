@@ -6,11 +6,13 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 // import 'package:flutter/material.dart' show ElevatedButton, ListView;
-import 'package:flutter_test/flutter_test.dart' show group, testWidgets;
+import 'package:logger/logger.dart' show Logger;
+import 'package:test/test.dart' show group, test;
 
-import 'package:choose_food/main.dart' show MyApp;
 import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
+
+var log = Logger();
 
 void main() {
   final IntegrationTestWidgetsFlutterBinding binding =
@@ -18,23 +20,19 @@ void main() {
           as IntegrationTestWidgetsFlutterBinding;
 
   group('ChooseFood', () {
-    testWidgets('Places load', (tester) async {
-      tester.printToConsole("pumping");
-      await tester.pumpWidget(const MyApp());
-      tester.printToConsole("pumped");
-
+    test('Screenshot', () async {
 //    await tester.tap(find.widgetWithText(ElevatedButton, 'Get places'));
 //    await tester.pump();
 
 //    expect(find.byType(ListView), findsOneWidget);
 
-      tester.printToConsole("converting");
+      log.i("converting");
       await binding.convertFlutterSurfaceToImage();
-      tester.printToConsole("converted");
+      log.i("converted");
 
-      tester.printToConsole("screenshot");
+      log.i("screenshot");
       await binding.callbackManager.takeScreenshot('screenshot');
-      tester.printToConsole("screenshot");
+      log.i("screenshot");
     });
   });
 }
