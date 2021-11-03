@@ -33,7 +33,9 @@ void main() {
     await binding.convertFlutterSurfaceToImage();
     tester.printToConsole("converted");
 
-    await binding.takeScreenshot('screenshot-$Platform.operatingSystem');
+    tester.printToConsole("screenshot");
+    await binding.callbackManager
+        .takeScreenshot('screenshot-$Platform.operatingSystem');
     tester.printToConsole("screenshot");
   });
 }
