@@ -19,6 +19,9 @@ void main() {
       as IntegrationTestWidgetsFlutterBinding;
 
   testWidgets('screenshot', (WidgetTester tester) async {
+    await Get.deleteAll(force: true);
+    Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
+
     // Build the app.
     await tester.pumpWidget(const MyApp());
 
@@ -27,8 +30,6 @@ void main() {
     // Trigger a frame.
     await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-default');
-
-    Get.put(SupabaseClient("https://dummy", "dummy"));
 
     await tester.tap(find.text("Friends sessions"));
 
