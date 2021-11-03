@@ -188,6 +188,11 @@ jobs:
           avd-name: android
           script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: screenshots/
+
   note_changelog:
     runs-on: ubuntu-latest
 
