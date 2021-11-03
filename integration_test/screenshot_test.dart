@@ -1,9 +1,9 @@
 import 'dart:io'
     show HttpClient, HttpClientRequest, HttpClientResponse, HttpOverrides;
 
-import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:supabase/supabase.dart';
@@ -28,11 +28,9 @@ void main() {
     await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-default');
 
-    await tester.tap(find.text("Friends sessions"));
+    Get.put(SupabaseClient("https://dummy", "dummy"));
 
-    var myHomePageState =
-        tester.state(find.byType(FriendsSessions)) as FriendsSessionsState;
-    myHomePageState.supabaseClient = SupabaseClient("https://dummy", "dummy");
+    await tester.tap(find.text("Friends sessions"));
 
     var mockHttpClient = MockHttpClient();
     var mockHttpClientRequest = MockHttpClientRequest();
