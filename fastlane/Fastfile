@@ -16,12 +16,22 @@
 default_platform(:android)
 
 platform :android do
+  desc "Creates notes"
+  lane :create_notes do |options|
+    isReleasable = analyze_commits(match: "builds/")
+    notes = conventional_changelog(format: 'markdown', debug: true)
+    File.open("metadata/android/en-GB/changelogs/#{options[:build_number]}.txt","w") {
+      |file| file.write(notes)
+    };
+  end
+
   desc "Deploy a new version to the Google Play"
-  lane :deploy do
+  lane :deploy do |options|
     # google_play_track_version_codes
     # google_play_track_release_names
-    isReleasable = analyze_commits(match: "android/")
-    notes = conventional_changelog(format: 'markdown', debug: true)
+    create_notes
+    add_git_tag(build_number: "1.0.0+#{options[:build_number]})
+    push_git_tags
     upload_to_play_store(
       aab: "build/app/outputs/bundle/release/app-release.aab",
       track: "internal"
