@@ -145,6 +145,9 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release/
 
-      - run: ls -a build/app/outputs/bundle/release/
+      - run: |
+          ls -a build/app/outputs/bundle/release/
+          git config user.name "GitHub Actions"
+          git config user.email "ga@mause.me"
 
-      - run: bundle exec fastlane android deploy
+      - run: bundle exec fastlane android deploy build_number:${{ github.run_number }}
