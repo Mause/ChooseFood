@@ -194,7 +194,7 @@ jobs:
           path: screenshots/
 
       - name: Upload failed tests
-        # if: ${{ failure() }}
+        if: always()
         uses: edunad/actions-image@v1.0.1
         with:
             path: './screenshots/*'
