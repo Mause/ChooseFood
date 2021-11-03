@@ -14,6 +14,13 @@ class MockHttpClientRequest extends Mock implements HttpClientRequest {}
 
 class MockHttpClientResponse extends Mock implements HttpClientResponse {}
 
+class MyHttpOverrides extends HttpOverrides {
+  HttpClient httpClient;
+  MyHttpOverrides(this.httpClient);
+  @override
+  HttpClient createHttpClient(SecurityContext? sc) => httpClient;
+}
+
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
       as IntegrationTestWidgetsFlutterBinding;
@@ -21,6 +28,9 @@ void main() {
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
     Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
+    var mockHttpClient = MockHttpClient();
+    throwOnMissingStub(mockHttpClient);
+    HttpOverrides.global = MyHttpOverrides(mockHttpClient);
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
@@ -33,9 +43,7 @@ void main() {
 
     await tester.tap(find.text("Friends sessions"));
 
-    var mockHttpClient = MockHttpClient();
     var mockHttpClientRequest = MockHttpClientRequest();
-    throwOnMissingStub(mockHttpClient);
     throwOnMissingStub(mockHttpClientRequest);
     var mockHttpClientResponse = MockHttpClientResponse();
     when(mockHttpClientResponse.first).thenReturn(Future.value("[]".codeUnits));
@@ -44,8 +52,7 @@ void main() {
     when(mockHttpClient.get("dummy", 443, "/rest/v1/session?select=%2A"))
         .thenAnswer((_) => Future.value(mockHttpClientRequest));
 
-    await HttpOverrides.runZoned(() => tester.pumpAndSettle(),
-        createHttpClient: (_) => mockHttpClient);
+    await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-friends');
   });
 }
