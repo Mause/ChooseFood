@@ -111,6 +111,88 @@ jobs:
           name: web
           path: build/web
 
+  integration_tests:
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        api-level: [31]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 15
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          avd-name: android
+          script: echo "Generated AVD snapshot for caching."
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 6
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: flutter pub run build_runner build
+
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: adopt-hotspot
+
+      - name: Integration tests
+        uses: reactivecircus/android-emulator-runner@v2
+        timeout-minutes: 15
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 6
+          avd-name: android
+          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: screenshots/
+
   note_changelog:
     runs-on: ubuntu-latest
 
