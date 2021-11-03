@@ -37,8 +37,10 @@ void main() {
     var mockHttpClientRequest = MockHttpClientRequest();
     throwOnMissingStub(mockHttpClient);
     throwOnMissingStub(mockHttpClientRequest);
+    var mockHttpClientResponse = MockHttpClientResponse();
+    when(mockHttpClientResponse.first).thenReturn(Future.value("[]".codeUnits));
     when(mockHttpClientRequest.done)
-        .thenReturn(Future.value(MockHttpClientResponse()));
+        .thenReturn(Future.value(mockHttpClientResponse));
     when(mockHttpClient.get("dummy", 443, "/rest/v1/session?select=%2A"))
         .thenAnswer((_) => Future.value(mockHttpClientRequest));
 
