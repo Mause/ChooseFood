@@ -40,9 +40,11 @@ class FriendsSessionsState extends State<FriendsSessions> {
       if (sessions.error != null) {
         handleError(sessions.error);
       }
-      (sessions.data as List<Map<String, dynamic>>)
-          .map((e) => Text(e['id']))
-          .toList();
+      setState(() {
+        this.sessions = (sessions.data as List<Map<String, dynamic>>)
+            .map((e) => Text(e['id']))
+            .toList();
+      });
     }, onError: handleError)));
   }
 
