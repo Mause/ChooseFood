@@ -1,5 +1,5 @@
 import 'dart:io'
-    show HttpClient, HttpClientRequest, HttpClientResponse, HttpOverrides;
+    show HttpClient, HttpClientRequest, HttpClientResponse, HttpOverrides, SecurityContext;
 
 import 'package:choose_food/main.dart';
 import 'package:flutter_test/flutter_test.dart';
