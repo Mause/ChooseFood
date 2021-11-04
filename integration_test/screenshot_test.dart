@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
     show WidgetTester, find, setUp, tearDown, testWidgets;
@@ -21,6 +23,12 @@ void main() {
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
     Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
+
+    var packageName = "me.mause.choosefood";
+    await grant(packageName, 'android.permission.READ_EXTERNAL_STORAGE');
+    await grant(packageName, 'android.permission.READ_PHONE_STATE');
+    await grant(packageName, 'android.permission.ACCESS_FINE_LOCATION');
+    await grant(packageName, 'android.permission.ACCESS_COARSE_LOCATION');
 
     var nockScope = nock("https://dummy");
     nockScope
@@ -61,4 +69,10 @@ void main() {
     await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-friends');
   });
+}
+
+Future<void> grant(String packageName, String permission) async {
+  // var path = await Process.run("C:\\Windows\\System32\\where.exe", ["adb"], runInShell: true);
+  await Process.run("adb", ['shell', 'pm', 'grant', packageName, permission],
+      runInShell: true);
 }
