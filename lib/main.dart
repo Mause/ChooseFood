@@ -4,7 +4,7 @@ import 'dart:collection';
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show AlertDialog, Card, ElevatedButton, Theme, ThemeData, showDialog;
+    show AlertDialog, Card, ButtonBar, ListTile, ElevatedButton, Theme, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -277,13 +277,13 @@ class LocationCard extends StatelessWidget {
     return Card(
       child: Row(
         children: [
+          ListTile(title: Text(location.name)),
           Expanded(
             child: Image.network(places.buildPhotoUrl(
                 maxWidth: MediaQuery.of(context).size.width.truncate(),
                 photoReference: location.photos[0].photoReference)),
           ),
-          Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
-          Wrap(direction: Axis.horizontal, children: [
+          ButtonBar(children: [
             elevatedButton('No', () {
               callback(location, false);
             }),
