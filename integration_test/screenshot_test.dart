@@ -33,15 +33,23 @@ void main() {
         ]
       }
     ]);
+    nock("https://dummy").post("/rest/v1/session").reply(200, [
+      {
+        "id": "0000-00000-00000-00000",
+      }
+    ]);
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
-
     await binding.convertFlutterSurfaceToImage();
 
-    // Trigger a frame.
     await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-default');
+
+    await tester.tap(find.text("Get places"));
+
+    await tester.pumpAndSettle();
+    await binding.takeScreenshot('screenshot-get-places');
 
     await tester.tap(find.text("Friends sessions"));
 
