@@ -1,5 +1,4 @@
 import 'dart:async' show Future;
-import 'dart:collection';
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
@@ -38,11 +37,13 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
 import 'package:get/get.dart';
-import 'package:supabase/supabase.dart';
+import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart' show BasePage, title;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:supabase_client/api.dart' show Session;
 
 var log = Logger();
 
@@ -127,8 +128,7 @@ class MyHomePageState extends State<MyHomePage> {
     var session =
         await supabaseClient.from(TableNames.session).insert({}).execute();
     setState(() {
-      sessionId = ((session.data as List<dynamic>)[0]
-          as LinkedHashMap<String, dynamic>)['id'];
+      sessionId = Session.listFromJson(session)[0].id!;
     });
 
     log.i("started new session: $sessionId");

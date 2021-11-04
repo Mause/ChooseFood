@@ -14,6 +14,8 @@ import 'package:get/get.dart' show Get, Inst;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:supabase_client/api.dart' show Session;
 
 var log = Logger();
 
@@ -41,8 +43,8 @@ class FriendsSessionsState extends State<FriendsSessions> {
         handleError(sessions.error);
       }
       setState(() {
-        this.sessions = (sessions.data as List<dynamic>)
-            .map((e) => Text((e as Map<String, dynamic>)['id']))
+        this.sessions = Session.listFromJson(sessions.data)
+            .map((e) => Text(e.id!))
             .toList();
       });
     }, onError: handleError)));
