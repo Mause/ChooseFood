@@ -22,7 +22,8 @@ void main() {
     await Get.deleteAll(force: true);
     Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
 
-    nock("https://dummy")
+    var nockScope = nock("https://dummy");
+    nockScope
         .get("/rest/v1/session?select=id%2Cdecision%28decision%29")
         .reply(200, [
       {
@@ -33,7 +34,7 @@ void main() {
         ]
       }
     ]);
-    nock("https://dummy").post("/rest/v1/session").reply(200, [
+    nockScope.post("/rest/v1/session").reply(200, [
       {
         "id": "0000-00000-00000-00000",
       }
