@@ -41,11 +41,11 @@ import 'package:openapi/api.dart';
 
 
 final api_instance = DecisionApi();
-final id = id_example; // String | 
-final createdAt = createdAt_example; // String | 
-final sessionId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final decision = decision_example; // bool | 
-final placeReference = placeReference_example; // String | 
+final id = id_example; // String |
+final createdAt = createdAt_example; // String |
+final sessionId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String |
+final decision = decision_example; // bool |
+final placeReference = placeReference_example; // String |
 final prefer = prefer_example; // String | Preference
 
 try {
@@ -62,15 +62,15 @@ All URIs are relative to *http://0.0.0.0:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DecisionApi* | [**decisionDelete**](doc//DecisionApi.md#decisiondelete) | **DELETE** /decision | 
-*DecisionApi* | [**decisionGet**](doc//DecisionApi.md#decisionget) | **GET** /decision | 
-*DecisionApi* | [**decisionPatch**](doc//DecisionApi.md#decisionpatch) | **PATCH** /decision | 
-*DecisionApi* | [**decisionPost**](doc//DecisionApi.md#decisionpost) | **POST** /decision | 
+*DecisionApi* | [**decisionDelete**](doc//DecisionApi.md#decisiondelete) | **DELETE** /decision |
+*DecisionApi* | [**decisionGet**](doc//DecisionApi.md#decisionget) | **GET** /decision |
+*DecisionApi* | [**decisionPatch**](doc//DecisionApi.md#decisionpatch) | **PATCH** /decision |
+*DecisionApi* | [**decisionPost**](doc//DecisionApi.md#decisionpost) | **POST** /decision |
 *IntrospectionApi* | [**rootGet**](doc//IntrospectionApi.md#rootget) | **GET** / | OpenAPI description (this document)
-*SessionApi* | [**sessionDelete**](doc//SessionApi.md#sessiondelete) | **DELETE** /session | 
-*SessionApi* | [**sessionGet**](doc//SessionApi.md#sessionget) | **GET** /session | 
-*SessionApi* | [**sessionPatch**](doc//SessionApi.md#sessionpatch) | **PATCH** /session | 
-*SessionApi* | [**sessionPost**](doc//SessionApi.md#sessionpost) | **POST** /session | 
+*SessionApi* | [**sessionDelete**](doc//SessionApi.md#sessiondelete) | **DELETE** /session |
+*SessionApi* | [**sessionGet**](doc//SessionApi.md#sessionget) | **GET** /session |
+*SessionApi* | [**sessionPatch**](doc//SessionApi.md#sessionpatch) | **PATCH** /session |
+*SessionApi* | [**sessionPost**](doc//SessionApi.md#sessionpost) | **POST** /session |
 
 
 ## Documentation For Models
@@ -85,6 +85,3 @@ Class | Method | HTTP request | Description
 
 
 ## Author
-
-
-
