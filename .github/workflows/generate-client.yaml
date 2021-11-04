@@ -34,6 +34,7 @@ jobs:
             flutter pub get
             cd packages/supabase_client
             flutter pub get
+            flutter pub run build_runner build
             dart migrate --apply-changes
           COMMIT_MESSAGE: "chore: update ${{ matrix.name }} client"
           COMMIT_NAME: "GitHub Actions"
