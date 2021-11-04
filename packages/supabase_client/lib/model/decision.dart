@@ -16,8 +16,9 @@ class Decision {
     @required this.id,
     this.createdAt = 'now()',
     this.sessionId,
-    this.decision,
+    @required this.decision,
     @required this.placeReference,
+    @required this.participantId,
   });
 
   /// Note: This is a Primary Key.<pk/>
@@ -32,13 +33,16 @@ class Decision {
 
   String placeReference;
 
+  int participantId;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is Decision &&
      other.id == id &&
      other.createdAt == createdAt &&
      other.sessionId == sessionId &&
      other.decision == decision &&
-     other.placeReference == placeReference;
+     other.placeReference == placeReference &&
+     other.participantId == participantId;
 
   @override
   int get hashCode =>
@@ -47,10 +51,11 @@ class Decision {
     (createdAt == null ? 0 : createdAt.hashCode) +
     (sessionId == null ? 0 : sessionId.hashCode) +
     (decision == null ? 0 : decision.hashCode) +
-    (placeReference == null ? 0 : placeReference.hashCode);
+    (placeReference == null ? 0 : placeReference.hashCode) +
+    (participantId == null ? 0 : participantId.hashCode);
 
   @override
-  String toString() => 'Decision[id=$id, createdAt=$createdAt, sessionId=$sessionId, decision=$decision, placeReference=$placeReference]';
+  String toString() => 'Decision[id=$id, createdAt=$createdAt, sessionId=$sessionId, decision=$decision, placeReference=$placeReference, participantId=$participantId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -61,10 +66,9 @@ class Decision {
     if (sessionId != null) {
       json[r'sessionId'] = sessionId;
     }
-    if (decision != null) {
       json[r'decision'] = decision;
-    }
       json[r'placeReference'] = placeReference;
+      json[r'participantId '] = participantId;
     return json;
   }
 
@@ -80,6 +84,7 @@ class Decision {
         sessionId: mapValueOfType<String>(json, r'sessionId'),
         decision: mapValueOfType<bool>(json, r'decision'),
         placeReference: mapValueOfType<String>(json, r'placeReference'),
+        participantId: mapValueOfType<int>(json, r'participantId '),
       );
     }
     return null;
@@ -117,3 +122,4 @@ class Decision {
     return map;
   }
 }
+

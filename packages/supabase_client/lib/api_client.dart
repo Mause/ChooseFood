@@ -193,6 +193,8 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'Decision':
           return Decision.fromJson(value);
+        case 'Participant':
+          return Participant.fromJson(value);
         case 'Session':
           return Session.fromJson(value);
         default:

@@ -11,33 +11,29 @@
 part of openapi.api;
 
 
-class DecisionApi {
-  DecisionApi([ApiClient apiClient]) : apiClient = apiClient ?? defaultApiClient;
+class ParticipantApi {
+  ParticipantApi([ApiClient apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
-  /// Performs an HTTP 'DELETE /decision' operation and returns the [Response].
+  /// Performs an HTTP 'DELETE /participant' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] id:
   ///
   /// * [String] createdAt:
   ///
-  /// * [String] sessionId:
+  /// * [String] userId:
   ///
-  /// * [bool] decision:
-  ///
-  /// * [String] placeReference:
-  ///
-  /// * [String] participantId:
+  /// * [String] session:
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<Response> decisionDeleteWithHttpInfo({ String id, String createdAt, String sessionId, bool decision, String placeReference, String participantId, String prefer, }) async {
+  Future<Response> participantDeleteWithHttpInfo({ String id, String createdAt, String userId, String session, String prefer, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/decision';
+    final path = r'/participant';
 
     // ignore: prefer_final_locals
     Object postBody;
@@ -52,17 +48,11 @@ class DecisionApi {
     if (createdAt != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'created_at', createdAt));
     }
-    if (sessionId != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'sessionId', sessionId));
+    if (userId != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'userId', userId));
     }
-    if (decision != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'decision', decision));
-    }
-    if (placeReference != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'placeReference', placeReference));
-    }
-    if (participantId != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'participantId ', participantId));
+    if (session != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'session', session));
     }
 
     if (prefer != null) {
@@ -91,37 +81,29 @@ class DecisionApi {
   ///
   /// * [String] createdAt:
   ///
-  /// * [String] sessionId:
+  /// * [String] userId:
   ///
-  /// * [bool] decision:
-  ///
-  /// * [String] placeReference:
-  ///
-  /// * [String] participantId:
+  /// * [String] session:
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<void> decisionDelete({ String id, String createdAt, String sessionId, bool decision, String placeReference, String participantId, String prefer, }) async {
-    final response = await decisionDeleteWithHttpInfo( id: id, createdAt: createdAt, sessionId: sessionId, decision: decision, placeReference: placeReference, participantId: participantId, prefer: prefer, );
+  Future<void> participantDelete({ String id, String createdAt, String userId, String session, String prefer, }) async {
+    final response = await participantDeleteWithHttpInfo( id: id, createdAt: createdAt, userId: userId, session: session, prefer: prefer, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Performs an HTTP 'GET /decision' operation and returns the [Response].
+  /// Performs an HTTP 'GET /participant' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] id:
   ///
   /// * [String] createdAt:
   ///
-  /// * [String] sessionId:
+  /// * [String] userId:
   ///
-  /// * [bool] decision:
-  ///
-  /// * [String] placeReference:
-  ///
-  /// * [String] participantId:
+  /// * [String] session:
   ///
   /// * [String] select:
   ///   Filtering Columns
@@ -143,11 +125,11 @@ class DecisionApi {
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<Response> decisionGetWithHttpInfo({ String id, String createdAt, String sessionId, bool decision, String placeReference, String participantId, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
+  Future<Response> participantGetWithHttpInfo({ String id, String createdAt, String userId, String session, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/decision';
+    final path = r'/participant';
 
     // ignore: prefer_final_locals
     Object postBody;
@@ -162,17 +144,11 @@ class DecisionApi {
     if (createdAt != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'created_at', createdAt));
     }
-    if (sessionId != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'sessionId', sessionId));
+    if (userId != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'userId', userId));
     }
-    if (decision != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'decision', decision));
-    }
-    if (placeReference != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'placeReference', placeReference));
-    }
-    if (participantId != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'participantId ', participantId));
+    if (session != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'session', session));
     }
     if (select != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'select', select));
@@ -219,13 +195,9 @@ class DecisionApi {
   ///
   /// * [String] createdAt:
   ///
-  /// * [String] sessionId:
+  /// * [String] userId:
   ///
-  /// * [bool] decision:
-  ///
-  /// * [String] placeReference:
-  ///
-  /// * [String] participantId:
+  /// * [String] session:
   ///
   /// * [String] select:
   ///   Filtering Columns
@@ -247,8 +219,8 @@ class DecisionApi {
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<List<Decision>> decisionGet({ String id, String createdAt, String sessionId, bool decision, String placeReference, String participantId, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
-    final response = await decisionGetWithHttpInfo( id: id, createdAt: createdAt, sessionId: sessionId, decision: decision, placeReference: placeReference, participantId: participantId, select: select, order: order, range: range, rangeUnit: rangeUnit, offset: offset, limit: limit, prefer: prefer, );
+  Future<List<Participant>> participantGet({ String id, String createdAt, String userId, String session, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
+    final response = await participantGetWithHttpInfo( id: id, createdAt: createdAt, userId: userId, session: session, select: select, order: order, range: range, rangeUnit: rangeUnit, offset: offset, limit: limit, prefer: prefer, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -257,40 +229,38 @@ class DecisionApi {
     // FormatException when trying to decode an empty string.
     if (response.body != null && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Decision>') as List)
-        .cast<Decision>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<Participant>') as List)
+        .cast<Participant>()
         .toList(growable: false);
 
     }
-    return Future<List<Decision>>.value();
+    return Future<List<Participant>>.value();
   }
 
-  /// Performs an HTTP 'PATCH /decision' operation and returns the [Response].
+  /// Performs an HTTP 'PATCH /participant' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] id:
   ///
   /// * [String] createdAt:
   ///
-  /// * [String] sessionId:
+  /// * [String] userId:
   ///
-  /// * [String] placeReference:
-  ///
-  /// * [String] participantId:
+  /// * [String] session:
   ///
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Decision] decision:
-  ///   decision
-  Future<Response> decisionPatchWithHttpInfo({ String id, String createdAt, String sessionId, String placeReference, String participantId, String prefer, Decision decision, }) async {
+  /// * [Participant] participant:
+  ///   participant
+  Future<Response> participantPatchWithHttpInfo({ String id, String createdAt, String userId, String session, String prefer, Participant participant, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/decision';
+    final path = r'/participant';
 
     // ignore: prefer_final_locals
-    Object postBody = decision;
+    Object postBody = participant;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -302,14 +272,11 @@ class DecisionApi {
     if (createdAt != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'created_at', createdAt));
     }
-    if (sessionId != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'sessionId', sessionId));
+    if (userId != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'userId', userId));
     }
-    if (placeReference != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'placeReference', placeReference));
-    }
-    if (participantId != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'participantId ', participantId));
+    if (session != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'session', session));
     }
 
     if (prefer != null) {
@@ -338,25 +305,23 @@ class DecisionApi {
   ///
   /// * [String] createdAt:
   ///
-  /// * [String] sessionId:
+  /// * [String] userId:
   ///
-  /// * [String] placeReference:
-  ///
-  /// * [String] participantId:
+  /// * [String] session:
   ///
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Decision] decision:
-  ///   decision
-  Future<void> decisionPatch({ String id, String createdAt, String sessionId, String placeReference, String participantId, String prefer, Decision decision, }) async {
-    final response = await decisionPatchWithHttpInfo( id: id, createdAt: createdAt, sessionId: sessionId, placeReference: placeReference, participantId: participantId, prefer: prefer, decision: decision, );
+  /// * [Participant] participant:
+  ///   participant
+  Future<void> participantPatch({ String id, String createdAt, String userId, String session, String prefer, Participant participant, }) async {
+    final response = await participantPatchWithHttpInfo( id: id, createdAt: createdAt, userId: userId, session: session, prefer: prefer, participant: participant, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Performs an HTTP 'POST /decision' operation and returns the [Response].
+  /// Performs an HTTP 'POST /participant' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] select:
@@ -365,16 +330,16 @@ class DecisionApi {
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Decision] decision:
-  ///   decision
-  Future<Response> decisionPostWithHttpInfo({ String select, String prefer, Decision decision, }) async {
+  /// * [Participant] participant:
+  ///   participant
+  Future<Response> participantPostWithHttpInfo({ String select, String prefer, Participant participant, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/decision';
+    final path = r'/participant';
 
     // ignore: prefer_final_locals
-    Object postBody = decision;
+    Object postBody = participant;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -412,10 +377,10 @@ class DecisionApi {
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Decision] decision:
-  ///   decision
-  Future<void> decisionPost({ String select, String prefer, Decision decision, }) async {
-    final response = await decisionPostWithHttpInfo( select: select, prefer: prefer, decision: decision, );
+  /// * [Participant] participant:
+  ///   participant
+  Future<void> participantPost({ String select, String prefer, Participant participant, }) async {
+    final response = await participantPostWithHttpInfo( select: select, prefer: prefer, participant: participant, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
