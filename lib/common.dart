@@ -87,7 +87,7 @@ class _BasePage extends State<BasePage> {
             NavigationDestination(
                 icon: Icon(CupertinoIcons.home), label: 'Home'),
             NavigationDestination(
-                icon: Icon(CupertinoIcons.person), label: 'Friends sessions'),
+                icon: Icon(CupertinoIcons.person_2), label: 'Friends sessions'),
             NavigationDestination(
                 icon: Icon(CupertinoIcons.time), label: 'Past sessions'),
             NavigationDestination(
