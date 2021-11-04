@@ -34,11 +34,15 @@ void main() {
         ]
       }
     ]);
-    nockScope.post("/rest/v1/session").reply(200, [
+    nockScope.post("/rest/v1/session", {}).reply(200, [
       {
         "id": "0000-00000-00000-00000",
       }
     ]);
+    nock("https://maps.googleapis.com")
+        .get(
+            "/maps/api/place/nearbysearch/json?location=-31.9925197%2C115.8909208&type=restaurant&radius=3000&key")
+        .reply(200, {});
 
     // Build the app.
     await tester.pumpWidget(const MyApp());

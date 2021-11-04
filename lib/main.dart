@@ -136,6 +136,9 @@ class MyHomePageState extends State<MyHomePage> {
     context.loaderOverlay.show();
     var session =
         await supabaseClient.from(TableNames.session).insert({}).execute();
+    if (session.error != null) {
+      log.e(session.error!.message);
+    }
     setState(() {
       sessionId = ((session.data as List<dynamic>)[0]
           as LinkedHashMap<String, dynamic>)['id'];
