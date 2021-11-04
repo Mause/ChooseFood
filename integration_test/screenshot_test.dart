@@ -22,7 +22,9 @@ void main() {
     await Get.deleteAll(force: true);
     Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
 
-    nock("https://dummy").get("/rest/v1/session?select=%2A").reply(200, [
+    nock("https://dummy")
+        .get("/rest/v1/session?select=id%2Cdecision%28decision%29")
+        .reply(200, [
       {
         "id": "0000-00000-00000-00000",
         "decision": [
