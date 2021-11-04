@@ -4,21 +4,31 @@ import 'dart:collection';
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show AlertDialog, Card, ElevatedButton, Theme, ThemeData, showDialog;
+    show
+        AlertDialog,
+        ButtonBar,
+        Card,
+        ElevatedButton,
+        Ink,
+        ListTile,
+        Theme,
+        ThemeData,
+        showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
+        BoxFit,
         BuildContext,
+        Column,
         EdgeInsets,
-        Expanded,
         FutureBuilder,
-        Image,
         Key,
         ListBody,
         MediaQuery,
+        NetworkImage,
         Padding,
-        Row,
         SingleChildScrollView,
+        SizedBox,
         State,
         StatefulWidget,
         StatelessWidget,
@@ -275,15 +285,21 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: Image.network(places.buildPhotoUrl(
-                maxWidth: MediaQuery.of(context).size.width.truncate(),
-                photoReference: location.photos[0].photoReference)),
+          ListTile(title: Text(location.name)),
+          SizedBox(
+            height: 200.0,
+            child: Ink.image(
+              image: NetworkImage(
+                places.buildPhotoUrl(
+                    maxWidth: MediaQuery.of(context).size.width.truncate(),
+                    photoReference: location.photos[0].photoReference),
+              ),
+              fit: BoxFit.cover,
+            ),
           ),
-          Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
-          Wrap(direction: Axis.horizontal, children: [
+          ButtonBar(children: [
             elevatedButton('No', () {
               callback(location, false);
             }),
