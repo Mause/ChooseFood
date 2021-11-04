@@ -202,7 +202,7 @@ jobs:
             const fs = require('fs');
             const data = fs.readFileSync("screenshots/screenshot-friends.png").toString('base64');
 
-            octokit.rest.repos.createCommitComment({
+            github.rest.repos.createCommitComment({
               commit_sha: context.sha,
               owner: context.repo.owner,
               repo: context.repo.repo,
