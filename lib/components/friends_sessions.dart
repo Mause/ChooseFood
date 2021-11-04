@@ -26,6 +26,9 @@ class FriendsSessions extends StatefulWidget {
   State<StatefulWidget> createState() => FriendsSessionsState();
 }
 
+List<Map<String, dynamic>> toMapList(dynamic data) =>
+    (data as List<dynamic>).map((e) => e as Map<String, dynamic>).toList();
+
 class FriendsSessionsState extends State<FriendsSessions> {
   SupabaseClient supabaseClient = Get.find();
 
@@ -35,14 +38,20 @@ class FriendsSessionsState extends State<FriendsSessions> {
   void initState() {
     super.initState();
 
-    ((supabaseClient.from(TableNames.session).select().execute().then(
-        (sessions) {
+    ((supabaseClient
+        .from(TableNames.session)
+        .select("id, decision(decision)")
+        .execute()
+        .then((sessions) {
       if (sessions.error != null) {
         handleError(sessions.error);
       }
       setState(() {
-        this.sessions = (sessions.data as List<dynamic>)
-            .map((e) => Text((e as Map<String, dynamic>)['id']))
+        this.sessions = toMapList(sessions.data)
+            .map((e) => Text(e['id'] +
+                "(" +
+                toMapList(e['decision']).map((e) => e['decision']).join(", ") +
+                ")"))
             .toList();
       });
     }, onError: handleError)));

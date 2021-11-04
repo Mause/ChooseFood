@@ -23,7 +23,13 @@ void main() {
     Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
 
     nock("https://dummy").get("/rest/v1/session?select=%2A").reply(200, [
-      {"id": "0000-00000-00000-00000"}
+      {
+        "id": "0000-00000-00000-00000",
+        "decision": [
+          {"decision": true},
+          {"decision": false}
+        ]
+      }
     ]);
 
     // Build the app.
