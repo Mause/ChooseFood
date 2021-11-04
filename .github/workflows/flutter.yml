@@ -202,12 +202,17 @@ jobs:
             const fs = require('fs');
             const data = fs.readFileSync("screenshots/screenshot-friends.png").toString('base64');
 
-            github.rest.repos.createCommitComment({
+            const fields = {
               commit_sha: context.sha,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `![Image](data:image/png;base64,${data})`
-            })
+            };
+            console.log(fields);
+            const comment = await github.rest.repos.createCommitComment({
+              body: `![Image](data:image/png;base64,${data})`,
+              ...fields
+            });
+            console.log(comment);
 
   note_changelog:
     runs-on: ubuntu-latest
