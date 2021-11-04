@@ -47,6 +47,8 @@ dependencies:
   sentry_flutter: ^6.0.1
   get: ^4.3.8
   supabase: ^0.2.8
+  supabase_client:
+    path: ./packages/supabase_client
 
 dev_dependencies:
   flutter_test:
