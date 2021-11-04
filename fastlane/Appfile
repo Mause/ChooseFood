@@ -1,0 +1,2 @@
+json_key_file("secrets.json")
+package_name("me.mause.choosefood")

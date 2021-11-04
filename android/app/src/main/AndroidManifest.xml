@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.mause.choosefood">
-   <application
+    <application
         android:label="Choose Food"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -58,8 +58,9 @@
            </intent-filter>
        </activity>
 
-   </application>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    </application>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <queries>

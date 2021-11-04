@@ -1,16 +1,11 @@
 import 'dart:async' show Future;
+import 'dart:collection';
 
+import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart'
-    show
-        AlertDialog,
-        Card,
-        ElevatedButton,
-        MaterialApp,
-        Theme,
-        ThemeData,
-        showDialog;
+    show AlertDialog, Card, ElevatedButton, Theme, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -21,7 +16,6 @@ import 'package:flutter/widgets.dart'
         Image,
         Key,
         ListBody,
-        ListView,
         MediaQuery,
         Padding,
         Row,
@@ -43,6 +37,8 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
+import 'package:get/get.dart';
+import 'package:supabase/supabase.dart';
 
 import 'common.dart' show BasePage, title;
 import 'compat.dart';
@@ -52,9 +48,14 @@ import 'platform_colours.dart' show getThemeData;
 var log = Logger();
 
 Future<void> main() async {
-  await SentryFlutter.init((options) {
-    options.dsn = EnvironmentConfig.sentryDsn;
-  }, appRunner: () => runApp(const MyApp()));
+  if (EnvironmentConfig.sentryDsn == 'https://...') {
+    log.w("Running without sentry");
+    runApp(const MyApp());
+  } else {
+    await SentryFlutter.init((options) {
+      options.dsn = EnvironmentConfig.sentryDsn;
+    }, appRunner: () => runApp(const MyApp()));
+  }
 }
 
 Widget Function(BuildContext) makeErrorDialog(String error) {
@@ -69,9 +70,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Get.isLogEnable = true;
+    Get.put(SupabaseClient(
+        EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
+    Get.put(kIsWeb ? Web() : Android());
+
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
-        builder: (context, snapshot) => MaterialApp(
+        builder: (context, snapshot) => GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
               home: const LoaderOverlay(child: MyHomePage(title: title)),
@@ -80,6 +86,7 @@ class MyApp extends StatelessWidget {
               ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
+                FriendsSessions.routeName: (context) => const FriendsSessions()
               },
             ));
   }
@@ -102,19 +109,31 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? userId;
-  List<Place> results = [];
+  int index = 0;
+  List<PlacesSearchResult> results = [];
+  String? sessionId;
 
-  Compat places = kIsWeb ? Web() : Android();
+  GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
+  Compat places = Get.find();
+  SupabaseClient supabaseClient = Get.find();
 
   getPlaces() async {
     context.loaderOverlay.show();
-    var geolocatorPlatform = GeolocatorPlatform.instance;
+    var session =
+        await supabaseClient.from(TableNames.session).insert({}).execute();
+    setState(() {
+      sessionId = ((session.data as List<dynamic>)[0]
+          as LinkedHashMap<String, dynamic>)['id'];
+    });
+
+    log.i("started new session: $sessionId");
+
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
     var permission = await geolocatorPlatform.requestPermission();
@@ -147,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await Sentry.captureMessage(response.errorMessage);
       log.e(response.errorMessage);
     } else {
-      log.i("found places", response.results.length);
+      log.i("found places ${response.results.length}");
     }
 
     setState(() {
@@ -198,11 +217,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var locations = results
-        .map(
-          (e) => LocationCard(location: e),
-        )
-        .toList();
+    LocationCard? location;
+
+    if (results.isNotEmpty) {
+      location = LocationCard(
+          location: results[index],
+          callback: (location, state) async {
+            await createDecision(location.reference, state);
+            setState(() {
+              index++;
+            });
+          });
+    }
 
     return BasePage(
       selectedIndex: 0,
@@ -215,16 +241,59 @@ class _MyHomePageState extends State<MyHomePage> {
             elevatedButton('Get places', getPlaces),
           ],
         ),
-        const Text(
-          'You have clicked the button this many times:',
-        ),
         Text(
           '$_counter',
           style: Theme.of(context).textTheme.headline4,
         ),
-        const Text('Matching locations'),
-        Expanded(child: ListView(children: locations, primary: true)),
+        location ?? const Text('No locations loaded yet'),
+        //Expanded(child: ListView(children: locations, primary: true)),
       ],
+    );
+  }
+
+  Future<void> createDecision(String reference, bool state) async {
+    await supabaseClient.from(TableNames.decision).insert({
+      "sessionId": sessionId!,
+      "placeReference": reference,
+      "decision": state
+    }).execute();
+  }
+}
+
+class TableNames {
+  static const String decision = "decision";
+  static const String session = "session";
+}
+
+class LocationCard extends StatelessWidget {
+  final PlacesSearchResult location;
+  final GoogleMapsPlaces places = Get.find();
+  final void Function(PlacesSearchResult searchResult, bool state) callback;
+
+  LocationCard({Key? key, required this.location, required this.callback})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Row(
+        children: [
+          Expanded(
+            child: Image.network(places.buildPhotoUrl(
+                maxWidth: MediaQuery.of(context).size.width.truncate(),
+                photoReference: location.photos[0].photoReference)),
+          ),
+          Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
+          Wrap(direction: Axis.horizontal, children: [
+            elevatedButton('No', () {
+              callback(location, false);
+            }),
+            elevatedButton('Yes', () {
+              callback(location, true);
+            })
+          ])
+        ],
+      ),
     );
   }
 }
