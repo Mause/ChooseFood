@@ -106,4 +106,3 @@ class Participant {
     return map;
   }
 }
-

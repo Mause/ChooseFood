@@ -122,4 +122,3 @@ class Decision {
     return map;
   }
 }
-
