@@ -8,9 +8,7 @@ import 'package:supabase_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **String** | Note: This is a Primary Key.<pk/> | 
+**id** | **String** | Note: This is a Primary Key.<pk/> |
 **createdAt** | **String** |  | [optional] [default to 'now()']
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-
