@@ -29,7 +29,7 @@ jobs:
         uses: technote-space/create-pr-action@v2
         with:
           EXECUTE_COMMANDS: |
-            npx @openapitools/openapi-generator-cli generate -i ${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_KEY }} -o packages/supabase -g dart
+            npx @openapitools/openapi-generator-cli generate -i ${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_KEY }} -o packages/supabase -g dart --additional-parameters=pubName=Supabase
             flutter pub add ./packages/supabase
             flutter pub get
           COMMIT_MESSAGE: "chore: update ${{ matrix.name }} client"
