@@ -191,6 +191,8 @@ class ApiClient {
           }
           final valueString = '$value'.toLowerCase();
           return valueString == 'true' || valueString == '1';
+        case 'Countries':
+          return Countries.fromJson(value);
         case 'Decision':
           return Decision.fromJson(value);
         case 'Participant':

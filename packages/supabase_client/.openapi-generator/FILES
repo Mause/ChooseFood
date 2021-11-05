@@ -2,6 +2,8 @@
 .travis.yml
 README.md
 analysis_options.yaml
+doc/Countries.md
+doc/CountriesApi.md
 doc/Decision.md
 doc/DecisionApi.md
 doc/IntrospectionApi.md
@@ -11,6 +13,7 @@ doc/Session.md
 doc/SessionApi.md
 git_push.sh
 lib/api.dart
+lib/api/countries_api.dart
 lib/api/decision_api.dart
 lib/api/introspection_api.dart
 lib/api/participant_api.dart
@@ -23,10 +26,13 @@ lib/auth/authentication.dart
 lib/auth/http_basic_auth.dart
 lib/auth/http_bearer_auth.dart
 lib/auth/oauth.dart
+lib/model/countries.dart
 lib/model/decision.dart
 lib/model/participant.dart
 lib/model/session.dart
 pubspec.yaml
+test/countries_api_test.dart
+test/countries_test.dart
 test/decision_api_test.dart
 test/decision_test.dart
 test/introspection_api_test.dart

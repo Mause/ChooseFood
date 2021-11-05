@@ -11,29 +11,40 @@
 part of openapi.api;
 
 
-class SessionApi {
-  SessionApi([ApiClient apiClient]) : apiClient = apiClient ?? defaultApiClient;
+class CountriesApi {
+  CountriesApi([ApiClient apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
-  /// Performs an HTTP 'DELETE /session' operation and returns the [Response].
+  /// Full list of countries.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
   /// Parameters:
   ///
   /// * [String] id:
   ///
-  /// * [String] createdAt:
+  /// * [String] name:
+  ///   Full country name.
   ///
-  /// * [String] concludedTime:
+  /// * [String] iso2:
+  ///   ISO 3166-1 alpha-2 code.
   ///
-  /// * [String] point:
+  /// * [String] iso3:
+  ///   ISO 3166-1 alpha-3 code.
+  ///
+  /// * [String] localName:
+  ///   Local variation of the name.
+  ///
+  /// * [String] continent:
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<Response> sessionDeleteWithHttpInfo({ String id, String createdAt, String concludedTime, String point, String prefer, }) async {
+  Future<Response> countriesDeleteWithHttpInfo({ String id, String name, String iso2, String iso3, String localName, String continent, String prefer, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/session';
+    final path = r'/countries';
 
     // ignore: prefer_final_locals
     Object postBody;
@@ -45,14 +56,20 @@ class SessionApi {
     if (id != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'id', id));
     }
-    if (createdAt != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'created_at', createdAt));
+    if (name != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'name', name));
     }
-    if (concludedTime != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'concludedTime', concludedTime));
+    if (iso2 != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'iso2', iso2));
     }
-    if (point != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'point', point));
+    if (iso3 != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'iso3', iso3));
+    }
+    if (localName != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'local_name', localName));
+    }
+    if (continent != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'continent', continent));
     }
 
     if (prefer != null) {
@@ -75,35 +92,56 @@ class SessionApi {
     );
   }
 
+  /// Full list of countries.
+  ///
   /// Parameters:
   ///
   /// * [String] id:
   ///
-  /// * [String] createdAt:
+  /// * [String] name:
+  ///   Full country name.
   ///
-  /// * [String] concludedTime:
+  /// * [String] iso2:
+  ///   ISO 3166-1 alpha-2 code.
   ///
-  /// * [String] point:
+  /// * [String] iso3:
+  ///   ISO 3166-1 alpha-3 code.
+  ///
+  /// * [String] localName:
+  ///   Local variation of the name.
+  ///
+  /// * [String] continent:
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<void> sessionDelete({ String id, String createdAt, String concludedTime, String point, String prefer, }) async {
-    final response = await sessionDeleteWithHttpInfo( id: id, createdAt: createdAt, concludedTime: concludedTime, point: point, prefer: prefer, );
+  Future<void> countriesDelete({ String id, String name, String iso2, String iso3, String localName, String continent, String prefer, }) async {
+    final response = await countriesDeleteWithHttpInfo( id: id, name: name, iso2: iso2, iso3: iso3, localName: localName, continent: continent, prefer: prefer, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Performs an HTTP 'GET /session' operation and returns the [Response].
+  /// Full list of countries.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
   /// Parameters:
   ///
   /// * [String] id:
   ///
-  /// * [String] createdAt:
+  /// * [String] name:
+  ///   Full country name.
   ///
-  /// * [String] concludedTime:
+  /// * [String] iso2:
+  ///   ISO 3166-1 alpha-2 code.
   ///
-  /// * [String] point:
+  /// * [String] iso3:
+  ///   ISO 3166-1 alpha-3 code.
+  ///
+  /// * [String] localName:
+  ///   Local variation of the name.
+  ///
+  /// * [String] continent:
   ///
   /// * [String] select:
   ///   Filtering Columns
@@ -125,11 +163,11 @@ class SessionApi {
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<Response> sessionGetWithHttpInfo({ String id, String createdAt, String concludedTime, String point, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
+  Future<Response> countriesGetWithHttpInfo({ String id, String name, String iso2, String iso3, String localName, String continent, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/session';
+    final path = r'/countries';
 
     // ignore: prefer_final_locals
     Object postBody;
@@ -141,14 +179,20 @@ class SessionApi {
     if (id != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'id', id));
     }
-    if (createdAt != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'created_at', createdAt));
+    if (name != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'name', name));
     }
-    if (concludedTime != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'concludedTime', concludedTime));
+    if (iso2 != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'iso2', iso2));
     }
-    if (point != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'point', point));
+    if (iso3 != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'iso3', iso3));
+    }
+    if (localName != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'local_name', localName));
+    }
+    if (continent != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'continent', continent));
     }
     if (select != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'select', select));
@@ -189,15 +233,25 @@ class SessionApi {
     );
   }
 
+  /// Full list of countries.
+  ///
   /// Parameters:
   ///
   /// * [String] id:
   ///
-  /// * [String] createdAt:
+  /// * [String] name:
+  ///   Full country name.
   ///
-  /// * [String] concludedTime:
+  /// * [String] iso2:
+  ///   ISO 3166-1 alpha-2 code.
   ///
-  /// * [String] point:
+  /// * [String] iso3:
+  ///   ISO 3166-1 alpha-3 code.
+  ///
+  /// * [String] localName:
+  ///   Local variation of the name.
+  ///
+  /// * [String] continent:
   ///
   /// * [String] select:
   ///   Filtering Columns
@@ -219,8 +273,8 @@ class SessionApi {
   ///
   /// * [String] prefer:
   ///   Preference
-  Future<List<Session>> sessionGet({ String id, String createdAt, String concludedTime, String point, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
-    final response = await sessionGetWithHttpInfo( id: id, createdAt: createdAt, concludedTime: concludedTime, point: point, select: select, order: order, range: range, rangeUnit: rangeUnit, offset: offset, limit: limit, prefer: prefer, );
+  Future<List<Countries>> countriesGet({ String id, String name, String iso2, String iso3, String localName, String continent, String select, String order, String range, String rangeUnit, String offset, String limit, String prefer, }) async {
+    final response = await countriesGetWithHttpInfo( id: id, name: name, iso2: iso2, iso3: iso3, localName: localName, continent: continent, select: select, order: order, range: range, rangeUnit: rangeUnit, offset: offset, limit: limit, prefer: prefer, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -229,38 +283,49 @@ class SessionApi {
     // FormatException when trying to decode an empty string.
     if (response.body != null && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Session>') as List)
-        .cast<Session>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<Countries>') as List)
+        .cast<Countries>()
         .toList(growable: false);
 
     }
-    return Future<List<Session>>.value();
+    return Future<List<Countries>>.value();
   }
 
-  /// Performs an HTTP 'PATCH /session' operation and returns the [Response].
+  /// Full list of countries.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
   /// Parameters:
   ///
   /// * [String] id:
   ///
-  /// * [String] createdAt:
+  /// * [String] name:
+  ///   Full country name.
   ///
-  /// * [String] concludedTime:
+  /// * [String] iso2:
+  ///   ISO 3166-1 alpha-2 code.
   ///
-  /// * [String] point:
+  /// * [String] iso3:
+  ///   ISO 3166-1 alpha-3 code.
+  ///
+  /// * [String] localName:
+  ///   Local variation of the name.
+  ///
+  /// * [String] continent:
   ///
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Session] session:
-  ///   session
-  Future<Response> sessionPatchWithHttpInfo({ String id, String createdAt, String concludedTime, String point, String prefer, Session session, }) async {
+  /// * [Countries] countries:
+  ///   countries
+  Future<Response> countriesPatchWithHttpInfo({ String id, String name, String iso2, String iso3, String localName, String continent, String prefer, Countries countries, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/session';
+    final path = r'/countries';
 
     // ignore: prefer_final_locals
-    Object postBody = session;
+    Object postBody = countries;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -269,14 +334,20 @@ class SessionApi {
     if (id != null) {
       queryParams.addAll(_convertParametersForCollectionFormat('', 'id', id));
     }
-    if (createdAt != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'created_at', createdAt));
+    if (name != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'name', name));
     }
-    if (concludedTime != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'concludedTime', concludedTime));
+    if (iso2 != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'iso2', iso2));
     }
-    if (point != null) {
-      queryParams.addAll(_convertParametersForCollectionFormat('', 'point', point));
+    if (iso3 != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'iso3', iso3));
+    }
+    if (localName != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'local_name', localName));
+    }
+    if (continent != null) {
+      queryParams.addAll(_convertParametersForCollectionFormat('', 'continent', continent));
     }
 
     if (prefer != null) {
@@ -299,29 +370,42 @@ class SessionApi {
     );
   }
 
+  /// Full list of countries.
+  ///
   /// Parameters:
   ///
   /// * [String] id:
   ///
-  /// * [String] createdAt:
+  /// * [String] name:
+  ///   Full country name.
   ///
-  /// * [String] concludedTime:
+  /// * [String] iso2:
+  ///   ISO 3166-1 alpha-2 code.
   ///
-  /// * [String] point:
+  /// * [String] iso3:
+  ///   ISO 3166-1 alpha-3 code.
+  ///
+  /// * [String] localName:
+  ///   Local variation of the name.
+  ///
+  /// * [String] continent:
   ///
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Session] session:
-  ///   session
-  Future<void> sessionPatch({ String id, String createdAt, String concludedTime, String point, String prefer, Session session, }) async {
-    final response = await sessionPatchWithHttpInfo( id: id, createdAt: createdAt, concludedTime: concludedTime, point: point, prefer: prefer, session: session, );
+  /// * [Countries] countries:
+  ///   countries
+  Future<void> countriesPatch({ String id, String name, String iso2, String iso3, String localName, String continent, String prefer, Countries countries, }) async {
+    final response = await countriesPatchWithHttpInfo( id: id, name: name, iso2: iso2, iso3: iso3, localName: localName, continent: continent, prefer: prefer, countries: countries, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Performs an HTTP 'POST /session' operation and returns the [Response].
+  /// Full list of countries.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
   /// Parameters:
   ///
   /// * [String] select:
@@ -330,16 +414,16 @@ class SessionApi {
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Session] session:
-  ///   session
-  Future<Response> sessionPostWithHttpInfo({ String select, String prefer, Session session, }) async {
+  /// * [Countries] countries:
+  ///   countries
+  Future<Response> countriesPostWithHttpInfo({ String select, String prefer, Countries countries, }) async {
     // Verify required params are set.
 
     // ignore: prefer_const_declarations
-    final path = r'/session';
+    final path = r'/countries';
 
     // ignore: prefer_final_locals
-    Object postBody = session;
+    Object postBody = countries;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -369,6 +453,8 @@ class SessionApi {
     );
   }
 
+  /// Full list of countries.
+  ///
   /// Parameters:
   ///
   /// * [String] select:
@@ -377,10 +463,10 @@ class SessionApi {
   /// * [String] prefer:
   ///   Preference
   ///
-  /// * [Session] session:
-  ///   session
-  Future<void> sessionPost({ String select, String prefer, Session session, }) async {
-    final response = await sessionPostWithHttpInfo( select: select, prefer: prefer, session: session, );
+  /// * [Countries] countries:
+  ///   countries
+  Future<void> countriesPost({ String select, String prefer, Countries countries, }) async {
+    final response = await countriesPostWithHttpInfo( select: select, prefer: prefer, countries: countries, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

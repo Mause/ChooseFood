@@ -40,19 +40,19 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:supabase_client/api.dart';
 
 
-final api_instance = DecisionApi();
-final id = id_example; // String |
-final createdAt = createdAt_example; // String |
-final sessionId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String |
-final decision = decision_example; // bool |
-final placeReference = placeReference_example; // String |
-final participantId = participantId_example; // String |
+final api_instance = CountriesApi();
+final id = id_example; // String | 
+final name = name_example; // String | Full country name.
+final iso2 = iso2_example; // String | ISO 3166-1 alpha-2 code.
+final iso3 = iso3_example; // String | ISO 3166-1 alpha-3 code.
+final localName = localName_example; // String | Local variation of the name.
+final continent = continent_example; // String | 
 final prefer = prefer_example; // String | Preference
 
 try {
-    api_instance.decisionDelete(id, createdAt, sessionId, decision, placeReference, participantId, prefer);
+    api_instance.countriesDelete(id, name, iso2, iso3, localName, continent, prefer);
 } catch (e) {
-    print('Exception when calling DecisionApi->decisionDelete: $e\n');
+    print('Exception when calling CountriesApi->countriesDelete: $e\n');
 }
 
 ```
@@ -63,23 +63,28 @@ All URIs are relative to *http://0.0.0.0:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DecisionApi* | [**decisionDelete**](doc//DecisionApi.md#decisiondelete) | **DELETE** /decision |
-*DecisionApi* | [**decisionGet**](doc//DecisionApi.md#decisionget) | **GET** /decision |
-*DecisionApi* | [**decisionPatch**](doc//DecisionApi.md#decisionpatch) | **PATCH** /decision |
-*DecisionApi* | [**decisionPost**](doc//DecisionApi.md#decisionpost) | **POST** /decision |
+*CountriesApi* | [**countriesDelete**](doc//CountriesApi.md#countriesdelete) | **DELETE** /countries | Full list of countries.
+*CountriesApi* | [**countriesGet**](doc//CountriesApi.md#countriesget) | **GET** /countries | Full list of countries.
+*CountriesApi* | [**countriesPatch**](doc//CountriesApi.md#countriespatch) | **PATCH** /countries | Full list of countries.
+*CountriesApi* | [**countriesPost**](doc//CountriesApi.md#countriespost) | **POST** /countries | Full list of countries.
+*DecisionApi* | [**decisionDelete**](doc//DecisionApi.md#decisiondelete) | **DELETE** /decision | 
+*DecisionApi* | [**decisionGet**](doc//DecisionApi.md#decisionget) | **GET** /decision | 
+*DecisionApi* | [**decisionPatch**](doc//DecisionApi.md#decisionpatch) | **PATCH** /decision | 
+*DecisionApi* | [**decisionPost**](doc//DecisionApi.md#decisionpost) | **POST** /decision | 
 *IntrospectionApi* | [**rootGet**](doc//IntrospectionApi.md#rootget) | **GET** / | OpenAPI description (this document)
-*ParticipantApi* | [**participantDelete**](doc//ParticipantApi.md#participantdelete) | **DELETE** /participant |
-*ParticipantApi* | [**participantGet**](doc//ParticipantApi.md#participantget) | **GET** /participant |
-*ParticipantApi* | [**participantPatch**](doc//ParticipantApi.md#participantpatch) | **PATCH** /participant |
-*ParticipantApi* | [**participantPost**](doc//ParticipantApi.md#participantpost) | **POST** /participant |
-*SessionApi* | [**sessionDelete**](doc//SessionApi.md#sessiondelete) | **DELETE** /session |
-*SessionApi* | [**sessionGet**](doc//SessionApi.md#sessionget) | **GET** /session |
-*SessionApi* | [**sessionPatch**](doc//SessionApi.md#sessionpatch) | **PATCH** /session |
-*SessionApi* | [**sessionPost**](doc//SessionApi.md#sessionpost) | **POST** /session |
+*ParticipantApi* | [**participantDelete**](doc//ParticipantApi.md#participantdelete) | **DELETE** /participant | 
+*ParticipantApi* | [**participantGet**](doc//ParticipantApi.md#participantget) | **GET** /participant | 
+*ParticipantApi* | [**participantPatch**](doc//ParticipantApi.md#participantpatch) | **PATCH** /participant | 
+*ParticipantApi* | [**participantPost**](doc//ParticipantApi.md#participantpost) | **POST** /participant | 
+*SessionApi* | [**sessionDelete**](doc//SessionApi.md#sessiondelete) | **DELETE** /session | 
+*SessionApi* | [**sessionGet**](doc//SessionApi.md#sessionget) | **GET** /session | 
+*SessionApi* | [**sessionPatch**](doc//SessionApi.md#sessionpatch) | **PATCH** /session | 
+*SessionApi* | [**sessionPost**](doc//SessionApi.md#sessionpost) | **POST** /session | 
 
 
 ## Documentation For Models
 
+ - [Countries](doc//Countries.md)
  - [Decision](doc//Decision.md)
  - [Participant](doc//Participant.md)
  - [Session](doc//Session.md)
@@ -91,3 +96,6 @@ Class | Method | HTTP request | Description
 
 
 ## Author
+
+
+

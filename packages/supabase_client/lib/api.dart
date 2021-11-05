@@ -27,11 +27,13 @@ part 'auth/oauth.dart';
 part 'auth/http_basic_auth.dart';
 part 'auth/http_bearer_auth.dart';
 
+part 'api/countries_api.dart';
 part 'api/decision_api.dart';
 part 'api/introspection_api.dart';
 part 'api/participant_api.dart';
 part 'api/session_api.dart';
 
+part 'model/countries.dart';
 part 'model/decision.dart';
 part 'model/participant.dart';
 part 'model/session.dart';

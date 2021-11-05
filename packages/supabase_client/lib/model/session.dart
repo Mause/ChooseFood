@@ -15,6 +15,8 @@ class Session {
   Session({
     @required this.id,
     this.createdAt = 'now()',
+    this.concludedTime = 'timezone(\'utc\'::text, now())',
+    this.point,
   });
 
   /// Note: This is a Primary Key.<pk/>
@@ -22,25 +24,39 @@ class Session {
 
   String createdAt;
 
+  String concludedTime;
+
+  String point;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is Session &&
      other.id == id &&
-     other.createdAt == createdAt;
+     other.createdAt == createdAt &&
+     other.concludedTime == concludedTime &&
+     other.point == point;
 
   @override
   int get hashCode =>
   // ignore: unnecessary_parenthesis
     (id == null ? 0 : id.hashCode) +
-    (createdAt == null ? 0 : createdAt.hashCode);
+    (createdAt == null ? 0 : createdAt.hashCode) +
+    (concludedTime == null ? 0 : concludedTime.hashCode) +
+    (point == null ? 0 : point.hashCode);
 
   @override
-  String toString() => 'Session[id=$id, createdAt=$createdAt]';
+  String toString() => 'Session[id=$id, createdAt=$createdAt, concludedTime=$concludedTime, point=$point]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'id'] = id;
     if (createdAt != null) {
       json[r'created_at'] = createdAt;
+    }
+    if (concludedTime != null) {
+      json[r'concludedTime'] = concludedTime;
+    }
+    if (point != null) {
+      json[r'point'] = point;
     }
     return json;
   }
@@ -54,6 +70,8 @@ class Session {
       return Session(
         id: mapValueOfType<String>(json, r'id'),
         createdAt: mapValueOfType<String>(json, r'created_at'),
+        concludedTime: mapValueOfType<String>(json, r'concludedTime'),
+        point: mapValueOfType<String>(json, r'point'),
       );
     }
     return null;
@@ -91,3 +109,4 @@ class Session {
     return map;
   }
 }
+
