@@ -437,13 +437,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  markdown:
-    dependency: transitive
-    description:
-      name: markdown
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   matcher:
     dependency: transitive
     description:
@@ -612,13 +605,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.11"
-  recase:
-    dependency: transitive
-    description:
-      name: recase
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   sentry:
     dependency: transitive
     description:
@@ -743,13 +729,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.8"
-  swagger_dart_code_generator:
-    dependency: "direct dev"
-    description:
-      name: swagger_dart_code_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.4"
   sync_http:
     dependency: transitive
     description:
