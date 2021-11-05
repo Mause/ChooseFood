@@ -45,7 +45,8 @@ void main() {
         "id": "0000-00000-00000-00000",
       }
     ]);
-    nock("https://maps.googleapis.com")
+    var mapsScope = nock("https://maps.googleapis.com");
+    mapsScope
         .get(
             "/maps/api/place/nearbysearch/json?location=115.8577778%2C-31.9509882&type=restaurant&radius=3000&key")
         .reply(200, {
@@ -61,6 +62,8 @@ void main() {
         }
       ]
     });
+    mapsScope.get("/maps/api/place/photo?photoreference=1&maxwidth=411&key")
+         .reply(500, '');
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
