@@ -74,6 +74,9 @@ class MockGeolocatorPlatform extends GeolocatorPlatform {
       Future.value(LocationPermission.always);
 
   @override
+  Future<bool> isLocationServiceEnabled() => Future.value(true);
+
+  @override
   Future<Position> getCurrentPosition(
           {LocationAccuracy desiredAccuracy = LocationAccuracy.best,
           bool forceAndroidLocationManager = false,
