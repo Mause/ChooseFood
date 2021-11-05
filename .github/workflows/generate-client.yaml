@@ -15,6 +15,7 @@ jobs:
         uses: technote-space/create-pr-action@v2
         with:
           EXECUTE_COMMANDS: |
+            mkdir -p lib/swagger
             curl ${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_KEY }} | jq > lib/swagger/openapi.json
           COMMIT_MESSAGE: "chore: update ${{ matrix.name }} client"
           COMMIT_NAME: "GitHub Actions"
