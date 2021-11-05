@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart'
     show WidgetTester, find, setUp, tearDown, testWidgets;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
+import 'package:google_maps_webservice/places.dart';
 import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
 import 'package:logger/logger.dart' show Logger;
@@ -52,6 +53,7 @@ void main() {
       'results': [
         {
           "reference": "1",
+          'place_id': '1',
           "photos": [
             {"width": 200, "photo_reference": "1", "height": 200}
           ],
