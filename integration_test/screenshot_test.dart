@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:convert' show Encoding;
+import 'dart:io' show Process;
 
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
@@ -6,8 +7,12 @@ import 'package:flutter_test/flutter_test.dart'
 import 'package:get/get.dart' show Get, Inst;
 import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
+import 'package:logger/logger.dart' show Logger;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
+
+var log = Logger();
+var utf8 = Encoding.getByName("latin1");
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
@@ -29,6 +34,10 @@ void main() {
     await grant(packageName, 'android.permission.READ_PHONE_STATE');
     await grant(packageName, 'android.permission.ACCESS_FINE_LOCATION');
     await grant(packageName, 'android.permission.ACCESS_COARSE_LOCATION');
+    log.i((await Process.run(
+            "adb", ["emu", "geo", "fix", "30.219470", "-97.745361"],
+            runInShell: true, stdoutEncoding: utf8))
+        .stdout);
 
     var nockScope = nock("https://dummy");
     nockScope
@@ -72,7 +81,11 @@ void main() {
 }
 
 Future<void> grant(String packageName, String permission) async {
-  // var path = await Process.run("C:\\Windows\\System32\\where.exe", ["adb"], runInShell: true);
-  await Process.run("adb", ['shell', 'pm', 'grant', packageName, permission],
-      runInShell: true);
+  await shell(['pm', 'grant', packageName, permission]);
+}
+
+Future<void> shell(List<String> command) async {
+  var res = await Process.run("adb", ['shell', ...command],
+      runInShell: true, stdoutEncoding: utf8);
+  log.i(res.stdout);
 }
