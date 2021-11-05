@@ -3,12 +3,12 @@ import 'package:flutter_test/flutter_test.dart'
     show WidgetTester, find, setUp, tearDown, testWidgets;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
-import 'package:google_maps_webservice/places.dart';
 import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
 import 'package:logger/logger.dart' show Logger;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
+import 'package:network_image_mock/src/network_image_mock.dart' show image;
 
 var log = Logger();
 
@@ -62,8 +62,9 @@ void main() {
         }
       ]
     });
-    mapsScope.get("/maps/api/place/photo?photoreference=1&maxwidth=411&key")
-         .reply(500, '');
+    mapsScope
+        .get("/maps/api/place/photo?photoreference=1&maxwidth=411&key")
+        .reply(200, image, headers: {"Content-Type": "image/png"});
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
