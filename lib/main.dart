@@ -136,6 +136,9 @@ class MyHomePageState extends State<MyHomePage> {
     context.loaderOverlay.show();
     var session =
         await supabaseClient.from(TableNames.session).insert({}).execute();
+    if (session.error != null) {
+      log.e(session.error!.message);
+    }
     setState(() {
       sessionId = ((session.data as List<dynamic>)[0]
           as LinkedHashMap<String, dynamic>)['id'];
@@ -145,15 +148,26 @@ class MyHomePageState extends State<MyHomePage> {
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
-    var permission = await geolocatorPlatform.requestPermission();
-    log.i({
-      "message": "checking location",
-      "locationServiceEnabled": locationServiceEnabled,
-      "permission": permission
-    });
-    if (!(locationServiceEnabled && isAllowed(permission))) {
-      log.e("Location permission not given");
+    log.i({"locationServiceEnabled": locationServiceEnabled});
+    if (!locationServiceEnabled) {
+      log.e("Location service not enabled");
       return;
+    }
+    try {
+      var permission = await geolocatorPlatform
+          .requestPermission()
+          .timeout(const Duration(minutes: 1));
+      log.i({
+        "message": "checking location",
+        "locationServiceEnabled": locationServiceEnabled,
+        "permission": permission
+      });
+      if (!isAllowed(permission)) {
+        log.e("Location permission not given");
+        return;
+      }
+    } catch (e, s) {
+      log.e("Failed to request permission, trying anyway", e, s);
     }
 
     Position geoposition;
@@ -163,7 +177,7 @@ class MyHomePageState extends State<MyHomePage> {
     } catch (e, s) {
       showDialog(context: context, builder: makeErrorDialog(e.toString()));
       await Sentry.captureException(e, stackTrace: s);
-      log.e("timed out", e, s);
+      log.e("location request timed out", e, s);
       return;
     }
     var location =
@@ -272,6 +286,7 @@ class MyHomePageState extends State<MyHomePage> {
 class TableNames {
   static const String decision = "decision";
   static const String session = "session";
+  static const String participant = "participant";
 }
 
 class LocationCard extends StatelessWidget {
