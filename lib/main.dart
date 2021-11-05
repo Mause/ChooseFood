@@ -148,6 +148,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
+    log.i({"locationServiceEnabled": locationServiceEnabled});
     var permission = await geolocatorPlatform.requestPermission();
     log.i({
       "message": "checking location",
