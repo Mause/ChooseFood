@@ -47,7 +47,18 @@ void main() {
     nock("https://maps.googleapis.com")
         .get(
             "/maps/api/place/nearbysearch/json?location=115.8577778%2C-31.9509882&type=restaurant&radius=3000&key")
-        .reply(200, {});
+        .reply(200, {
+      'status': 'OK',
+      'results': [
+        {
+          "reference": "1",
+          "photos": [
+            {"width": 200, "photo_reference": "1", "height": 200}
+          ],
+          "name": "Park Center",
+        }
+      ]
+    });
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
