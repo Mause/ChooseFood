@@ -199,6 +199,7 @@ jobs:
         uses: edunad/actions-image@v1.0.1
         with:
             path: './screenshots/*'
+            uploadHost: ${{ secrets.SUPABASE_URL }}/storage/v1/object/screenshots/screen.png
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             title: 'Screenshots'
 
