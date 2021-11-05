@@ -67,6 +67,7 @@ dev_dependencies:
   mockito: ^5.0.16
   network_image_mock: ^2.0.1
   nock: ^1.2.0
+  swagger_dart_code_generator: ^2.2.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
