@@ -1,9 +1,7 @@
-import 'dart:convert' show Encoding;
-import 'dart:io' show Process;
-
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
     show WidgetTester, find, setUp, tearDown, testWidgets;
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
 import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
@@ -12,7 +10,6 @@ import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 var log = Logger();
-var utf8 = Encoding.getByName("latin1");
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
@@ -28,16 +25,7 @@ void main() {
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
     Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
-
-    var packageName = "me.mause.choosefood";
-    await grant(packageName, 'android.permission.READ_EXTERNAL_STORAGE');
-    await grant(packageName, 'android.permission.READ_PHONE_STATE');
-    await grant(packageName, 'android.permission.ACCESS_FINE_LOCATION');
-    await grant(packageName, 'android.permission.ACCESS_COARSE_LOCATION');
-    log.i((await Process.run(
-            "adb", ["emu", "geo", "fix", "30.219470", "-97.745361"],
-            runInShell: true, stdoutEncoding: utf8))
-        .stdout);
+    GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
     var nockScope = nock("https://dummy");
     nockScope
@@ -80,12 +68,23 @@ void main() {
   });
 }
 
-Future<void> grant(String packageName, String permission) async {
-  await shell(['pm', 'grant', packageName, permission]);
-}
+class MockGeolocatorPlatform extends GeolocatorPlatform {
+  @override
+  Future<LocationPermission> requestPermission() =>
+      Future.value(LocationPermission.always);
 
-Future<void> shell(List<String> command) async {
-  var res = await Process.run("adb", ['shell', ...command],
-      runInShell: true, stdoutEncoding: utf8);
-  log.i(res.stdout);
+  @override
+  Future<Position> getCurrentPosition(
+          {LocationAccuracy desiredAccuracy = LocationAccuracy.best,
+          bool forceAndroidLocationManager = false,
+          Duration? timeLimit}) =>
+      Future.value(Position(
+          longitude: -31.9509882,
+          latitude: 115.8577778,
+          timestamp: DateTime(2021, 1, 1),
+          accuracy: 0,
+          altitude: 0,
+          heading: 0,
+          speed: 0,
+          speedAccuracy: 0));
 }
