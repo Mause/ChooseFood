@@ -43,7 +43,7 @@ void main() {
       }
     ]);
     nockScope
-        .post("/rest/v1/session", Session(point: "POINT(0.0 0.0)").toJson())
+        .post("/rest/v1/session", Session(point: "POINT(115.8577778 -31.9509882)").toJson())
         .reply(200, [
       {
         "id": "0000-00000-00000-00000",
