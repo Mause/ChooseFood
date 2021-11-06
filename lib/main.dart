@@ -125,14 +125,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   getPlaces() async {
     context.loaderOverlay.show();
-    List<Session> data = (await execute<Session>(
-            supabaseClient.from(TableNames.session).insert({}),
-            Session.fromJson))
-        .data;
-
-    setState(() {
-      sessionId = data[0].id;
-    });
 
     log.i("started new session: $sessionId");
 
@@ -172,6 +164,15 @@ class MyHomePageState extends State<MyHomePage> {
     }
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
+
+    List<Session> data = (await execute<Session>(
+            supabaseClient.from(TableNames.session).insert(Session().toJson()),
+            Session.fromJson))
+        .data;
+
+    setState(() {
+      sessionId = data[0].id;
+    });
 
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
