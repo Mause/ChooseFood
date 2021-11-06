@@ -3,6 +3,8 @@ import 'package:choose_food/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:supabase/supabase.dart'
+    show PostgrestBuilder, PostgrestError, PostgrestResponse;
 
 import 'info.dart';
 
@@ -95,4 +97,34 @@ class _BasePage extends State<BasePage> {
           ]),
     );
   }
+}
+
+Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
+    T Function(Map<String, dynamic> e) fromJson) async {
+  var response = await builder.execute();
+
+  return MyPostgrestResponse(
+      datam: ((response.data as List<dynamic>?) ?? [])
+          .map((e) => e as Map<String, dynamic>)
+          .map((e) => fromJson(e))
+          .toList(),
+      error: response.error);
+}
+
+class MyPostgrestResponse<T> extends PostgrestResponse {
+  @override
+  get data => datam;
+
+  List<T> datam;
+
+  MyPostgrestResponse(
+      {required this.datam, int? count, PostgrestError? error, int? status})
+      : super(count: count, error: error, status: status);
+}
+
+Widget Function(BuildContext) makeErrorDialog(String error,
+    {String title = 'Login failed'}) {
+  return (BuildContext context) => AlertDialog(
+      title: Text(title),
+      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
