@@ -104,10 +104,11 @@ Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
   var response = await builder.execute();
 
   return MyPostgrestResponse(
-      datam: (response.data as List<dynamic>)
+      datam: ((response.data as List<dynamic>?) ?? [])
           .map((e) => e as Map<String, dynamic>)
           .map((e) => fromJson(e))
-          .toList());
+          .toList(),
+      error: response.error);
 }
 
 class MyPostgrestResponse<T> extends PostgrestResponse {
