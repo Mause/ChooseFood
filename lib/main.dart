@@ -166,7 +166,9 @@ class MyHomePageState extends State<MyHomePage> {
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
     List<Session> data = (await execute<Session>(
-            supabaseClient.from(TableNames.session).insert(Session().toJson()),
+            supabaseClient.from(TableNames.session).insert(
+                Session(point: "POINT(${location.lat} ${location.lng})")
+                    .toJson()),
             Session.fromJson))
         .data;
 
