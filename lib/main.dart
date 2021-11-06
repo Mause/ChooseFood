@@ -126,8 +126,6 @@ class MyHomePageState extends State<MyHomePage> {
   getPlaces() async {
     context.loaderOverlay.show();
 
-    log.i("started new session: $sessionId");
-
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
     log.i({"locationServiceEnabled": locationServiceEnabled});
@@ -196,6 +194,8 @@ class MyHomePageState extends State<MyHomePage> {
     setState(() {
       sessionId = response.data[0].id;
     });
+
+    log.i("started new session: $sessionId");
   }
 
   Future<void> _login() async {
