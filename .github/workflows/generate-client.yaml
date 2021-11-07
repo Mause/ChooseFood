@@ -29,7 +29,7 @@ jobs:
             mkdir -p lib/swagger
             curl ${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_KEY }} | jq > lib/swagger/openapi.json
             python3 .github/workflows/add_point.py
-            flutter pub run build_runner build
+            flutter pub run build_runner build --delete-conflicting-outputs
             git add -f lib/generated_code
           COMMIT_MESSAGE: "chore: update ${{ matrix.name }} client"
           COMMIT_NAME: "GitHub Actions"
