@@ -131,3 +131,21 @@ Widget Function(BuildContext) makeErrorDialog(String error,
 
 Map<String, dynamic> excludeNull(Map<String, dynamic> map) =>
     Map.from(map)..removeWhere((key, value) => value == null);
+
+class LabelledProgressIndicator extends StatelessWidget {
+  final String label;
+
+  const LabelledProgressIndicator(this.label, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Row(
+        children: [
+          const CircularProgressIndicator(),
+          Text(label)
+        ],
+      ),
+    );
+  }
+}

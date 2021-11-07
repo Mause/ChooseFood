@@ -47,7 +47,7 @@ import 'package:sentry_flutter/sentry_flutter.dart'
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart'
-    show BasePage, excludeNull, execute, makeErrorDialog, title;
+    show BasePage, LabelledProgressIndicator, excludeNull, execute, makeErrorDialog, title;
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
@@ -126,7 +126,7 @@ class MyHomePageState extends State<MyHomePage> {
   SupabaseClient supabaseClient = Get.find();
 
   getPlaces() async {
-    context.loaderOverlay.show(widget: const Text("Loading places"));
+    context.loaderOverlay.show(widget: const LabelledProgressIndicator(label: "Loading places"));
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
