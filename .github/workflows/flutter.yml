@@ -140,30 +140,6 @@ jobs:
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
-      - name: AVD cache
-        uses: actions/cache@v2
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
-
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 15
-        with:
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          avd-name: android
-          script: echo "Generated AVD snapshot for caching."
-          target: google_apis
-          arch: x86_64
-          profile: Nexus 6
-
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
         with:
@@ -185,26 +161,26 @@ jobs:
           java-version: '11'
           distribution: adopt-hotspot
 
+      - run: echo "$SIGNING_KEY" | openssl base64 -d > android/app/key.store
+        shell: bash
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+
       - run: |
           pushd android
           flutter build apk
           ./gradlew app:assembleAndroidTest
-          ./gradlew app:assembleDebug -Ptarget=test/widget_test.dart
+          ./gradlew app:assembleDebug -Ptarget=integration_test/screenshot_test.dart
           popd
+        env:
+          SIGNING_KEY: key.store
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          
+      - uses: google-github-actions/setup-gcloud@master
 
-      - name: Integration tests
-        uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 15
-        with:
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          target: google_apis
-          arch: x86_64
-          profile: Nexus 6
-          avd-name: android
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+      - run: gcloud config set project choosefood
+      - run: gcloud firebase test android run --type instrumentation --app *.apk --test app-debug-androidTest/app-debug-androidTest.apk --device model=Pixel3a,version=31,locale=au,orientation=portrait
 
       - uses: actions/upload-artifact@v2
         if: always()
