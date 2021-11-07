@@ -185,6 +185,13 @@ jobs:
           java-version: '11'
           distribution: adopt-hotspot
 
+      - run: |
+          pushd android
+          flutter build apk
+          ./gradlew app:assembleAndroidTest
+          ./gradlew app:assembleDebug -Ptarget=test/widget_test.dart
+          popd
+
       - name: Integration tests
         uses: reactivecircus/android-emulator-runner@v2
         timeout-minutes: 15
