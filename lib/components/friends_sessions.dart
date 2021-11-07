@@ -62,17 +62,17 @@ class FriendsSessionsState extends State<FriendsSessions> {
   }
 
   void initSessions() async {
-    MyPostgrestResponse<Session> sessions;
+    MyPostgrestResponse<SessionWithDecisions> sessions;
 
     context.loaderOverlay.show();
 
     try {
-      sessions = await execute<Session>(
+      sessions = await execute<SessionWithDecisions>(
           supabaseClient
               .from(TableNames.session)
               .select("id, decision(decision)")
               .is_("concludedTime", null),
-          Session.fromJson);
+          SessionWithDecisions.fromJson);
     } catch (e, s) {
       handleError(e, s);
       return;
@@ -83,9 +83,8 @@ class FriendsSessionsState extends State<FriendsSessions> {
     }
 
     setState(() {
-      this.sessions = toMapList(sessions.data)
-          .map((e) => SessionCard(
-              sessionWithDecisions: SessionWithDecisions.fromJson(e)))
+      this.sessions = sessions.datam
+          .map((e) => SessionCard(sessionWithDecisions: e))
           .toList();
     });
     context.loaderOverlay.hide();
