@@ -45,6 +45,7 @@ jobs:
   build_releases:
     runs-on: ubuntu-latest
     needs: build
+    container: cirrusci/flutter:beta
 
     strategy:
       matrix:
@@ -59,9 +60,6 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: beta
       - name: Install dependencies
         run: flutter pub get
       - name: Prebuild
