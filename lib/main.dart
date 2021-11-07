@@ -270,6 +270,9 @@ class MyHomePageState extends State<MyHomePage> {
           '$_counter',
           style: Theme.of(context).textTheme.headline4,
         ),
+        Text(sessionId == null
+            ? 'No session started yet'
+            : 'Session ID: $sessionId'),
         location ?? const Text('No locations loaded yet'),
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
