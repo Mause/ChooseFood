@@ -36,6 +36,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth, LoginStatus;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
+import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
@@ -43,14 +44,14 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
-import 'package:get/get.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart'
     show BasePage, excludeNull, execute, makeErrorDialog, title;
+import 'generated_code/openapi.models.swagger.dart'
+    show Session, Point, Decision;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
-import 'generated_code/openapi.models.swagger.dart' show Session, Point;
 
 var log = Logger();
 
@@ -280,11 +281,15 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> createDecision(String reference, bool state) async {
-    await supabaseClient.from(TableNames.decision).insert({
-      "sessionId": sessionId!,
-      "placeReference": reference,
-      "decision": state
-    }).execute();
+    await supabaseClient
+        .from(TableNames.decision)
+        .insert(excludeNull(Decision(
+                sessionId: sessionId!,
+                participantId: 1, // TODO: eventually this should be the current users ID
+                placeReference: reference,
+                decision: state)
+            .toJson()))
+        .execute();
   }
 }
 
