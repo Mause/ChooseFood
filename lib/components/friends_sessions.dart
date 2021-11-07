@@ -71,7 +71,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
       sessions = await execute<SessionWithDecisions>(
           supabaseClient
               .from(TableNames.session)
-              .select("id, decision(decision)")
+              .select("id, decision(decision, placeReference, participantId)")
               .is_("concludedTime", null),
           SessionWithDecisions.fromJson);
     } catch (e, s) {
