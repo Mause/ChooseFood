@@ -183,8 +183,12 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> createSession(Location location) async {
     var response = (await execute<Session>(
-        supabaseClient.from(TableNames.session).insert(excludeNull(
-            Session(point: "POINT(${location.lat} ${location.lng})").toJson())),
+        supabaseClient
+            .from(TableNames.session)
+            .insert(excludeNull(Session(point: {
+              "type": "Point",
+              "coordinates": [location.lat, location.lng]
+            }).toJson())),
         Session.fromJson));
     if (response.error != null) {
       log.e(response.error);
