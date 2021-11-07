@@ -39,7 +39,7 @@ void main() {
     var nockScope = nock("https://dummy");
     nockScope
         .get(
-            "/rest/v1/session?select=id%2Cdecision%28decision%29&concludedTime=is.null")
+            "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
       {
         "id": "0000-00000-00000-00000",
