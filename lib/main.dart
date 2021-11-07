@@ -126,7 +126,7 @@ class MyHomePageState extends State<MyHomePage> {
   SupabaseClient supabaseClient = Get.find();
 
   getPlaces() async {
-    context.loaderOverlay.show();
+    context.loaderOverlay.show(widget: const Text("Loading places"));
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
