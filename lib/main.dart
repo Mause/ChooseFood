@@ -50,7 +50,7 @@ import 'common.dart'
     show BasePage, excludeNull, execute, makeErrorDialog, title;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
-import 'generated_code/openapi.models.swagger.dart' show Session;
+import 'generated_code/openapi.models.swagger.dart' show Session, Point;
 
 var log = Logger();
 
@@ -183,8 +183,10 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> createSession(Location location) async {
     var response = (await execute<Session>(
-        supabaseClient.from(TableNames.session).insert(excludeNull(
-            Session(point: "POINT(${location.lat} ${location.lng})").toJson())),
+        supabaseClient.from(TableNames.session).insert(excludeNull(Session(
+            point: Point(
+                type: "Point",
+                coordinates: [location.lat, location.lng])).toJson())),
         Session.fromJson));
     if (response.error != null) {
       log.e(response.error);

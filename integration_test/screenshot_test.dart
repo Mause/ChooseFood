@@ -49,10 +49,12 @@ void main() {
         ]
       }
     ]);
-    nockScope
-        .post("/rest/v1/session",
-            {"point": "POINT(115.8577778 -31.9509882)"})
-        .reply(200, [
+    nockScope.post("/rest/v1/session", {
+      "point": {
+        "type": "Point",
+        "coordinates": [115.8577778, -31.9509882]
+      }
+    }).reply(200, [
       {
         "id": "0000-00000-00000-00000",
       }

@@ -31,7 +31,8 @@ import 'package:get/get.dart' show Get, Inst;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
-import '../generated_code/openapi.models.swagger.dart' show Decision, Session;
+import '../generated_code/openapi.models.swagger.dart'
+    show Decision, Session, Point;
 
 part 'friends_sessions.g.dart';
 
@@ -110,7 +111,7 @@ class SessionWithDecisions extends Session {
   List<Decision> decision;
 
   SessionWithDecisions(this.decision, String? id, String? concludedTime,
-      String? createdAt, String? point)
+      String? createdAt, Point? point)
       : super(
             id: id,
             concludedTime: concludedTime,
