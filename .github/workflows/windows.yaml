@@ -19,6 +19,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
+      - run: flutter doctor
       - run: flutter config --enable-windows-desktop
       - name: Install dependencies
         run: flutter pub get
