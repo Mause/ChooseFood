@@ -696,8 +696,8 @@
           "type": "string"
         },
         "participantId": {
-          "format": "bigint",
-          "type": "integer"
+          "format": "uuid",
+          "type": "string"
         }
       },
       "type": "object"
@@ -956,7 +956,7 @@
     "rowFilter.decision.participantId": {
       "name": "participantId",
       "required": false,
-      "format": "bigint",
+      "format": "uuid",
       "in": "query",
       "type": "string"
     },

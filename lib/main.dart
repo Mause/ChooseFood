@@ -280,12 +280,16 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  String? getUser() {
+    return supabaseClient.auth.currentUser!.id;
+  }
+
   Future<void> createDecision(String reference, bool state) async {
     await supabaseClient
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
                 sessionId: sessionId!,
-                participantId: 1, // TODO: eventually this should be the current users ID
+                participantId: getUser(),
                 placeReference: reference,
                 decision: state)
             .toJson()))
