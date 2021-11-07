@@ -200,7 +200,13 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const data = fs.readFileSync("screenshots/screenshot-friends.png").toString('base64');
+            const fileStream = fs.createReadStream("screenshots/screenshot-friends.png");
+            
+            const url = '${{ secrets.SUPABASE_URL }}/storage/v1/object/screenshots/${{ github.run_number }}/screenshot-friends.png';
+
+            var data = new FormData()
+            data.append('file', fileStream);
+            await fetch(url, {body: data, headers: {Authorization: "${{ secrets.SUPABASE_KEY }}"}});
 
             const fields = {
               commit_sha: context.sha,
@@ -209,7 +215,7 @@ jobs:
             };
             console.log(fields);
             const comment = await github.rest.repos.createCommitComment({
-              body: `![Image](data:image/png;base64,${data})`,
+              body: `![Image](${url})`,
               ...fields
             });
             console.log(comment);
