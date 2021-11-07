@@ -176,7 +176,7 @@ jobs:
           SIGNING_KEY: key.store
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          
+
       - uses: google-github-actions/setup-gcloud@master
 
       - run: gcloud config set project choosefood
