@@ -216,7 +216,7 @@
             "$ref": "#/parameters/rowFilter.decision.placeReference"
           },
           {
-            "$ref": "#/parameters/rowFilter.decision.participantId "
+            "$ref": "#/parameters/rowFilter.decision.participantId"
           },
           {
             "$ref": "#/parameters/select"
@@ -297,7 +297,7 @@
             "$ref": "#/parameters/rowFilter.decision.placeReference"
           },
           {
-            "$ref": "#/parameters/rowFilter.decision.participantId "
+            "$ref": "#/parameters/rowFilter.decision.participantId"
           },
           {
             "$ref": "#/parameters/preferReturn"
@@ -330,7 +330,7 @@
             "$ref": "#/parameters/rowFilter.decision.placeReference"
           },
           {
-            "$ref": "#/parameters/rowFilter.decision.participantId "
+            "$ref": "#/parameters/rowFilter.decision.participantId"
           },
           {
             "$ref": "#/parameters/body.decision"
@@ -669,7 +669,7 @@
         "id",
         "decision",
         "placeReference",
-        "participantId "
+        "participantId"
       ],
       "properties": {
         "id": {
@@ -695,7 +695,7 @@
           "format": "character varying",
           "type": "string"
         },
-        "participantId ": {
+        "participantId": {
           "format": "bigint",
           "type": "integer"
         }
@@ -953,8 +953,8 @@
       "in": "query",
       "type": "string"
     },
-    "rowFilter.decision.participantId ": {
-      "name": "participantId ",
+    "rowFilter.decision.participantId": {
+      "name": "participantId",
       "required": false,
       "format": "bigint",
       "in": "query",
