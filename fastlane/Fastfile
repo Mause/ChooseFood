@@ -19,6 +19,7 @@ platform :android do
   desc "Creates notes"
   lane :create_notes do |options|
     isReleasable = analyze_commits(match: "builds/*")
+
     notes = conventional_changelog(format: 'markdown', debug: true, commit_url: "https://github.com/Mause/ChooseFood/commit")
     File.open("metadata/android/en-GB/changelogs/#{options[:build_number]}.txt","w") {
       |file| file.write(notes)
