@@ -760,10 +760,7 @@
               "type": {"type": "string"},
               "coordinates": {
                   "type": "array",
-                  "items": [
-                      {"type": "number"},
-                      {"type": "number"}
-                  ]
+                  "items": {"type": "number"}
               }
           }
         }
