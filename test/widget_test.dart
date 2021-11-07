@@ -21,8 +21,6 @@ import 'package:mockito/mockito.dart' show throwOnMissingStub, verify, when;
 import 'package:supabase/supabase.dart' show PostgrestResponse;
 import 'package:network_image_mock/network_image_mock.dart'
     show mockNetworkImagesFor;
-import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Session;
 
 import './widget_test.mocks.dart';
 
@@ -76,8 +74,7 @@ void main() {
     ]);
     when(mockPostgresBuilder.execute())
         .thenAnswer((_) => Future.value(mockPostgresResponse));
-    when(mockSupabaseQueryBuilder
-            .insert(Session(point: "POINT(0.0 0.0)").toJson()))
+    when(mockSupabaseQueryBuilder.insert({"point": "POINT(0.0 0.0)"}))
         .thenReturn(mockPostgresBuilder);
     when(mockSupabaseClient.from("session"))
         .thenReturn(mockSupabaseQueryBuilder);

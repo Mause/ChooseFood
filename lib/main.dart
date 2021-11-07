@@ -46,7 +46,8 @@ import 'package:sentry_flutter/sentry_flutter.dart'
 import 'package:get/get.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
-import 'common.dart' show BasePage, execute, makeErrorDialog, title;
+import 'common.dart'
+    show BasePage, excludeNull, execute, makeErrorDialog, title;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
 import 'generated_code/openapi.models.swagger.dart' show Session;
@@ -182,10 +183,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> createSession(Location location) async {
     var response = (await execute<Session>(
-            supabaseClient.from(TableNames.session).insert(
-                Session(point: "POINT(${location.lat} ${location.lng})")
-                    .toJson()),
-            Session.fromJson));
+        supabaseClient.from(TableNames.session).insert(excludeNull(
+            Session(point: "POINT(${location.lat} ${location.lng})").toJson())),
+        Session.fromJson));
     if (response.error != null) {
       log.e(response.error);
       throw ArgumentError(response.error);
