@@ -9,8 +9,6 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
-import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Session;
 
 var log = Logger();
 
@@ -43,7 +41,7 @@ void main() {
       }
     ]);
     nockScope
-        .post("/rest/v1/session", Session(point: "POINT(115.8577778 -31.9509882)").toJson())
+        .post("/rest/v1/session", {"point": "POINT(115.8577778 -31.9509882)"})
         .reply(200, [
       {
         "id": "0000-00000-00000-00000",
