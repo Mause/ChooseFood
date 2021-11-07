@@ -1,4 +1,4 @@
-package me.mause.choosefood; 
+package me.mause.choosefood;
 
 import androidx.test.rule.ActivityTestRule;
 import dev.flutter.plugins.integration_test.FlutterTestRunner;
@@ -10,4 +10,3 @@ public class MainActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, false);
 }
-
