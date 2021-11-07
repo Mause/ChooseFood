@@ -1,6 +1,4 @@
 import 'package:choose_food/components/friends_sessions.dart';
-import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Session;
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
     show
