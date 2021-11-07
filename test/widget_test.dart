@@ -74,7 +74,8 @@ void main() {
     ]);
     when(mockPostgresBuilder.execute())
         .thenAnswer((_) => Future.value(mockPostgresResponse));
-    when(mockSupabaseQueryBuilder.insert({})).thenReturn(mockPostgresBuilder);
+    when(mockSupabaseQueryBuilder.insert({"point": "POINT(0.0 0.0)"}))
+        .thenReturn(mockPostgresBuilder);
     when(mockSupabaseClient.from("session"))
         .thenReturn(mockSupabaseQueryBuilder);
 

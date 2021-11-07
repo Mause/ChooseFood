@@ -1,11 +1,9 @@
 import 'dart:async' show Future;
-import 'dart:collection';
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
     show
-        AlertDialog,
         ButtonBar,
         Card,
         ElevatedButton,
@@ -23,11 +21,9 @@ import 'package:flutter/widgets.dart'
         EdgeInsets,
         FutureBuilder,
         Key,
-        ListBody,
         MediaQuery,
         NetworkImage,
         Padding,
-        SingleChildScrollView,
         SizedBox,
         State,
         StatefulWidget,
@@ -48,11 +44,13 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver;
 import 'package:get/get.dart';
-import 'package:supabase/supabase.dart';
+import 'package:supabase/supabase.dart' show SupabaseClient;
 
-import 'common.dart' show BasePage, title;
+import 'common.dart'
+    show BasePage, excludeNull, execute, makeErrorDialog, title;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
+import 'generated_code/openapi.models.swagger.dart' show Session;
 
 var log = Logger();
 
@@ -65,12 +63,6 @@ Future<void> main() async {
       options.dsn = EnvironmentConfig.sentryDsn;
     }, appRunner: () => runApp(const MyApp()));
   }
-}
-
-Widget Function(BuildContext) makeErrorDialog(String error) {
-  return (BuildContext context) => AlertDialog(
-      title: const Text('Login failed'),
-      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
 
 class MyApp extends StatelessWidget {
@@ -134,17 +126,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   getPlaces() async {
     context.loaderOverlay.show();
-    var session =
-        await supabaseClient.from(TableNames.session).insert({}).execute();
-    if (session.error != null) {
-      log.e(session.error!.message);
-    }
-    setState(() {
-      sessionId = ((session.data as List<dynamic>)[0]
-          as LinkedHashMap<String, dynamic>)['id'];
-    });
-
-    log.i("started new session: $sessionId");
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
@@ -183,6 +164,8 @@ class MyHomePageState extends State<MyHomePage> {
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
+    await createSession(location);
+
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
@@ -196,6 +179,23 @@ class MyHomePageState extends State<MyHomePage> {
       results = response.results;
       context.loaderOverlay.hide();
     });
+  }
+
+  Future<void> createSession(Location location) async {
+    var response = (await execute<Session>(
+        supabaseClient.from(TableNames.session).insert(excludeNull(
+            Session(point: "POINT(${location.lat} ${location.lng})").toJson())),
+        Session.fromJson));
+    if (response.error != null) {
+      log.e(response.error);
+      throw ArgumentError(response.error);
+    }
+
+    setState(() {
+      sessionId = response.data[0].id;
+    });
+
+    log.i("started new session: $sessionId");
   }
 
   Future<void> _login() async {
