@@ -755,7 +755,17 @@
         },
         "point": {
           "format": "extensions.geometry(Point,4326)",
-          "type": "string"
+          "type": "object",
+          "properties": {
+              "type": {"type": "string"},
+              "coordinates": {
+                  "type": "array",
+                  "items": [
+                      {"type": "number"},
+                      {"type": "number"}
+                  ]
+              }
+          }
         }
       },
       "type": "object"
