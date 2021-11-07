@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: cirrusci/flutter:beta
 
     steps:
       - uses: actions/checkout@v2
@@ -15,10 +16,6 @@ jobs:
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
-
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: 'beta'
 
       - name: Install dependencies
         run: flutter pub get
