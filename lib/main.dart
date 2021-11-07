@@ -125,16 +125,6 @@ class MyHomePageState extends State<MyHomePage> {
 
   getPlaces() async {
     context.loaderOverlay.show();
-    List<Session> data = (await execute<Session>(
-            supabaseClient.from(TableNames.session).insert({}),
-            Session.fromJson))
-        .data;
-
-    setState(() {
-      sessionId = data[0].id;
-    });
-
-    log.i("started new session: $sessionId");
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
@@ -173,6 +163,8 @@ class MyHomePageState extends State<MyHomePage> {
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
 
+    await createSession(location);
+
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
@@ -186,6 +178,24 @@ class MyHomePageState extends State<MyHomePage> {
       results = response.results;
       context.loaderOverlay.hide();
     });
+  }
+
+  Future<void> createSession(Location location) async {
+    var response = (await execute<Session>(
+            supabaseClient.from(TableNames.session).insert(
+                Session(point: "POINT(${location.lat} ${location.lng})")
+                    .toJson()),
+            Session.fromJson));
+    if (response.error != null) {
+      log.e(response.error);
+      throw ArgumentError(response.error);
+    }
+
+    setState(() {
+      sessionId = response.data[0].id;
+    });
+
+    log.i("started new session: $sessionId");
   }
 
   Future<void> _login() async {
