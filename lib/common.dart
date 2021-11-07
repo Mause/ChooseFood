@@ -128,3 +128,6 @@ Widget Function(BuildContext) makeErrorDialog(String error,
       title: Text(title),
       content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
+
+Map<String, dynamic> excludeNull(Map<String, dynamic> map) =>
+    Map.from(map)..removeWhere((key, value) => value == null);
