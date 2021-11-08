@@ -1,4 +1,4 @@
-import 'dart:async' show Future;
+import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
@@ -35,7 +35,7 @@ import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show Sentry, SentryFlutter, SentryNavigatorObserver;
+    show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart'
@@ -60,6 +60,7 @@ Future<void> main() async {
   } else {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
+      options.beforeSend = beforeSend;
     }, appRunner: () => runApp(const MyApp()));
   }
 }
@@ -388,4 +389,8 @@ bool isAllowed(LocationPermission index) {
     default:
       return false;
   }
+}
+
+FutureOr<SentryEvent?> beforeSend(SentryEvent event, {hint}) {
+  return event.tags?['os.rooted'] == 'yes' ? null : event;
 }
