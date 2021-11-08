@@ -43,4 +43,4 @@ linter:
 analyzer:
   exclude:
     - test/*.mocks.dart
-    - test_driver/*.dart
+    - lib/generated_code

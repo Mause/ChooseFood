@@ -16,16 +16,21 @@ import 'package:google_maps_webservice/places.dart'
 abstract class Place {
   String name;
 
+  String reference;
+
   String buildPhotoUrl(num maxWidth);
 
-  Place({required this.name});
+  Place({required this.name, required this.reference});
 }
 
 class AndroidPlace extends Place {
   String photoReference;
 
-  AndroidPlace({required String name, required this.photoReference})
-      : super(name: name);
+  AndroidPlace(
+      {required String name,
+      required String reference,
+      required this.photoReference})
+      : super(name: name, reference: reference);
 
   @override
   String buildPhotoUrl(num maxWidth) => GoogleMapsPlaces()
@@ -63,7 +68,10 @@ class Web implements Compat {
   }
 
   Place convertItem(PlaceResult? result) {
-    return WebPlace(photo: result!.photos![0]!.url!, name: result.name!);
+    return WebPlace(
+        photo: result!.photos![0]!.url!,
+        reference: result.placeId!,
+        name: result.name!);
   }
 
   List<Place> convert(List<PlaceResult?>? results) {
@@ -74,7 +82,9 @@ class Web implements Compat {
 class WebPlace extends Place {
   String photo;
 
-  WebPlace({required String name, required this.photo}) : super(name: name);
+  WebPlace(
+      {required String name, required String reference, required this.photo})
+      : super(name: name, reference: reference);
 
   @override
   String buildPhotoUrl(num maxWidth) => photo;
@@ -94,7 +104,9 @@ class Android implements Compat {
 
   Place convertItem(PlacesSearchResult? result) {
     return AndroidPlace(
-        name: result!.name, photoReference: result.photos[0].photoReference);
+        name: result!.name,
+        reference: result.reference,
+        photoReference: result.photos[0].photoReference);
   }
 
   List<Place> convert(List<PlacesSearchResult> results) {
