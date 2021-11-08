@@ -233,12 +233,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: appbundle
-          path: build/app/outputs/bundle/release/
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: appbundle
-          path: build/app/outputs/bundle/release/
+          path: '*.aab'
 
       - uses: actions/download-artifact@v2
         with:
@@ -248,7 +243,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: msix
-          path: build\windows\runner\**\*.msix
+          path: '*.msix'
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -257,7 +252,7 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            build/app/outputs/bundle/release/app-release.aab
+            *.aab
             *.apk
             *.msix
 
