@@ -145,7 +145,7 @@ class MyHomePageState extends State<MyHomePage> {
         supabaseClient
             .from(TableNames.session)
             .select()
-            .is_(ColumnNames.session.concludedId, null),
+            .is_(ColumnNames.session.concludedTime, null),
         Session.fromJson);
     if (response.error != null) {
       return handleError(response.error);
