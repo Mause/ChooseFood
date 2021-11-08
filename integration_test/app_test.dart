@@ -10,7 +10,10 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [RegExp(path.context.current + '/features/*.*.feature')]
+    ..features = [
+      RegExp(
+          path.context.absolute(path.context.current, '/features/*.*.feature'))
+    ]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
