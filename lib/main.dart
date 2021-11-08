@@ -131,6 +131,32 @@ class MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
 
+  @override
+  void initState() {
+    super.initState();
+
+    loadExistingSession();
+  }
+
+  Future<void> loadExistingSession() async {
+    context.progress("Loading existing session");
+
+    var response = await execute<Session>(
+        supabaseClient
+            .from(TableNames.session)
+            .select()
+            .is_(ColumnNames.session.concludedTime, null),
+        Session.fromJson);
+    if (response.error != null) {
+      throw makeError(response.error);
+    }
+
+    setState(() {
+      context.loaderOverlay.hide();
+      sessionId = response.datam.isEmpty ? null : response.datam[0].id;
+    });
+  }
+
   getPlaces() async {
     context.progress("Determining location...");
     var location = await getLocation();
@@ -188,8 +214,9 @@ class MyHomePageState extends State<MyHomePage> {
     return location;
   }
 
-  Future<ArgumentError> makeError(String message,
+  Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
+    context.loaderOverlay.hide();
     showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
@@ -311,6 +338,16 @@ class MyHomePageState extends State<MyHomePage> {
             .toJson()))
         .execute();
   }
+}
+
+class SessionFieldNames {
+  final String concludedTime = "concludedTime";
+
+  const SessionFieldNames();
+}
+
+class ColumnNames {
+  static const session = SessionFieldNames();
 }
 
 class TableNames {

@@ -1,6 +1,6 @@
 import 'package:choose_food/common.dart'
     show BasePage, MyPostgrestResponse, execute;
-import 'package:choose_food/main.dart' show TableNames;
+import 'package:choose_food/main.dart' show ColumnNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -77,7 +77,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
                 placeReference,
                 participantId
               )
-              """).is_("concludedTime", null), SessionWithDecisions.fromJson);
+              """).is_(ColumnNames.session.concludedTime, null), SessionWithDecisions.fromJson);
     } catch (e, s) {
       handleError(e, s);
       return;

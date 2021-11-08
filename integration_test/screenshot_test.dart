@@ -17,6 +17,7 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
+import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
 
 var log = Logger();
 
@@ -33,10 +34,13 @@ void main() {
 
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
-    Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
+    Get.put(SupabaseClient("https://supabase", "dummy"), permanent: true);
     GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
-    var nockScope = nock("https://dummy");
+    var nockScope = nock("https://supabase");
+    nockScope
+        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
+        .reply(200, []);
     nockScope
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
@@ -99,28 +103,4 @@ void main() {
     expect(find.byType(SessionCard), findsOneWidget);
     await binding.takeScreenshot('screenshot-friends');
   });
-}
-
-class MockGeolocatorPlatform extends GeolocatorPlatform {
-  @override
-  Future<LocationPermission> requestPermission() =>
-      Future.value(LocationPermission.always);
-
-  @override
-  Future<bool> isLocationServiceEnabled() => Future.value(true);
-
-  @override
-  Future<Position> getCurrentPosition(
-          {LocationAccuracy desiredAccuracy = LocationAccuracy.best,
-          bool forceAndroidLocationManager = false,
-          Duration? timeLimit}) =>
-      Future.value(Position(
-          longitude: -31.9509882,
-          latitude: 115.8577778,
-          timestamp: DateTime(2021, 1, 1),
-          accuracy: 0,
-          altitude: 0,
-          heading: 0,
-          speed: 0,
-          speedAccuracy: 0));
 }
