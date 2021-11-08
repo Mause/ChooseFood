@@ -1,16 +1,23 @@
+import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
-    show WidgetTester, find, setUp, tearDown, testWidgets;
+    show
+        WidgetTester,
+        find,
+        findsOneWidget,
+        setUp,
+        tearDown,
+        testWidgets,
+        expect;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
 import 'package:integration_test/integration_test.dart'
     show IntegrationTestWidgetsFlutterBinding;
 import 'package:logger/logger.dart' show Logger;
+import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
-import 'package:network_image_mock/src/network_image_mock.dart' show image;
-import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Session;
+import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
 
 var log = Logger();
 
@@ -27,12 +34,16 @@ void main() {
 
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
-    Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
+    Get.put(SupabaseClient("https://supabase", "dummy"), permanent: true);
     GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
-    var nockScope = nock("https://dummy");
+    var nockScope = nock("https://supabase");
     nockScope
-        .get("/rest/v1/session?select=id%2Cdecision%28decision%29")
+        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
+        .reply(200, []);
+    nockScope
+        .get(
+            "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
       {
         "id": "0000-00000-00000-00000",
@@ -42,9 +53,12 @@ void main() {
         ]
       }
     ]);
-    nockScope
-        .post("/rest/v1/session", Session(point: "POINT(115.8577778 -31.9509882)").toJson())
-        .reply(200, [
+    nockScope.post("/rest/v1/session", {
+      "point": {
+        "type": "Point",
+        "coordinates": [115.8577778, -31.9509882]
+      }
+    }).reply(200, [
       {
         "id": "0000-00000-00000-00000",
       }
@@ -86,29 +100,7 @@ void main() {
 
     await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-friends');
+    expect(find.byType(SessionCard), findsOneWidget);
+    await binding.takeScreenshot('screenshot-friends');
   });
-}
-
-class MockGeolocatorPlatform extends GeolocatorPlatform {
-  @override
-  Future<LocationPermission> requestPermission() =>
-      Future.value(LocationPermission.always);
-
-  @override
-  Future<bool> isLocationServiceEnabled() => Future.value(true);
-
-  @override
-  Future<Position> getCurrentPosition(
-          {LocationAccuracy desiredAccuracy = LocationAccuracy.best,
-          bool forceAndroidLocationManager = false,
-          Duration? timeLimit}) =>
-      Future.value(Position(
-          longitude: -31.9509882,
-          latitude: 115.8577778,
-          timestamp: DateTime(2021, 1, 1),
-          accuracy: 0,
-          altitude: 0,
-          heading: 0,
-          speed: 0,
-          speedAccuracy: 0));
 }

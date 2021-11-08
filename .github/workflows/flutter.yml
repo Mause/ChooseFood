@@ -95,6 +95,17 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
 
+#       - uses: "marvinpinto/action-automatic-releases@latest"
+#         if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
+#         with:
+#           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#           automatic_release_tag: "builds/androiddeploy/1.0.0+${{ github.run_number }}"
+#           prerelease: false
+#           title: "Build 1.0.0+${{ github.run_number }}"
+#           files: |
+#             build/app/outputs/bundle/release/app-release.aab
+#             *.apk
+
       - uses: "marvinpinto/action-automatic-releases@latest"
         if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
         with:
