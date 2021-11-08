@@ -3,7 +3,15 @@ import 'dart:async' show Future;
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show ButtonBar, Card, ElevatedButton, Ink, ListTile, Theme, ThemeData, showDialog;
+    show
+        ButtonBar,
+        Card,
+        ElevatedButton,
+        Ink,
+        ListTile,
+        Theme,
+        ThemeData,
+        showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -39,7 +47,13 @@ import 'package:sentry_flutter/sentry_flutter.dart'
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart'
-    show BasePage, LabelledProgressIndicator, excludeNull, execute, makeErrorDialog, title;
+    show
+        BasePage,
+        LabelledProgressIndicator,
+        excludeNull,
+        execute,
+        makeErrorDialog,
+        title;
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
@@ -133,7 +147,7 @@ class MyHomePageState extends State<MyHomePage> {
             .select()
             .is_(ColumnNames.session.concludedId, null),
         Session.fromJson);
-    if (response.error!=null){
+    if (response.error != null) {
       return handleError(response.error);
     }
 
@@ -144,7 +158,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   getPlaces() async {
-    context.loaderOverlay.show(widget: const LabelledProgressIndicator("Loading places"));
+    context.loaderOverlay
+        .show(widget: const LabelledProgressIndicator("Loading places"));
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
@@ -314,7 +329,7 @@ class MyHomePageState extends State<MyHomePage> {
         .execute();
   }
 
-  void handleError(PostgrestError? error) {
+  void handleError(dynamic error) {
     context.loaderOverlay.hide();
     log.e(error);
     throw ArgumentError(error);
@@ -326,6 +341,7 @@ class SessionFieldNames {
 
   const SessionFieldNames();
 }
+
 class ColumnNames {
   static const session = SessionFieldNames();
 }
