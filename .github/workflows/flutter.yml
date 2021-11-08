@@ -194,6 +194,10 @@ jobs:
           name: screenshots
           path: screenshots/
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm install node-fetch
       - name: Upload failed tests
         if: always() && github.ref != 'refs/heads/main'
         uses: actions/github-script@v5
