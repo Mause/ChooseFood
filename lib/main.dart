@@ -3,15 +3,7 @@ import 'dart:async' show Future;
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show
-        ButtonBar,
-        Card,
-        ElevatedButton,
-        Ink,
-        ListTile,
-        Theme,
-        ThemeData,
-        showDialog;
+    show ButtonBar, Card, ElevatedButton, Ink, ListTile, Theme, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -124,6 +116,32 @@ class MyHomePageState extends State<MyHomePage> {
   GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadExistingSession();
+  }
+
+  Future<void> loadExistingSession() async {
+    context.loaderOverlay.show(widget: const Text("Loading existing session"));
+
+    var response = await execute<Session>(
+        supabaseClient
+            .from(TableNames.session)
+            .select()
+            .is_(ColumnNames.session.concludedId, null),
+        Session.fromJson);
+    if (response.error!=null){
+      return handleError(response.error);
+    }
+
+    setState(() {
+      context.loaderOverlay.hide();
+      sessionId = response.datam[0].id;
+    });
+  }
 
   getPlaces() async {
     context.loaderOverlay.show(widget: const LabelledProgressIndicator(label: "Loading places"));
@@ -295,6 +313,21 @@ class MyHomePageState extends State<MyHomePage> {
             .toJson()))
         .execute();
   }
+
+  void handleError(PostgrestError? error) {
+    context.loaderOverlay.hide();
+    log.e(error);
+    throw ArgumentError(error);
+  }
+}
+
+class SessionFieldNames {
+  final String concludedTime = "concludedTime";
+
+  const SessionFieldNames();
+}
+class ColumnNames {
+  static const session = SessionFieldNames();
 }
 
 class TableNames {
