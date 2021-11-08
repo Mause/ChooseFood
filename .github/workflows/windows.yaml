@@ -39,3 +39,7 @@ jobs:
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
       - run: flutter build windows
+      - run: flutter pub run msix:create
+      - uses: actions/upload-artifact@v2
+        with:
+          path: build\windows\runner

@@ -71,6 +71,7 @@ dev_dependencies:
     git:
       url: https://github.com/Mause/swagger-dart-code-generator
       ref: patch-1
+  msix: ^2.6.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -114,3 +115,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+msix_config:
+  display_name: Choose Food
+  publisher_display_name: mause.me
+  identity_name: Mause.ChooseFood
+  msix_version: 1.0.0.0
+  architecture: x64
+  capabilities: "internetClient,location"
