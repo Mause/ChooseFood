@@ -200,13 +200,20 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const request = require('request');
             const fileStream = fs.createReadStream("screenshots/screenshot-friends.png");
 
             const url = '${{ secrets.SUPABASE_URL }}/storage/v1/object/screenshots/${{ github.run_number }}/screenshot-friends.png';
 
-            var data = new FormData()
-            data.append('file', fileStream);
-            await fetch(url, {body: data, headers: {Authorization: "${{ secrets.SUPABASE_KEY }}"}});
+            const req = request.post(url, {headers: {Authorization: "${{ secrets.SUPABASE_KEY }}"}}, function (err, resp, body) {
+              if (err) {
+                console.log('Error!');
+              } else {
+                console.log('URL: ' + body);
+              }
+            });
+            const form = req.form();
+            form.append('file', fileStream);
 
             const fields = {
               commit_sha: context.sha,
