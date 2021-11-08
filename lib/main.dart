@@ -326,6 +326,8 @@ class MyHomePageState extends State<MyHomePage> {
         .execute();
     setState(() {
       sessionId = null;
+      results = [];
+      index = 0;
     });
     context.loaderOverlay.hide();
   }
