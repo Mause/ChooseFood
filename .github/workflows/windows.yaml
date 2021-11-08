@@ -19,7 +19,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: 'beta'
-      - run: flutter doctor
+ 
       - run: flutter config --enable-windows-desktop
       - name: Install dependencies
         run: flutter pub get
@@ -42,4 +42,5 @@ jobs:
       - run: flutter pub run msix:create
       - uses: actions/upload-artifact@v2
         with:
-          path: build\windows\runner
+          name: msix
+          path: build\windows\runner\**\*.msix
