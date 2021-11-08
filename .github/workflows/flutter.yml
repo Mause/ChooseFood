@@ -200,6 +200,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const fetch = require('node-fetch');
             const fileStream = fs.createReadStream("screenshots/screenshot-friends.png");
 
             const url = '${{ secrets.SUPABASE_URL }}/storage/v1/object/screenshots/${{ github.run_number }}/screenshot-friends.png';
