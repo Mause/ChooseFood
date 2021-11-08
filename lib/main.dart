@@ -299,8 +299,9 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String? getUser() {
-    return supabaseClient.auth.currentUser!.id;
+  String getUser() {
+    return supabaseClient.auth.currentUser?.id ??
+        '00000000-0000-0000-0000-000000000000';
   }
 
   Future<void> createDecision(String reference, bool state) async {
