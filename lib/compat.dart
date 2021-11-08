@@ -1,6 +1,7 @@
 import 'dart:async' show Completer, Future;
 import 'dart:html' show document;
 
+import 'package:get/get.dart' show Get, Inst;
 import 'package:google_maps/google_maps.dart' show LatLng;
 import 'package:google_maps/google_maps_places.dart'
     show
@@ -91,7 +92,7 @@ class WebPlace extends Place {
 }
 
 class Android implements Compat {
-  GoogleMapsPlaces places = GoogleMapsPlaces();
+  GoogleMapsPlaces places = Get.find();
 
   @override
   Future<Result> getPlaces(Location location, num radius, String type) async {
