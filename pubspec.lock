@@ -748,7 +748,7 @@ packages:
     description:
       path: "."
       ref: patch-1
-      resolved-ref: "1cbfef8dba5a3fa191d6c13d0fde299bef9afd9f"
+      resolved-ref: b148d86888e1bbdbec480bf0468aeb58e4b51478
       url: "https://github.com/Mause/swagger-dart-code-generator"
     source: git
     version: "2.2.3"
