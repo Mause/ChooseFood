@@ -153,7 +153,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       context.loaderOverlay.hide();
-      sessionId = response.datam[0].id;
+      sessionId = response.datam.isEmpty ? null : response.datam[0].id;
     });
   }
 
