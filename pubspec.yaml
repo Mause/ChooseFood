@@ -72,7 +72,7 @@ dev_dependencies:
       url: https://github.com/Mause/swagger-dart-code-generator
       ref: patch-1
   msix: ^2.6.2
-  flutter_gherkin: ^2.0.0
+  flutter_gherkin: ^3.0.0-rc.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
