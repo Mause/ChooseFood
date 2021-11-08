@@ -287,6 +287,7 @@ class MyHomePageState extends State<MyHomePage> {
           direction: Axis.horizontal,
           children: [
             elevatedButton('Login', _login),
+            elevatedButton('Conclude session', concludeSession),
             elevatedButton('Get places', getPlaces),
           ],
         ),
@@ -314,10 +315,25 @@ class MyHomePageState extends State<MyHomePage> {
             .toJson()))
         .execute();
   }
+
+  Future<void> concludeSession() async {
+    context.progress('Closing session');
+    await supabaseClient
+        .from(TableNames.session)
+        .update(excludeNull(Session(
+                id: sessionId, concludedTime: DateTime.now().toIso8601String())
+            .toJson()))
+        .execute();
+    setState(() {
+      sessionId = null;
+    });
+    context.loaderOverlay.hide();
+  }
 }
 
 class SessionFieldNames {
   final String concludedTime = "concludedTime";
+  final String id = 'id';
 
   const SessionFieldNames();
 }
