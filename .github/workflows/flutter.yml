@@ -207,18 +207,11 @@ jobs:
 
       - name: Upload failed tests
         if: always() && github.ref != 'refs/heads/main'
-        uses: actions/github-script@v5
+        uses: edunad/actions-image@v1.0.1
         with:
-          script: |
-            const fs = require('fs');
-            const data = fs.readFileSync("screenshots/screenshot-friends.png").toString('base64');
-
-            octokit.rest.repos.createCommitComment({
-              commit_sha: context.sha,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `![Image](data:image/png;base64,${data})`
-            })
+            path: './screenshots/*'
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            title: 'Screenshots'
 
   note_changelog:
     runs-on: ubuntu-latest
@@ -234,7 +227,6 @@ jobs:
 
       - run: |
           bundle exec fastlane create_notes build_number:${{ github.run_number }}
-
   publish:
     runs-on: ubuntu-latest
     needs:
@@ -265,7 +257,6 @@ jobs:
           ls -a build/app/outputs/bundle/release/
           git config user.name "GitHub Actions"
           git config user.email "ga@mause.me"
-
       - run: bundle exec fastlane android deploy build_number:${{ github.run_number }}
 
   build_windows:
