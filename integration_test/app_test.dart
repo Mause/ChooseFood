@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
+import 'package:path/path.dart' as path;
+
 import 'hooks/hook_example.dart';
 import 'steps/colour_parameter.dart';
 import 'steps/given_i_pick_a_colour_step.dart';
@@ -8,7 +10,7 @@ import 'steps/tap_button_n_times_step.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [RegExp('features/*.*.feature')]
+    ..features = [RegExp(path.context.current + '/features/*.*.feature')]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
