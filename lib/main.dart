@@ -144,9 +144,18 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     setState(() {
-      context.loaderOverlay.hide();
       sessionId = response.datam.isEmpty ? null : response.datam[0].id;
     });
+
+    if (response.datam.isNotEmpty) {
+      await loadPlaces(toLocation(response.datam[0].point!));
+    }
+  }
+
+  Location toLocation(Point point) {
+    var coordinates = point.coordinates!;
+    var location = Location(lat: coordinates[0], lng: coordinates[1]);
+    return location;
   }
 
   getPlaces() async {
@@ -156,6 +165,10 @@ class MyHomePageState extends State<MyHomePage> {
     context.progress("Creating session...");
     await createSession(location);
 
+    await loadPlaces(location);
+  }
+
+  Future<void> loadPlaces(Location location) async {
     context.progress("Loading places...");
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
