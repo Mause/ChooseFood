@@ -7,3 +7,9 @@ targets:
           output_folder: 'lib/generated_code/'
           build_only_models: true
           separate_models: true
+    sources:
+      - lib/**
+      - pubspec.*
+      - $package$
+      # Allows the code generator to target files outside of the lib folder
+      - integration_test/**.dart
