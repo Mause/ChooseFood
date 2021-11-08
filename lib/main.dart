@@ -144,7 +144,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   getPlaces() async {
-    context.loaderOverlay.show(widget: const LabelledProgressIndicator(label: "Loading places"));
+    context.loaderOverlay.show(widget: const LabelledProgressIndicator("Loading places"));
 
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
