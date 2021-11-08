@@ -256,6 +256,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.0+2"
+  flutter_gherkin:
+    dependency: "direct dev"
+    description:
+      name: flutter_gherkin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -327,6 +334,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.8"
+  gherkin:
+    dependency: transitive
+    description:
+      name: gherkin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5+1"
   glob:
     dependency: transitive
     description:
