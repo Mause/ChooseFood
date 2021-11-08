@@ -287,6 +287,8 @@ class MyHomePageState extends State<MyHomePage> {
           direction: Axis.horizontal,
           children: [
             elevatedButton('Login', _login),
+            elevatedButton('Conclude session', concludeSession,
+                enabled: sessionId != null),
             elevatedButton('Get places', getPlaces),
           ],
         ),
@@ -299,8 +301,9 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String? getUser() {
-    return supabaseClient.auth.currentUser!.id;
+  String getUser() {
+    return supabaseClient.auth.currentUser?.id ??
+        '00000000-0000-0000-0000-000000000000';
   }
 
   Future<void> createDecision(String reference, bool state) async {
@@ -314,10 +317,25 @@ class MyHomePageState extends State<MyHomePage> {
             .toJson()))
         .execute();
   }
+
+  Future<void> concludeSession() async {
+    context.progress('Closing session');
+    await supabaseClient
+        .from(TableNames.session)
+        .update(excludeNull(Session(
+                id: sessionId, concludedTime: DateTime.now().toIso8601String())
+            .toJson()))
+        .execute();
+    setState(() {
+      sessionId = null;
+    });
+    context.loaderOverlay.hide();
+  }
 }
 
 class SessionFieldNames {
   final String concludedTime = "concludedTime";
+  final String id = 'id';
 
   const SessionFieldNames();
 }
@@ -371,12 +389,13 @@ class LocationCard extends StatelessWidget {
   }
 }
 
-Padding elevatedButton(String label, void Function() onPressed) {
+Padding elevatedButton(String label, void Function() onPressed,
+    {bool enabled = true}) {
   return Padding(
     padding: const EdgeInsets.all(10),
     child: ElevatedButton(
       child: Text(label),
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
     ),
   );
 }
