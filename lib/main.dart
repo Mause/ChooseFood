@@ -148,7 +148,7 @@ class MyHomePageState extends State<MyHomePage> {
             .is_(ColumnNames.session.concludedTime, null),
         Session.fromJson);
     if (response.error != null) {
-      return handleError(response.error);
+      throw makeError(response.error);
     }
 
     setState(() {
@@ -214,8 +214,9 @@ class MyHomePageState extends State<MyHomePage> {
     return location;
   }
 
-  Future<ArgumentError> makeError(String message,
+  Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
+    context.loaderOverlay.hide();
     showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
@@ -336,12 +337,6 @@ class MyHomePageState extends State<MyHomePage> {
                 decision: state)
             .toJson()))
         .execute();
-  }
-
-  void handleError(dynamic error) {
-    context.loaderOverlay.hide();
-    log.e(error);
-    throw ArgumentError(error);
   }
 }
 
