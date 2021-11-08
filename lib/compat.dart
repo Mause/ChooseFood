@@ -26,16 +26,18 @@ abstract class Place {
 
 class AndroidPlace extends Place {
   String photoReference;
+  GoogleMapsPlaces places;
 
   AndroidPlace(
       {required String name,
       required String reference,
+      required this.places,
       required this.photoReference})
       : super(name: name, reference: reference);
 
   @override
-  String buildPhotoUrl(num maxWidth) => GoogleMapsPlaces()
-      .buildPhotoUrl(photoReference: photoReference, maxWidth: maxWidth as int);
+  String buildPhotoUrl(num maxWidth) => places.buildPhotoUrl(
+      photoReference: photoReference, maxWidth: maxWidth as int);
 }
 
 class Result {
@@ -106,6 +108,7 @@ class Android implements Compat {
   Place convertItem(PlacesSearchResult? result) {
     return AndroidPlace(
         name: result!.name,
+        places: places,
         reference: result.reference,
         photoReference: result.photos[0].photoReference);
   }
