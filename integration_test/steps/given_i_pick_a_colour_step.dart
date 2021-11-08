@@ -9,7 +9,7 @@ StepDefinitionGeneric GivenIPickAColour() {
     (key, count, context) async {
       final locator = find.byValueKey(key);
       for (var i = 0; i < count; i += 1) {
-        await context.world.driver!.tap(locator);
+        await context.world.appDriver.tap(locator);
       }
     },
   );
