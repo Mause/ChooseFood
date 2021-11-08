@@ -746,10 +746,12 @@ packages:
   swagger_dart_code_generator:
     dependency: "direct dev"
     description:
-      name: swagger_dart_code_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.4"
+      path: "."
+      ref: patch-1
+      resolved-ref: "1cbfef8dba5a3fa191d6c13d0fde299bef9afd9f"
+      url: "https://github.com/Mause/swagger-dart-code-generator"
+    source: git
+    version: "2.2.3"
   sync_http:
     dependency: transitive
     description:
