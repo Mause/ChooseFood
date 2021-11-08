@@ -47,7 +47,13 @@ import 'package:sentry_flutter/sentry_flutter.dart'
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart'
-    show BasePage, LabelledProgressIndicator, excludeNull, execute, makeErrorDialog, title;
+    show
+        BasePage,
+        LabelledProgressIndicatorExtension,
+        excludeNull,
+        execute,
+        makeErrorDialog,
+        title;
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
@@ -126,14 +132,33 @@ class MyHomePageState extends State<MyHomePage> {
   SupabaseClient supabaseClient = Get.find();
 
   getPlaces() async {
-    context.loaderOverlay.show(widget: const LabelledProgressIndicator("Loading places"));
+    context.progress("Determining location...");
+    var location = await getLocation();
 
+    context.progress("Creating session...");
+    await createSession(location);
+
+    context.progress("Loading places...");
+    var response =
+        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
+    if (response.errorMessage != null) {
+      throw await makeError(response.errorMessage!);
+    } else {
+      log.i("found places ${response.results.length}");
+    }
+
+    setState(() {
+      results = response.results;
+      context.loaderOverlay.hide();
+    });
+  }
+
+  Future<Location> getLocation() async {
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
     log.i({"locationServiceEnabled": locationServiceEnabled});
     if (!locationServiceEnabled) {
-      log.e("Location service not enabled");
-      return;
+      throw makeError("Location service not enabled");
     }
     try {
       var permission = await geolocatorPlatform
@@ -145,8 +170,7 @@ class MyHomePageState extends State<MyHomePage> {
         "permission": permission
       });
       if (!isAllowed(permission)) {
-        log.e("Location permission not given");
-        return;
+        throw await makeError("Location permission not given");
       }
     } catch (e, s) {
       log.e("Failed to request permission, trying anyway", e, s);
@@ -157,29 +181,21 @@ class MyHomePageState extends State<MyHomePage> {
       geoposition = await geolocatorPlatform.getCurrentPosition(
           timeLimit: const Duration(seconds: 10));
     } catch (e, s) {
-      showDialog(context: context, builder: makeErrorDialog(e.toString()));
-      await Sentry.captureException(e, stackTrace: s);
-      log.e("location request timed out", e, s);
-      return;
+      throw await makeError("Location request timed out", e: e, s: s);
     }
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
+    return location;
+  }
 
-    await createSession(location);
-
-    var response =
-        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
-    if (response.errorMessage != null) {
-      await Sentry.captureMessage(response.errorMessage);
-      log.e(response.errorMessage);
-    } else {
-      log.i("found places ${response.results.length}");
-    }
-
-    setState(() {
-      results = response.results;
-      context.loaderOverlay.hide();
-    });
+  Future<ArgumentError> makeError(String message,
+      {dynamic e, StackTrace? s}) async {
+    showDialog(
+        context: context,
+        builder: makeErrorDialog(e.toString(), title: message));
+    await Sentry.captureException(e, stackTrace: s, hint: message);
+    log.e(message, e, s);
+    return ArgumentError(message);
   }
 
   Future<void> createSession(Location location) async {

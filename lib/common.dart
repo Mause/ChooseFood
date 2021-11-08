@@ -3,6 +3,8 @@ import 'package:choose_food/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:loader_overlay/loader_overlay.dart'
+    show OverlayControllerWidgetExtension;
 import 'package:supabase/supabase.dart'
     show PostgrestBuilder, PostgrestError, PostgrestResponse;
 
@@ -139,13 +141,20 @@ class LabelledProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      constraints: const BoxConstraints(
+        minWidth: 36.0,
+        minHeight: 36.0,
+      ),
       child: Row(
-        children: [
-          const CircularProgressIndicator(),
-          Text(label)
-        ],
+        children: [const CircularProgressIndicator(), Text(label)],
       ),
     );
+  }
+}
+
+extension LabelledProgressIndicatorExtension on BuildContext {
+  progress(String label) {
+    loaderOverlay.show(widget: LabelledProgressIndicator(label));
   }
 }
