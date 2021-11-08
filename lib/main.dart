@@ -139,7 +139,8 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> loadExistingSession() async {
-    context.loaderOverlay.show(widget: const Text("Loading existing session"));
+    context.loaderOverlay.show(
+        widget: const LabelledProgressIndicator("Loading existing session"));
 
     var response = await execute<Session>(
         supabaseClient
