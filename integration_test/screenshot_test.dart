@@ -17,6 +17,7 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
+import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
 
 var log = Logger();
 
@@ -99,28 +100,4 @@ void main() {
     expect(find.byType(SessionCard), findsOneWidget);
     await binding.takeScreenshot('screenshot-friends');
   });
-}
-
-class MockGeolocatorPlatform extends GeolocatorPlatform {
-  @override
-  Future<LocationPermission> requestPermission() =>
-      Future.value(LocationPermission.always);
-
-  @override
-  Future<bool> isLocationServiceEnabled() => Future.value(true);
-
-  @override
-  Future<Position> getCurrentPosition(
-          {LocationAccuracy desiredAccuracy = LocationAccuracy.best,
-          bool forceAndroidLocationManager = false,
-          Duration? timeLimit}) =>
-      Future.value(Position(
-          longitude: -31.9509882,
-          latitude: 115.8577778,
-          timestamp: DateTime(2021, 1, 1),
-          accuracy: 0,
-          altitude: 0,
-          heading: 0,
-          speed: 0,
-          speedAccuracy: 0));
 }
