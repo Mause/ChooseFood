@@ -253,7 +253,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     if (accessToken == null) {
-      throw makeError('Failed to login');
+      throw await makeError('Failed to login');
     }
 
     setState(() {
