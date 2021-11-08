@@ -3,15 +3,7 @@ import 'dart:async' show Future;
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show
-        ButtonBar,
-        Card,
-        ElevatedButton,
-        Ink,
-        ListTile,
-        Theme,
-        ThemeData,
-        showDialog;
+    show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -121,7 +113,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
@@ -273,17 +264,6 @@ class MyHomePageState extends State<MyHomePage> {
     log.i("login complete?");
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     LocationCard? location;
@@ -306,13 +286,8 @@ class MyHomePageState extends State<MyHomePage> {
           direction: Axis.horizontal,
           children: [
             elevatedButton('Login', _login),
-            elevatedButton('Increment', _incrementCounter),
             elevatedButton('Get places', getPlaces),
           ],
-        ),
-        Text(
-          '$_counter',
-          style: Theme.of(context).textTheme.headline4,
         ),
         Text(sessionId == null
             ? 'No session started yet'
