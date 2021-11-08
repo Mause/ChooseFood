@@ -287,7 +287,8 @@ class MyHomePageState extends State<MyHomePage> {
           direction: Axis.horizontal,
           children: [
             elevatedButton('Login', _login),
-            elevatedButton('Conclude session', concludeSession),
+            elevatedButton('Conclude session', concludeSession,
+                enabled: sessionId != null),
             elevatedButton('Get places', getPlaces),
           ],
         ),
@@ -387,12 +388,13 @@ class LocationCard extends StatelessWidget {
   }
 }
 
-Padding elevatedButton(String label, void Function() onPressed) {
+Padding elevatedButton(String label, void Function() onPressed,
+    {bool enabled = true}) {
   return Padding(
     padding: const EdgeInsets.all(10),
     child: ElevatedButton(
       child: Text(label),
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
     ),
   );
 }
