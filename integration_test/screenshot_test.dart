@@ -34,10 +34,13 @@ void main() {
 
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
-    Get.put(SupabaseClient("https://dummy", "dummy"), permanent: true);
+    Get.put(SupabaseClient("https://supabase", "dummy"), permanent: true);
     GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
-    var nockScope = nock("https://dummy");
+    var nockScope = nock("https://supabase");
+    nockScope
+        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
+        .reply(200, []);
     nockScope
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
