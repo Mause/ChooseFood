@@ -209,7 +209,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
     context.loaderOverlay.hide();
-    showDialog(
+    await showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
     await Sentry.captureException(e, stackTrace: s, hint: message);
@@ -253,9 +253,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     if (accessToken == null) {
-      await Sentry.captureMessage('failed to login');
-      log.e("failed to login");
-      return;
+      throw makeError('Failed to login');
     }
 
     setState(() {
