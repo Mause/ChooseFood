@@ -5,15 +5,32 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
-env:
-  MY_GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
 jobs:
-  assign_one_project:
+  issue_opened_and_reopened:
+    name: issue_opened_and_reopened
     runs-on: ubuntu-latest
-    name: Assign to Project
+    if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
     steps:
-    - name: Assign NEW issues and NEW pull requests to project
-      uses: srggrs/assign-one-project-github-action@1.3.1
-      with:
-        project: 'https://github.com/users/Mause/projects/3'
+      - name: 'Move issue to "Todo"'
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
+        with:
+          gh_token: ${{ secrets.ACCESS_TOKEN }}
+          organization: Mause
+          project_id: 3
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: "Todo"
+
+  pr_opened_reopened_review_requested:
+    name: pr_opened_reopened_review_requested
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested'
+    steps:
+      - name: 'Move PR to "In Progress"'
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
+        with:
+          gh_token: ${{ secrets.ACCESS_TOKEN }}
+          organization: Mause
+          project_id: 3
+          resource_node_id: ${{ github.event.pull_request.node_id }}
+          status_value: "In Progress"
