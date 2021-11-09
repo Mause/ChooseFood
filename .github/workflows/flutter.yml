@@ -170,7 +170,7 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@master
         with:
-          project_id: choosefood
+          project_id: choose-food-330101
           service_account_key: ${{ secrets.SERVICE_TOKEN }}
           export_default_credentials: true
 
