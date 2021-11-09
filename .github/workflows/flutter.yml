@@ -183,11 +183,19 @@ jobs:
             --test android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=Pixel3,version=30,locale=en_AU,orientation=portrait
 
+      - name: List buckets
+        if: always()
+        run: |
+          gsutil ls -p choose-food-330101
+
+      - name: List bucket
+        if: always()
+        run: |
+          gsutil ls -p choose-food-330101 | head
+
       - name: List bucket contents
         if: always()
         run: |
-          gsutil ls
-          gsutil ls | head
           BUCKET_NAME=$(gsutil ls | head)
           echo Bucket name: $BUCKET_NAME
           gsutil ls -r gs://$BUCKET_NAME/**
