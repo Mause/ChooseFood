@@ -77,7 +77,8 @@ class FriendsSessionsState extends State<FriendsSessions> {
                 placeReference,
                 participantId
               )
-              """).is_(ColumnNames.session.concludedTime, null), SessionWithDecisions.fromJson);
+              """).is_(ColumnNames.session.concludedTime, null),
+          SessionWithDecisions.fromJson);
     } catch (e, s) {
       handleError(e, s);
       return;
@@ -143,6 +144,12 @@ class SessionCard extends StatelessWidget {
         children: [
           ListTile(title: Text(sessionWithDecisions.id!)),
           ButtonBar(children: [
+            TextButton(
+                onPressed: () {
+                  Sentry.captureMessage(
+                      'User wishes to join ${sessionWithDecisions.id}');
+                },
+                child: const Text('Join')),
             TextButton(
                 onPressed: () async {
                   await showDialog(
