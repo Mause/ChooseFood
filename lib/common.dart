@@ -125,9 +125,9 @@ class MyPostgrestResponse<T> extends PostgrestResponse {
 }
 
 Widget Function(BuildContext) makeErrorDialog(String error,
-    {String title = 'Login failed'}) {
+    {dynamic title = 'Login failed'}) {
   return (BuildContext context) => AlertDialog(
-      title: Text(title),
+      title: Text(title.toString()),
       content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
 

@@ -20,6 +20,8 @@ import 'package:flutter/widgets.dart'
         Expanded,
         Key,
         ListView,
+        Axis,
+        SingleChildScrollView,
         State,
         StatefulWidget,
         StatelessWidget,
@@ -168,18 +170,20 @@ class SessionCard extends StatelessWidget {
 Widget buildDialog(context, SessionWithDecisions sessionWithDecisions) =>
     AlertDialog(
         title: Text(sessionWithDecisions.id!),
-        content: DataTable(
-            columns: const [
-              DataColumn(label: Text("Place Reference")),
-              DataColumn(label: Text("Decision")),
-              DataColumn(label: Text("Participant ID"))
-            ],
-            rows: sessionWithDecisions.decision
-                .map((e) => DataRow(cells: [
-                      DataCell(Text(
-                        e.placeReference!,
-                      )),
-                      DataCell(Text(e.decision!.toString())),
-                      DataCell(Text(e.participantId!.toString()))
-                    ]))
-                .toList()));
+        content: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                columns: const [
+                  DataColumn(label: Text("Place Reference")),
+                  DataColumn(label: Text("Decision")),
+                  DataColumn(label: Text("Participant ID"))
+                ],
+                rows: sessionWithDecisions.decision
+                    .map((e) => DataRow(cells: [
+                          DataCell(Text(
+                            e.placeReference!,
+                          )),
+                          DataCell(Text(e.decision!.toString())),
+                          DataCell(Text(e.participantId!.toString()))
+                        ]))
+                    .toList())));
