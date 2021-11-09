@@ -359,6 +359,16 @@ class SessionFieldNames {
 
 class ColumnNames {
   static const session = SessionFieldNames();
+  static const decision = DecisionFieldNames();
+}
+
+class DecisionFieldNames {
+  final String id = "id";
+  final String decision = "decision";
+  final String placeReference = "placeReference";
+  final String participantId = "participantId";
+
+  const DecisionFieldNames();
 }
 
 class TableNames {
