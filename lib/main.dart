@@ -2,6 +2,8 @@ import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
+import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
+    show PointType;
 import 'package:flutter/material.dart'
     show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
@@ -234,7 +236,7 @@ class MyHomePageState extends State<MyHomePage> {
     var response = (await execute<Session>(
         supabaseClient.from(TableNames.session).insert(excludeNull(Session(
             point: Point(
-                type: "Point",
+                type: PointType.point,
                 coordinates: [location.lat, location.lng])).toJson())),
         Session.fromJson));
     if (response.error != null) {
