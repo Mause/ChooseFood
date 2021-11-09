@@ -283,7 +283,6 @@ jobs:
           ls -a build/app/outputs/bundle/release/
           git config user.name "GitHub Actions"
           git config user.email "ga@mause.me"
-
       - run: bundle exec fastlane android deploy build_number:${{ github.run_number }}
 
   build_windows:

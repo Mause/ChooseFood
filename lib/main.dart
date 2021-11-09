@@ -2,6 +2,7 @@ import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart'
     show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
@@ -29,8 +30,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'package:get/get.dart';
-import 'package:google_maps_webservice/places.dart'
-    show GoogleMapsPlaces, Location, PlacesSearchResult;
+import 'package:google_maps_webservice/places.dart' show Location;
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
@@ -38,6 +38,7 @@ import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
+import 'compat.dart';
 import 'common.dart'
     show
         BasePage,
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
     Get.isLogEnable = true;
     Get.put(SupabaseClient(
         EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
-    Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
+    Get.put(kIsWeb ? Web() : Android());
 
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
@@ -116,11 +117,11 @@ class MyHomePage extends StatefulWidget {
 class MyHomePageState extends State<MyHomePage> {
   String? userId;
   int index = 0;
-  List<PlacesSearchResult> results = [];
+  List<Place> results = [];
   String? sessionId;
 
   GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
-  GoogleMapsPlaces places = Get.find();
+  Compat places = Get.find();
   SupabaseClient supabaseClient = Get.find();
 
   @override
@@ -170,8 +171,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> loadPlaces(Location location) async {
     context.progress("Loading places...");
-    var response =
-        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
+    var response = await places.getPlaces(location, 3000, "restaurant");
     if (response.errorMessage != null) {
       throw await makeError(response.errorMessage!);
     } else {
@@ -364,11 +364,10 @@ class TableNames {
 }
 
 class LocationCard extends StatelessWidget {
-  final PlacesSearchResult location;
-  final GoogleMapsPlaces places = Get.find();
-  final void Function(PlacesSearchResult searchResult, bool state) callback;
+  final Place location;
+  final void Function(Place searchResult, bool state) callback;
 
-  LocationCard({Key? key, required this.location, required this.callback})
+  const LocationCard({Key? key, required this.location, required this.callback})
       : super(key: key);
 
   @override
@@ -381,9 +380,8 @@ class LocationCard extends StatelessWidget {
             height: 200.0,
             child: Ink.image(
               image: NetworkImage(
-                places.buildPhotoUrl(
-                    maxWidth: MediaQuery.of(context).size.width.truncate(),
-                    photoReference: location.photos[0].photoReference),
+                location.buildPhotoUrl(
+                    MediaQuery.of(context).size.width.truncate()),
               ),
               fit: BoxFit.cover,
             ),
