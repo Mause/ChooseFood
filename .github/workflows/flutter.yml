@@ -157,7 +157,8 @@ jobs:
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
-      - run: |
+      - name: Build test apk
+        run: |
           pushd android
           flutter build apk
           ./gradlew app:assembleAndroidTest
@@ -181,7 +182,7 @@ jobs:
             --type instrumentation \
             --app *.apk \
             --test app-debug-androidTest/app-debug-androidTest.apk \
-            --device model=Pixel3,version=31,locale=au,orientation=portrait
+            --device model=Pixel3,version=31,locale=en_AU,orientation=portrait
 
       - uses: actions/upload-artifact@v2
         if: always()
