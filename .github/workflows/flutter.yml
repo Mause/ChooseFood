@@ -179,7 +179,7 @@ jobs:
         run: |
           gcloud firebase test android run \
             --type instrumentation \
-            --app build/app/outputs/flutter-apk/app-release.apk \
+            --app build/app/outputs/flutter-apk/app-debug.apk \
             --test android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=Pixel3,version=30,locale=en_AU,orientation=portrait
 
