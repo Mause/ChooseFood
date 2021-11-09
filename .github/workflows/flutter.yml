@@ -114,7 +114,7 @@ jobs:
           path: build/web
 
   integration_tests:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -182,7 +182,7 @@ jobs:
           gcloud firebase test android run \
             --type instrumentation \
             --app build/app/outputs/flutter-apk/app-release.apk \
-            --test app-debug-androidTest/app-debug-androidTest.apk \
+            --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=Pixel3,version=31,locale=en_AU,orientation=portrait
 
       - uses: actions/upload-artifact@v2
