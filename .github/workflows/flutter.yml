@@ -158,12 +158,13 @@ jobs:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
       - name: Build test apk
+        working-directory: android
         run: |
-          pushd android
           flutter build apk
           ./gradlew app:assembleAndroidTest
           ./gradlew app:assembleDebug -Ptarget=integration_test/screenshot_test.dart
-          popd
+          tree android
+          tree build
         env:
           SIGNING_KEY: key.store
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
