@@ -183,6 +183,13 @@ jobs:
             --test android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=Pixel3,version=30,locale=en_AU,orientation=portrait
 
+      - name: List bucket contents
+        if: always()
+        run: |
+          BUCKET_NAME=$(gsutil ls | head)
+          echo Bucket name: $BUCKET_NAME
+          gsutil ls -r gs://$BUCKET_NAME/**
+
       - uses: actions/upload-artifact@v2
         if: always()
         with:
