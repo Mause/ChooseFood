@@ -1,5 +1,6 @@
 import 'package:choose_food/common.dart'
     show BasePage, MyPostgrestResponse, execute;
+import 'package:choose_food/main.dart' show ColumnNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -12,9 +13,6 @@ import 'package:flutter/material.dart'
         ListTile,
         TextButton,
         showDialog;
-import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
-import 'package:loader_overlay/loader_overlay.dart';
-import 'package:choose_food/main.dart' show TableNames;
 import 'package:flutter/widgets.dart'
     show
         BuildContext,
@@ -28,9 +26,12 @@ import 'package:flutter/widgets.dart'
         Text,
         Widget;
 import 'package:get/get.dart' show Get, Inst;
+import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
+
 import '../generated_code/openapi.models.swagger.dart'
     show Decision, Session, Point;
 
@@ -69,11 +70,14 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
     try {
       sessions = await execute<SessionWithDecisions>(
-          supabaseClient
-              .from(TableNames.session)
-              .select("id, decision(decision)")
-              .is_("concludedTime", null),
-          SessionWithDecisions.fromJson);
+          supabaseClient.from(TableNames.session).select("""
+              id,
+              decision(
+                decision,
+                placeReference,
+                participantId
+              )
+              """).is_(ColumnNames.session.concludedTime, null), SessionWithDecisions.fromJson);
     } catch (e, s) {
       handleError(e, s);
       return;

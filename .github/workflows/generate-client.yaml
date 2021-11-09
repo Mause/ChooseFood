@@ -28,11 +28,10 @@ jobs:
           EXECUTE_COMMANDS: |
             mkdir -p lib/swagger
             curl ${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_KEY }} | jq > lib/swagger/openapi.json
-            flutter pub run build_runner build
-            git add -f lib/generated_code
+            python3 ./.github/workflows/add_point.py
           COMMIT_MESSAGE: "chore: update ${{ matrix.name }} client"
           COMMIT_NAME: "GitHub Actions"
           COMMIT_EMAIL: "example@example.com"
           PR_BRANCH_NAME: "chore-${{ matrix.name }}-update-client-${PR_ID}"
           PR_TITLE: "chore: update ${{ matrix.name }} client"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}

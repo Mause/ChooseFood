@@ -3,6 +3,8 @@ import 'package:choose_food/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:loader_overlay/loader_overlay.dart'
+    show OverlayControllerWidgetExtension;
 import 'package:supabase/supabase.dart'
     show PostgrestBuilder, PostgrestError, PostgrestResponse;
 
@@ -131,3 +133,28 @@ Widget Function(BuildContext) makeErrorDialog(String error,
 
 Map<String, dynamic> excludeNull(Map<String, dynamic> map) =>
     Map.from(map)..removeWhere((key, value) => value == null);
+
+class LabelledProgressIndicator extends StatelessWidget {
+  final String label;
+
+  const LabelledProgressIndicator(this.label, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(
+        minWidth: 36.0,
+        minHeight: 36.0,
+      ),
+      child: Row(
+        children: [const CircularProgressIndicator(), Text(label)],
+      ),
+    );
+  }
+}
+
+extension LabelledProgressIndicatorExtension on BuildContext {
+  progress(String label) {
+    loaderOverlay.show(widget: LabelledProgressIndicator(label));
+  }
+}

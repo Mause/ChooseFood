@@ -87,6 +87,7 @@ jobs:
       - if: ${{ matrix.target == 'appbundle' }}
         uses: actions/upload-artifact@v2
         with:
+          name: apk
           path: '*.apk'
 
       - if: ${{ matrix.target == 'appbundle' }}
@@ -95,27 +96,17 @@ jobs:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "builds/androiddeploy/1.0.0+${{ github.run_number }}"
-          prerelease: false
-          title: "Build 1.0.0+${{ github.run_number }}"
-          files: |
-            build/app/outputs/bundle/release/app-release.aab
-            *.apk
+#       - uses: "marvinpinto/action-automatic-releases@latest"
+#         if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
+#         with:
+#           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#           automatic_release_tag: "builds/androiddeploy/1.0.0+${{ github.run_number }}"
+#           prerelease: false
+#           title: "Build 1.0.0+${{ github.run_number }}"
+#           files: |
+#             build/app/outputs/bundle/release/app-release.aab
+#             *.apk
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            build/app/outputs/bundle/release/app-release.aab
-            *.apk
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
@@ -211,11 +202,46 @@ jobs:
       - run: |
           bundle exec fastlane create_notes build_number:${{ github.run_number }}
 
-  publish:
+  create_github_release:
     runs-on: ubuntu-latest
     needs:
       - build_releases
       - integration_tests
+      - build_windows
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+          path: '*.aab'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: apk
+          path: '*.apk'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: msix
+          path: '*.msix'
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            *.aab
+            *.apk
+            *.msix
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: create_github_release
     if: github.ref == 'refs/heads/main'
 
     steps:
@@ -242,3 +268,45 @@ jobs:
           git config user.email "ga@mause.me"
 
       - run: bundle exec fastlane android deploy build_number:${{ github.run_number }}
+
+  build_windows:
+    runs-on: windows-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta'
+
+      - run: flutter config --enable-windows-desktop
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: flutter pub run build_runner build
+
+      # Uncomment this step to verify the use of 'dart format' on each commit.
+      # - name: Verify formatting
+      #   run: flutter format --output=none --set-exit-if-changed .
+
+      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze project source
+        run: flutter analyze
+
+      - name: Unit tests
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
+
+      - run: flutter build windows
+      - run: flutter pub run msix:create
+      - uses: actions/upload-artifact@v2
+        with:
+          name: msix
+          path: build\windows\runner\**\*.msix

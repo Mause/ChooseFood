@@ -1,17 +1,9 @@
-import 'dart:async' show Future;
+import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:flutter/material.dart'
-    show
-        ButtonBar,
-        Card,
-        ElevatedButton,
-        Ink,
-        ListTile,
-        Theme,
-        ThemeData,
-        showDialog;
+    show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
@@ -36,21 +28,28 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
     show FacebookAuth, LoginStatus;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
+import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show Sentry, SentryFlutter, SentryNavigatorObserver;
-import 'package:get/get.dart';
+    show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import 'common.dart'
-    show BasePage, excludeNull, execute, makeErrorDialog, title;
+    show
+        BasePage,
+        LabelledProgressIndicatorExtension,
+        excludeNull,
+        execute,
+        makeErrorDialog,
+        title;
+import 'generated_code/openapi.models.swagger.dart'
+    show Session, Point, Decision;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
-import 'generated_code/openapi.models.swagger.dart' show Session, Point;
 
 var log = Logger();
 
@@ -61,6 +60,7 @@ Future<void> main() async {
   } else {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
+      options.beforeSend = beforeSend;
     }, appRunner: () => runApp(const MyApp()));
   }
 }
@@ -114,7 +114,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
@@ -124,15 +123,73 @@ class MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
 
-  getPlaces() async {
-    context.loaderOverlay.show();
+  @override
+  void initState() {
+    super.initState();
 
+    loadExistingSession();
+  }
+
+  Future<void> loadExistingSession() async {
+    context.progress("Loading existing session");
+
+    var response = await execute<Session>(
+        supabaseClient
+            .from(TableNames.session)
+            .select()
+            .is_(ColumnNames.session.concludedTime, null),
+        Session.fromJson);
+    if (response.error != null) {
+      throw makeError(response.error);
+    }
+
+    setState(() {
+      sessionId = response.datam.isEmpty ? null : response.datam[0].id;
+    });
+
+    if (response.datam.isNotEmpty) {
+      await loadPlaces(toLocation(response.datam[0].point!));
+    }
+  }
+
+  Location toLocation(Point point) {
+    var coordinates = point.coordinates!;
+    var location = Location(lat: coordinates[0], lng: coordinates[1]);
+    return location;
+  }
+
+  getPlaces() async {
+    context.progress("Determining location...");
+    var location = await getLocation();
+
+    context.progress("Creating session...");
+    await createSession(location);
+
+    await loadPlaces(location);
+  }
+
+  Future<void> loadPlaces(Location location) async {
+    context.progress("Loading places...");
+    var response =
+        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
+    if (response.errorMessage != null) {
+      throw await makeError(response.errorMessage!);
+    } else {
+      log.i("found places ${response.results.length}");
+    }
+
+    setState(() {
+      results = response.results;
+      context.loaderOverlay.hide();
+    });
+  }
+
+  Future<Location> getLocation() async {
     var locationServiceEnabled =
         await geolocatorPlatform.isLocationServiceEnabled();
     log.i({"locationServiceEnabled": locationServiceEnabled});
     if (!locationServiceEnabled) {
-      log.e("Location service not enabled");
-      return;
+      throw makeError("Location service not enabled");
     }
     try {
       var permission = await geolocatorPlatform
@@ -144,8 +201,7 @@ class MyHomePageState extends State<MyHomePage> {
         "permission": permission
       });
       if (!isAllowed(permission)) {
-        log.e("Location permission not given");
-        return;
+        throw await makeError("Location permission not given");
       }
     } catch (e, s) {
       log.e("Failed to request permission, trying anyway", e, s);
@@ -156,29 +212,22 @@ class MyHomePageState extends State<MyHomePage> {
       geoposition = await geolocatorPlatform.getCurrentPosition(
           timeLimit: const Duration(seconds: 10));
     } catch (e, s) {
-      showDialog(context: context, builder: makeErrorDialog(e.toString()));
-      await Sentry.captureException(e, stackTrace: s);
-      log.e("location request timed out", e, s);
-      return;
+      throw await makeError("Location request timed out", e: e, s: s);
     }
     var location =
         Location(lat: geoposition.latitude, lng: geoposition.longitude);
+    return location;
+  }
 
-    await createSession(location);
-
-    var response =
-        await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
-    if (response.errorMessage != null) {
-      await Sentry.captureMessage(response.errorMessage);
-      log.e(response.errorMessage);
-    } else {
-      log.i("found places ${response.results.length}");
-    }
-
-    setState(() {
-      results = response.results;
-      context.loaderOverlay.hide();
-    });
+  Future<ArgumentError> makeError(dynamic message,
+      {dynamic e, StackTrace? s}) async {
+    context.loaderOverlay.hide();
+    await showDialog(
+        context: context,
+        builder: makeErrorDialog(e.toString(), title: message));
+    await Sentry.captureException(e, stackTrace: s, hint: message);
+    log.e(message, e, s);
+    return ArgumentError(message);
   }
 
   Future<void> createSession(Location location) async {
@@ -217,9 +266,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     if (accessToken == null) {
-      await Sentry.captureMessage('failed to login');
-      log.e("failed to login");
-      return;
+      throw await makeError('Failed to login');
     }
 
     setState(() {
@@ -227,17 +274,6 @@ class MyHomePageState extends State<MyHomePage> {
     });
 
     log.i("login complete?");
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
   }
 
   @override
@@ -262,27 +298,63 @@ class MyHomePageState extends State<MyHomePage> {
           direction: Axis.horizontal,
           children: [
             elevatedButton('Login', _login),
-            elevatedButton('Increment', _incrementCounter),
+            elevatedButton('Conclude session', concludeSession,
+                enabled: sessionId != null),
             elevatedButton('Get places', getPlaces),
           ],
         ),
-        Text(
-          '$_counter',
-          style: Theme.of(context).textTheme.headline4,
-        ),
+        Text(sessionId == null
+            ? 'No session started yet'
+            : 'Session ID: $sessionId'),
         location ?? const Text('No locations loaded yet'),
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
     );
   }
 
-  Future<void> createDecision(String reference, bool state) async {
-    await supabaseClient.from(TableNames.decision).insert({
-      "sessionId": sessionId!,
-      "placeReference": reference,
-      "decision": state
-    }).execute();
+  String getUser() {
+    return supabaseClient.auth.currentUser?.id ??
+        '00000000-0000-0000-0000-000000000000';
   }
+
+  Future<void> createDecision(String reference, bool state) async {
+    await supabaseClient
+        .from(TableNames.decision)
+        .insert(excludeNull(Decision(
+                sessionId: sessionId!,
+                participantId: getUser(),
+                placeReference: reference,
+                decision: state)
+            .toJson()))
+        .execute();
+  }
+
+  Future<void> concludeSession() async {
+    context.progress('Closing session');
+    await supabaseClient
+        .from(TableNames.session)
+        .update(excludeNull(Session(
+                id: sessionId, concludedTime: DateTime.now().toIso8601String())
+            .toJson()))
+        .execute();
+    setState(() {
+      sessionId = null;
+      results = [];
+      index = 0;
+    });
+    context.loaderOverlay.hide();
+  }
+}
+
+class SessionFieldNames {
+  final String concludedTime = "concludedTime";
+  final String id = 'id';
+
+  const SessionFieldNames();
+}
+
+class ColumnNames {
+  static const session = SessionFieldNames();
 }
 
 class TableNames {
@@ -330,12 +402,13 @@ class LocationCard extends StatelessWidget {
   }
 }
 
-Padding elevatedButton(String label, void Function() onPressed) {
+Padding elevatedButton(String label, void Function() onPressed,
+    {bool enabled = true}) {
   return Padding(
     padding: const EdgeInsets.all(10),
     child: ElevatedButton(
       child: Text(label),
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
     ),
   );
 }
@@ -348,4 +421,8 @@ bool isAllowed(LocationPermission index) {
     default:
       return false;
   }
+}
+
+FutureOr<SentryEvent?> beforeSend(SentryEvent event, {hint}) {
+  return event.tags?['os.rooted'] == 'yes' ? null : event;
 }
