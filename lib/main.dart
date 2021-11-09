@@ -2,6 +2,8 @@ import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/environment_config.dart';
+import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
+    show PointType;
 import 'package:flutter/material.dart'
     show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
@@ -144,9 +146,20 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     setState(() {
-      context.loaderOverlay.hide();
       sessionId = response.datam.isEmpty ? null : response.datam[0].id;
     });
+
+    if (response.datam.isNotEmpty) {
+      await loadPlaces(toLocation(response.datam[0].point!));
+    } else {
+      context.loaderOverlay.hide();
+    }
+  }
+
+  Location toLocation(Point point) {
+    var coordinates = point.coordinates!;
+    var location = Location(lat: coordinates[0], lng: coordinates[1]);
+    return location;
   }
 
   getPlaces() async {
@@ -156,6 +169,10 @@ class MyHomePageState extends State<MyHomePage> {
     context.progress("Creating session...");
     await createSession(location);
 
+    await loadPlaces(location);
+  }
+
+  Future<void> loadPlaces(Location location) async {
     context.progress("Loading places...");
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
@@ -209,7 +226,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
     context.loaderOverlay.hide();
-    showDialog(
+    await showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
     await Sentry.captureException(e, stackTrace: s, hint: message);
@@ -221,7 +238,7 @@ class MyHomePageState extends State<MyHomePage> {
     var response = (await execute<Session>(
         supabaseClient.from(TableNames.session).insert(excludeNull(Session(
             point: Point(
-                type: "Point",
+                type: PointType.point,
                 coordinates: [location.lat, location.lng])).toJson())),
         Session.fromJson));
     if (response.error != null) {
@@ -253,9 +270,7 @@ class MyHomePageState extends State<MyHomePage> {
     }
 
     if (accessToken == null) {
-      await Sentry.captureMessage('failed to login');
-      log.e("failed to login");
-      return;
+      throw await makeError('Failed to login');
     }
 
     setState(() {
@@ -328,6 +343,8 @@ class MyHomePageState extends State<MyHomePage> {
         .execute();
     setState(() {
       sessionId = null;
+      results = [];
+      index = 0;
     });
     context.loaderOverlay.hide();
   }

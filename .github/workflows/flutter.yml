@@ -87,6 +87,7 @@ jobs:
       - if: ${{ matrix.target == 'appbundle' }}
         uses: actions/upload-artifact@v2
         with:
+          name: apk
           path: '*.apk'
 
       - if: ${{ matrix.target == 'appbundle' }}
@@ -106,16 +107,6 @@ jobs:
 #             build/app/outputs/bundle/release/app-release.aab
 #             *.apk
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ matrix.target == 'appbundle' && github.ref == 'refs/heads/main' }}
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            build/app/outputs/bundle/release/app-release.aab
-            *.apk
       - if: ${{ matrix.target == 'web' }}
         uses: actions/upload-artifact@v2
         with:
@@ -230,12 +221,46 @@ jobs:
       - run: |
           bundle exec fastlane create_notes build_number:${{ github.run_number }}
 
-  publish:
+  create_github_release:
     runs-on: ubuntu-latest
     needs:
       - build_releases
       - integration_tests
       - build_windows
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+          path: '*.aab'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: apk
+          path: '*.apk'
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: msix
+          path: '*.msix'
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            *.aab
+            *.apk
+            *.msix
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: create_github_release
     if: github.ref == 'refs/heads/main'
 
     steps:
