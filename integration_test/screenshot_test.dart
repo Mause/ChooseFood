@@ -111,10 +111,9 @@ Future<void> pumpAndSettle(WidgetTester tester, String message) async {
 }
 
 Future<T> timeout<T>(Future<T> future, String message) async {
-  try {
-    return await future.timeout(const Duration(seconds: 10));
-  } on TimeoutException catch (e, s) {
-    log.e("Timed out on: \"$message\"", e, s);
-    rethrow;
-  }
+  return await future.timeout(const Duration(seconds: 30), onTimeout: () {
+    var e = TimeoutException(message);
+    log.e("Timed out on: \"$message\"", e);
+    throw e;
+  });
 }
