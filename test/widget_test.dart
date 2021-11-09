@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:nock/nock.dart';
+import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
 
 import 'package:flutter/material.dart';
@@ -30,8 +31,13 @@ import './widget_test.mocks.dart';
   supabase.PostgrestBuilder,
 ])
 void main() {
+  late NockScope supabaseScope;
   setUp(() {
     nock.init();
+    supabaseScope = nock("https://supabase");
+    supabaseScope
+        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
+        .reply(200, []);
   });
   tearDown(() {
     nock.cleanAll();
@@ -40,10 +46,6 @@ void main() {
   testWidgets('Places load', (tester) async {
     var mockSupabaseClient = MockSupabaseClient();
     throwOnMissingStub(mockSupabaseClient);
-    var supabaseScope = nock("https://supabase");
-    supabaseScope
-        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
-        .reply(200, []);
     supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
@@ -84,5 +86,41 @@ void main() {
     await mockNetworkImagesFor(() => tester.pump());
 
     expect(find.byType(Card), findsOneWidget);
+  });
+
+  testWidgets('Friends sessions', (WidgetTester tester) async {
+    var id = "00000-00000-00000-00000";
+    var placeReference = "placeReference";
+    supabaseScope
+        .get(
+            "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
+        .reply(200, [
+      {
+        ColumnNames.session.id: id,
+        "decision": [
+          {
+            ColumnNames.decision.decision: true,
+            ColumnNames.decision.placeReference: placeReference,
+            ColumnNames.decision.participantId: 'PID'
+          }
+        ]
+      }
+    ]);
+    await tester.pumpWidget(const MyApp());
+
+    await tester
+        .tap(find.widgetWithText(NavigationDestination, 'Friends sessions'))
+        .timeout(const Duration(seconds: 10));
+    await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
+
+    expect(find.byType(Card), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Join'));
+    await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
+
+    await tester.tap(find.widgetWithText(TextButton, 'View details'));
+    await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
+
+    expect(find.widgetWithText(AlertDialog, placeReference), findsOneWidget);
   });
 }
