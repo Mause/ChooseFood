@@ -151,6 +151,8 @@ class MyHomePageState extends State<MyHomePage> {
 
     if (response.datam.isNotEmpty) {
       await loadPlaces(toLocation(response.datam[0].point!));
+    } else {
+      context.loaderOverlay.hide();
     }
   }
 
