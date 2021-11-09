@@ -174,7 +174,14 @@ jobs:
           service_account_key: ${{ secrets.SERVICE_TOKEN }}
           export_default_credentials: true
 
-      - run: gcloud firebase test android run --type instrumentation --app *.apk --test app-debug-androidTest/app-debug-androidTest.apk --device model=Pixel3,version=31,locale=au,orientation=portrait
+      - name: Integration tests
+        timeout-minutes: 15
+        run: |
+          gcloud firebase test android run \
+            --type instrumentation \
+            --app *.apk \
+            --test app-debug-androidTest/app-debug-androidTest.apk \
+            --device model=Pixel3,version=31,locale=au,orientation=portrait
 
       - uses: actions/upload-artifact@v2
         if: always()
