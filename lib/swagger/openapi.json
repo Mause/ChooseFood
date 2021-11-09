@@ -621,91 +621,10 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/rowFilter.users.instance_id"
-          },
-          {
             "$ref": "#/parameters/rowFilter.users.id"
           },
           {
-            "$ref": "#/parameters/rowFilter.users.aud"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.role"
-          },
-          {
             "$ref": "#/parameters/rowFilter.users.email"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.encrypted_password"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.invited_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmation_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmation_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.recovery_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.recovery_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_token_new"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.last_sign_in_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.raw_app_meta_data"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.raw_user_meta_data"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.is_super_admin"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.created_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.updated_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_token_current"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_confirm_status"
           },
           {
             "$ref": "#/parameters/select"
@@ -771,91 +690,10 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/rowFilter.users.instance_id"
-          },
-          {
             "$ref": "#/parameters/rowFilter.users.id"
           },
           {
-            "$ref": "#/parameters/rowFilter.users.aud"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.role"
-          },
-          {
             "$ref": "#/parameters/rowFilter.users.email"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.encrypted_password"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.invited_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmation_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmation_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.recovery_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.recovery_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_token_new"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.last_sign_in_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.raw_app_meta_data"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.raw_user_meta_data"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.is_super_admin"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.created_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.updated_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_token_current"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_confirm_status"
           },
           {
             "$ref": "#/parameters/preferReturn"
@@ -873,91 +711,10 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/rowFilter.users.instance_id"
-          },
-          {
             "$ref": "#/parameters/rowFilter.users.id"
           },
           {
-            "$ref": "#/parameters/rowFilter.users.aud"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.role"
-          },
-          {
             "$ref": "#/parameters/rowFilter.users.email"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.encrypted_password"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.invited_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmation_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmation_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.recovery_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.recovery_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_token_new"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.last_sign_in_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.raw_app_meta_data"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.raw_user_meta_data"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.is_super_admin"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.created_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.updated_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change_token"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.phone_change_sent_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.confirmed_at"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_token_current"
-          },
-          {
-            "$ref": "#/parameters/rowFilter.users.email_change_confirm_status"
           },
           {
             "$ref": "#/parameters/body.users"
@@ -1120,134 +877,15 @@
     },
     "users": {
       "properties": {
-        "instance_id": {
-          "format": "uuid",
-          "type": "string"
-        },
         "id": {
           "format": "uuid",
           "description": "Note:\nThis is a Primary Key.<pk/>",
-          "type": "string"
-        },
-        "aud": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "role": {
-          "format": "character varying",
-          "maxLength": 255,
           "type": "string"
         },
         "email": {
           "format": "character varying",
           "maxLength": 255,
           "type": "string"
-        },
-        "encrypted_password": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "email_confirmed_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "invited_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "confirmation_token": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "confirmation_sent_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "recovery_token": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "recovery_sent_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "email_change_token_new": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "email_change": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "email_change_sent_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "last_sign_in_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "raw_app_meta_data": {
-          "format": "jsonb",
-          "type": "string"
-        },
-        "raw_user_meta_data": {
-          "format": "jsonb",
-          "type": "string"
-        },
-        "is_super_admin": {
-          "format": "boolean",
-          "type": "boolean"
-        },
-        "created_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "updated_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "phone": {
-          "format": "character varying",
-          "maxLength": 15,
-          "type": "string"
-        },
-        "phone_confirmed_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "phone_change": {
-          "format": "character varying",
-          "maxLength": 15,
-          "type": "string"
-        },
-        "phone_change_token": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "phone_change_sent_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "confirmed_at": {
-          "format": "timestamp with time zone",
-          "type": "string"
-        },
-        "email_change_token_current": {
-          "format": "character varying",
-          "maxLength": 255,
-          "type": "string"
-        },
-        "email_change_confirm_status": {
-          "format": "smallint",
-          "type": "integer"
         }
       },
       "type": "object"
@@ -1544,13 +1182,6 @@
       },
       "in": "body"
     },
-    "rowFilter.users.instance_id": {
-      "name": "instance_id",
-      "required": false,
-      "format": "uuid",
-      "in": "query",
-      "type": "string"
-    },
     "rowFilter.users.id": {
       "name": "id",
       "required": false,
@@ -1558,192 +1189,10 @@
       "in": "query",
       "type": "string"
     },
-    "rowFilter.users.aud": {
-      "name": "aud",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.role": {
-      "name": "role",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
     "rowFilter.users.email": {
       "name": "email",
       "required": false,
       "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.encrypted_password": {
-      "name": "encrypted_password",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.email_confirmed_at": {
-      "name": "email_confirmed_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.invited_at": {
-      "name": "invited_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.confirmation_token": {
-      "name": "confirmation_token",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.confirmation_sent_at": {
-      "name": "confirmation_sent_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.recovery_token": {
-      "name": "recovery_token",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.recovery_sent_at": {
-      "name": "recovery_sent_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.email_change_token_new": {
-      "name": "email_change_token_new",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.email_change": {
-      "name": "email_change",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.email_change_sent_at": {
-      "name": "email_change_sent_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.last_sign_in_at": {
-      "name": "last_sign_in_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.raw_app_meta_data": {
-      "name": "raw_app_meta_data",
-      "required": false,
-      "format": "jsonb",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.raw_user_meta_data": {
-      "name": "raw_user_meta_data",
-      "required": false,
-      "format": "jsonb",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.is_super_admin": {
-      "name": "is_super_admin",
-      "required": false,
-      "format": "boolean",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.created_at": {
-      "name": "created_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.updated_at": {
-      "name": "updated_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.phone": {
-      "name": "phone",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.phone_confirmed_at": {
-      "name": "phone_confirmed_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.phone_change": {
-      "name": "phone_change",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.phone_change_token": {
-      "name": "phone_change_token",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.phone_change_sent_at": {
-      "name": "phone_change_sent_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.confirmed_at": {
-      "name": "confirmed_at",
-      "required": false,
-      "format": "timestamp with time zone",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.email_change_token_current": {
-      "name": "email_change_token_current",
-      "required": false,
-      "format": "character varying",
-      "in": "query",
-      "type": "string"
-    },
-    "rowFilter.users.email_change_confirm_status": {
-      "name": "email_change_confirm_status",
-      "required": false,
-      "format": "smallint",
       "in": "query",
       "type": "string"
     }
