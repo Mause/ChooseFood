@@ -750,11 +750,9 @@
         },
         "concludedTime": {
           "format": "timestamp with time zone",
-          "default": "timezone('utc'::text, now())",
           "type": "string"
         },
         "point": {
-          "format": "extensions.geometry(Point,4326)",
           "$ref": "#/definitions/Point"
         }
       },
@@ -763,11 +761,20 @@
     "Point": {
       "type": "object",
       "properties": {
-          "type": {"type": "string"},
-          "coordinates": {
-              "type": "array",
-              "items": {"type": "number"}
+        "type": {
+          "type": "string",
+          "enum": [
+            "Point"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "maxLength": 2,
+          "minLength": 2,
+          "items": {
+            "type": "number"
           }
+        }
       }
     }
   },
