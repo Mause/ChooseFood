@@ -169,8 +169,11 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: choosefood
+          service_account_key: ${{ secrets.SERVICE_TOKEN }}
+          export_default_credentials: true
 
-      - run: gcloud config set project choosefood
       - run: gcloud firebase test android run --type instrumentation --app *.apk --test app-debug-androidTest/app-debug-androidTest.apk --device model=Pixel3a,version=31,locale=au,orientation=portrait
 
       - uses: actions/upload-artifact@v2
