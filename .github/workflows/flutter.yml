@@ -163,13 +163,12 @@ jobs:
           flutter build apk
           ./gradlew app:assembleAndroidTest
           ./gradlew app:assembleDebug -Ptarget=integration_test/screenshot_test.dart
-          tree android
-          tree build
         env:
           SIGNING_KEY: key.store
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
+      - run: tree android/
+      - run: tree build/
       - uses: google-github-actions/setup-gcloud@master
         with:
           project_id: choose-food-330101
