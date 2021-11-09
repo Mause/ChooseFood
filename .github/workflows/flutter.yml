@@ -186,6 +186,8 @@ jobs:
       - name: List bucket contents
         if: always()
         run: |
+          gsutil ls
+          gsutil ls | head
           BUCKET_NAME=$(gsutil ls | head)
           echo Bucket name: $BUCKET_NAME
           gsutil ls -r gs://$BUCKET_NAME/**
