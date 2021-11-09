@@ -20,6 +20,8 @@ import 'package:flutter/widgets.dart'
         Expanded,
         Key,
         ListView,
+        Axis,
+        SingleChildScrollView,
         State,
         StatefulWidget,
         StatelessWidget,
@@ -77,7 +79,8 @@ class FriendsSessionsState extends State<FriendsSessions> {
                 placeReference,
                 participantId
               )
-              """).is_(ColumnNames.session.concludedTime, null), SessionWithDecisions.fromJson);
+              """).is_(ColumnNames.session.concludedTime, null),
+          SessionWithDecisions.fromJson);
     } catch (e, s) {
       handleError(e, s);
       return;
@@ -144,6 +147,12 @@ class SessionCard extends StatelessWidget {
           ListTile(title: Text(sessionWithDecisions.id!)),
           ButtonBar(children: [
             TextButton(
+                onPressed: () {
+                  Sentry.captureMessage(
+                      'User wishes to join ${sessionWithDecisions.id}');
+                },
+                child: const Text('Join')),
+            TextButton(
                 onPressed: () async {
                   await showDialog(
                       context: context,
@@ -161,18 +170,20 @@ class SessionCard extends StatelessWidget {
 Widget buildDialog(context, SessionWithDecisions sessionWithDecisions) =>
     AlertDialog(
         title: Text(sessionWithDecisions.id!),
-        content: DataTable(
-            columns: const [
-              DataColumn(label: Text("Place Reference")),
-              DataColumn(label: Text("Decision")),
-              DataColumn(label: Text("Participant ID"))
-            ],
-            rows: sessionWithDecisions.decision
-                .map((e) => DataRow(cells: [
-                      DataCell(Text(
-                        e.placeReference!,
-                      )),
-                      DataCell(Text(e.decision!.toString())),
-                      DataCell(Text(e.participantId!.toString()))
-                    ]))
-                .toList()));
+        content: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+                columns: const [
+                  DataColumn(label: Text("Place Reference")),
+                  DataColumn(label: Text("Decision")),
+                  DataColumn(label: Text("Participant ID"))
+                ],
+                rows: sessionWithDecisions.decision
+                    .map((e) => DataRow(cells: [
+                          DataCell(Text(
+                            e.placeReference!,
+                          )),
+                          DataCell(Text(e.decision!.toString())),
+                          DataCell(Text(e.participantId!.toString()))
+                        ]))
+                    .toList())));

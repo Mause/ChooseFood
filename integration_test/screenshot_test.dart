@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
@@ -87,20 +89,31 @@ void main() {
     // Build the app.
     await tester.pumpWidget(const MyApp());
     await binding.convertFlutterSurfaceToImage();
+    await pumpAndSettle(tester, "Inited app");
 
-    await tester.pumpAndSettle();
     await binding.takeScreenshot('screenshot-default');
 
     await tester.tap(find.text("Get places"));
-
-    await tester.pumpAndSettle();
+    await pumpAndSettle(tester, "Tapped Get places");
     await binding.takeScreenshot('screenshot-get-places');
 
     await tester.tap(find.text("Friends sessions"));
-
-    await tester.pumpAndSettle();
+    await pumpAndSettle(tester, "tapped Friends sessions");
     await binding.takeScreenshot('screenshot-friends');
+
     expect(find.byType(SessionCard), findsOneWidget);
     await binding.takeScreenshot('screenshot-friends');
+  });
+}
+
+Future<void> pumpAndSettle(WidgetTester tester, String message) async {
+  await timeout(tester.pumpAndSettle(), message);
+}
+
+Future<T> timeout<T>(Future<T> future, String message) async {
+  return await future.timeout(const Duration(seconds: 30), onTimeout: () {
+    var e = TimeoutException(message);
+    log.e("Timed out on: \"$message\"", e);
+    throw e;
   });
 }
