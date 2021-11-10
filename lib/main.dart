@@ -26,8 +26,6 @@ import 'package:flutter/widgets.dart'
         Widget,
         Wrap,
         runApp;
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
-    show FacebookAuth, LoginStatus;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'package:get/get.dart';
@@ -48,6 +46,7 @@ import 'common.dart'
         execute,
         makeErrorDialog,
         title;
+import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
@@ -254,30 +253,33 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    log.w('Calling login');
+    await showDialog(
+        context: context, builder: (context) => const LoginDialog());
 
-    var accessToken = await FacebookAuth.i.accessToken;
-    if (accessToken == null) {
-      var loginResult =
-          await FacebookAuth.instance.login(permissions: ["email"]);
-      log.w({"status": loginResult.status, "message": loginResult.message});
-      if (loginResult.status != LoginStatus.success) {
-        await Sentry.captureMessage(loginResult.message!);
-        await showDialog(
-            context: context, builder: makeErrorDialog(loginResult.message!));
-      }
-      accessToken = loginResult.accessToken;
-    }
+    // log.w('Calling login');
 
-    if (accessToken == null) {
-      throw await makeError('Failed to login');
-    }
+    // var accessToken = await FacebookAuth.i.accessToken;
+    // if (accessToken == null) {
+    //   var loginResult =
+    //       await FacebookAuth.instance.login(permissions: ["email"]);
+    //   log.w({"status": loginResult.status, "message": loginResult.message});
+    //   if (loginResult.status != LoginStatus.success) {
+    //     await Sentry.captureMessage(loginResult.message!);
+    //     await showDialog(
+    //         context: context, builder: makeErrorDialog(loginResult.message!));
+    //   }
+    //   accessToken = loginResult.accessToken;
+    // }
 
-    setState(() {
-      userId = accessToken?.userId;
-    });
+    // if (accessToken == null) {
+    //   throw await makeError('Failed to login');
+    // }
 
-    log.i("login complete?");
+    // setState(() {
+    //   userId = accessToken?.userId;
+    // });
+
+    // log.i("login complete?");
   }
 
   @override
