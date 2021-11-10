@@ -22,3 +22,4 @@ data["definitions"]["session"]["properties"]["point"] = {"$ref": "#/definitions/
 
 with openapi.open("w") as fh:
     json.dump(data, fh, indent=2)
+    fh.write('\n')
