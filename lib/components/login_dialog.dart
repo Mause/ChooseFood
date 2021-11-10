@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart'
-    show AlertDialog, InputDecoration, Step, Stepper, TextFormField;
+    show AlertDialog, Card, InputDecoration, ListTile, TextFormField;
 import 'package:flutter/widgets.dart'
     show
         Axis,
         BuildContext,
+        Column,
         Key,
         Navigator,
         SingleChildScrollView,
+        SizedBox,
         State,
         StatefulWidget,
         Text,
@@ -28,48 +30,50 @@ class _LoginDialogState extends State<LoginDialog> {
 
   var currentStep = 0;
 
+  void submitted(String value) async {
+    if (currentStep == 0) {
+      phone = value;
+      await supabaseClient.auth.signIn(phone: phone);
+      setState(() {
+        currentStep++;
+      });
+    } else if (currentStep == 1) {
+      token = value;
+      await supabaseClient.auth.verifyOTP(phone!, token!);
+      setState(() {
+        currentStep++;
+      });
+    } else {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var value = ''.reactive;
+    Card step(String title, String label) => Card(
+            child: Column(children: [
+          ListTile(title: Text(title)),
+          TextFormField(
+              decoration: InputDecoration(
+                labelText: label,
+              ),
+              onFieldSubmitted: submitted)
+        ]));
 
-    Step step(String title, String label) => Step(
-        title: Text(title),
-        content: TextFormField(
-          decoration: InputDecoration(
-            labelText: label,
-          ),
-          onChanged: (v) => value.value = v,
-        ));
-
-    var stepper = Stepper(
-        currentStep: currentStep,
-        steps: [
-          step('Phone', 'Phone number'),
-          step('Login code', 'Login code'),
-          const Step(title: Text('Welcome!'), content: Text("welcome!")),
-        ],
-        onStepContinue: () async {
-          if (currentStep == 0) {
-            phone = value.value;
-            await supabaseClient.auth.signIn(phone: phone);
-            setState(() {
-              currentStep++;
-            });
-          } else if (currentStep == 1) {
-            token = value.value;
-            await supabaseClient.auth.verifyOTP(phone!, token!);
-            setState(() {
-              currentStep++;
-            });
-          } else {
-            Navigator.of(context, rootNavigator: true).pop();
-          }
-        });
+    var currentstepper = <Widget>[
+      step('Phone', 'Phone number'),
+      step('Login code', 'Login code'),
+      Card(
+          child: Column(children: const [
+        ListTile(title: Text('Welcome!')),
+        Text("welcome!")
+      ])),
+    ][currentStep];
 
     return AlertDialog(
         content: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: stepper,
+      child: SizedBox.shrink(child: currentstepper),
     ));
   }
 }
