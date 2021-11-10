@@ -202,7 +202,7 @@ class _DecisionDialogState extends State<DecisionDialog> {
 
     log.d("Loading user names");
     userNames = (await execute<Users>(
-            supabaseClient.from(TableNames.user).select("name").in_(
+            supabaseClient.from(TableNames.users).select("name").in_(
                 "id",
                 widget.sessionWithDecisions.decision
                     .map((e) => e.participantId)

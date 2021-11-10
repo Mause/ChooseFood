@@ -375,7 +375,7 @@ class TableNames {
   static const String decision = "decision";
   static const String session = "session";
   static const String participant = "participant";
-  static const String user = "user";
+  static const String users = "users";
 }
 
 class LocationCard extends StatelessWidget {
