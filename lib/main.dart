@@ -326,7 +326,7 @@ class MyHomePageState extends State<MyHomePage> {
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
                 sessionId: sessionId!,
-                participantId: getUser(),
+                participantId: 0,
                 placeReference: reference,
                 decision: state)
             .toJson()))

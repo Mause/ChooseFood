@@ -86,7 +86,7 @@ void main() {
           {
             ColumnNames.decision.decision: true,
             ColumnNames.decision.placeReference: placeReference,
-            ColumnNames.decision.participantId: 'PID'
+            ColumnNames.decision.participantId: 101
           }
         ]
       }
