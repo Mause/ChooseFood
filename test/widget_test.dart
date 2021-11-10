@@ -2,7 +2,16 @@ import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart'
+    show
+        WidgetTester,
+        expect,
+        find,
+        findsNothing,
+        findsOneWidget,
+        setUp,
+        tearDown,
+        testWidgets;
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -124,5 +133,15 @@ void main() {
 
     expect(find.byType(AlertDialog), findsOneWidget);
     // TODO: assert text is displayed
+  });
+
+  testWidgets('Login dialog', (WidgetTester tester) async {
+    Get.put(supabase.SupabaseClient("https://supabase", ""));
+
+    await tester.pumpWidget(const MyApp());
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TextField), findsOneWidget);
   });
 }
