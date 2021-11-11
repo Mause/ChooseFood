@@ -2,24 +2,30 @@ import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart'
     show
         WidgetTester,
+        equals,
         expect,
         find,
         findsNothing,
         findsOneWidget,
+        isNull,
         setUp,
         tearDown,
         testWidgets;
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:network_image_mock/network_image_mock.dart'
     show mockNetworkImagesFor;
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
+import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
+    show SelectorButton;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
@@ -138,10 +144,54 @@ void main() {
   testWidgets('Login dialog', (WidgetTester tester) async {
     Get.put(supabase.SupabaseClient("https://supabase", ""));
 
+    var phone = '416041357';
+
+    supabaseScope.post("/auth/v1/otp", {"phone": "+61" + phone}).reply(200, {});
+
+    tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
+            (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case "isValidPhoneNumber":
+          return true;
+        case "formatAsYouType":
+          return methodCall.arguments['phoneNumber'];
+        case "normalizePhoneNumber":
+          return methodCall.arguments['phoneNumber'];
+        default:
+          log.e(methodCall);
+      }
+    });
+
     await tester.pumpWidget(const MyApp());
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TextField), findsOneWidget);
+    expect(await tester.takeException(), isNull);
+
+    var inputField = find.byType(TextFormField);
+    expect(inputField, findsOneWidget);
+
+    await tester.tap(find.byType(SelectorButton));
+    await tester.pumpAndSettle();
+    await tester.tapAt(const Offset(400.0, 234.0));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(inputField, phone);
+    await tester.pumpAndSettle();
+
+    var phoneField =
+        tester.state(find.byType(InternationalPhoneNumberInput)) as dynamic;
+    var countries = phoneField.countries as List<dynamic>;
+    var au = countries[13];
+    phoneField.onCountryChanged(au);
+    await tester.pumpAndSettle();
+
+    var formState = tester.state(find.byType(Form)) as FormState;
+    expect(formState.validate(), equals(true));
+
+    expect((tester.state(inputField) as FormFieldState).errorText, isNull);
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
   });
 }
