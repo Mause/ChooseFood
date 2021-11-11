@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart'
         find,
         findsNothing,
         findsOneWidget,
+        findsWidgets,
         isNull,
         setUp,
         tearDown,
@@ -151,6 +152,18 @@ void main() {
     supabaseScope
         .post("/auth/v1/otp", json.encode({"phone": "+61" + phone}))
         .reply(200, {});
+    var token = '101010';
+    supabaseScope
+        .post(
+            "/auth/v1/verify",
+            json.encode({
+              'phone': "+61" + phone,
+              'token': token,
+              'type': 'sms',
+              'redirect_to': null
+            }))
+        .reply(
+            200, {"error": null, "access_token": "TOKE", 'expires_in': 3600});
 
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
@@ -191,11 +204,19 @@ void main() {
     phoneField.onCountryChanged(au);
     await tester.pumpAndSettle();
 
-    var formState = tester.state(find.byType(Form)) as FormState;
-    expect(formState.validate(), equals(true));
-
-    expect((tester.state(inputField) as FormFieldState).errorText, isNull);
+    expect(tester.state<FormState>(find.byType(Form)).validate(), equals(true));
+    expect(tester.state<FormFieldState>(inputField).errorText, isNull);
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.pumpAndSettle();
+
+    var loginCode = find.widgetWithText(TextFormField, "Login code");
+    await tester.enterText(loginCode, token);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.pumpAndSettle();
+
+    expect(find.text("Welcome!"), findsWidgets);
   });
 }
