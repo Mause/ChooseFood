@@ -121,7 +121,7 @@ void main() {
                 htmlAttributions: []).toJson());
     var email2 = 'fake@example.com';
     var interceptor =
-        supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22PID%22%29");
+        supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22101%22%29");
     interceptor.reply(200, [Users(id: 'PID', email: email2).toJson()]);
 
     await tester.pumpWidget(const MyApp());

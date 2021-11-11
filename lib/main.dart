@@ -141,7 +141,7 @@ class MyHomePageState extends State<MyHomePage> {
             .is_(ColumnNames.session.concludedTime, null),
         Session.fromJson);
     if (response.error != null) {
-      throw makeError(response.error);
+      throw await makeError(response.error);
     }
 
     setState(() {
