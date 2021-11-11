@@ -7,11 +7,9 @@ import 'package:flutter/widgets.dart'
         BuildContext,
         Column,
         Form,
-        FormFieldState,
         FormState,
         GlobalKey,
         Key,
-        Navigator,
         SingleChildScrollView,
         SizedBox,
         State,
@@ -40,37 +38,35 @@ class _LoginDialogState extends State<LoginDialog> {
 
   var currentStep = 0;
 
-  void submitted(String value) async {
-    if (currentStep == 0) {
-      phone = value;
-      var res = await supabaseClient.auth.signIn(phone: phone);
-      if (res.error != null) {
-        log.e(res.error!.message);
-      } else {
-        setState(() {
-          currentStep++;
-        });
-      }
-    } else if (currentStep == 1) {
-      token = value;
-      var res = await supabaseClient.auth.verifyOTP(phone!, token!);
-      if (res.error != null) {
-        log.e(res.error!.message);
-      } else {
-        setState(() {
-          currentStep++;
-        });
-      }
+  Future<void> stepTwo(String value) async {
+    token = value;
+    var res = await supabaseClient.auth.verifyOTP(phone!, token!);
+    if (res.error != null) {
+      log.e(res.error!.message);
     } else {
-      Navigator.of(context, rootNavigator: true).pop();
+      forwardStep();
+    }
+  }
+
+  void forwardStep() {
+    setState(() {
+      currentStep++;
+    });
+  }
+
+  Future<void> stepOne(String value) async {
+    phone = value;
+    var res = await supabaseClient.auth.signIn(phone: phone);
+    if (res.error != null) {
+      log.e(res.error!.message);
+    } else {
+      forwardStep();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-    var fieldKey = GlobalKey<FormFieldState>();
 
     Widget buildStep(String title, Widget input) => Form(
         key: _formKey,
@@ -80,9 +76,9 @@ class _LoginDialogState extends State<LoginDialog> {
           input,
           ElevatedButton(
               onPressed: () {
-                var res = _formKey.currentState?.validate();
-                log.d("res: $res");
-                submitted(fieldKey.currentState?.value!);
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                }
               },
               child: const Text('Next'))
         ]));
@@ -91,11 +87,9 @@ class _LoginDialogState extends State<LoginDialog> {
       buildStep(
           'Phone',
           InternationalPhoneNumberInput(
-            onInputChanged: (PhoneNumber phone) {
-              log.d(phone);
-            },
-            validator: valid,
-            key: fieldKey,
+            onInputChanged: (PhoneNumber value) {},
+            onSaved: (PhoneNumber phoneNumber) async =>
+                await stepOne(phoneNumber.phoneNumber!),
             inputDecoration: const InputDecoration(labelText: 'Phone number'),
           )),
       buildStep(
@@ -103,7 +97,7 @@ class _LoginDialogState extends State<LoginDialog> {
           TextFormField(
               validator: valid,
               autovalidateMode: AutovalidateMode.always,
-              key: fieldKey,
+              onSaved: (String? loginCode) async => await stepTwo(loginCode!),
               decoration: const InputDecoration(
                 labelText: 'Login code',
               ))),
