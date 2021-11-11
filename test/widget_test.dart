@@ -1,3 +1,5 @@
+import 'dart:convert' show json;
+
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Users;
 import 'package:choose_food/main.dart';
@@ -146,7 +148,9 @@ void main() {
 
     var phone = '416041357';
 
-    supabaseScope.post("/auth/v1/otp", {"phone": "+61" + phone}).reply(200, {});
+    supabaseScope
+        .post("/auth/v1/otp", json.encode({"phone": "+61" + phone}))
+        .reply(200, {});
 
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
