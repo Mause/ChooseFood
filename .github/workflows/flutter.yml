@@ -206,11 +206,6 @@ jobs:
       - name: List bucket contents
         if: always()
         run: |
-          gsutil ls -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/**
-
-      - name: List bucket contents
-        if: always()
-        run: |
           mkdir results
           gsutil -m cp -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/** ./results/
 
@@ -233,7 +228,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               status: 'completed',
-              output: { title: 'Integration tests', summary: 'Yay?', text: output.toString() },
+              output: { title: 'Integration tests', summary: 'Yay?', text: '```xml\n' + output.toString() + '\n```' },
               name: 'Integration tests',
               conclusion: 'neutral'
             };
