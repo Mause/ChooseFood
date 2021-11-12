@@ -212,7 +212,7 @@ jobs:
         if: always()
         run: |
           mkdir results
-          gsutil cp -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/** ./results/
+          gsutil -m cp -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/** ./results/
 
       - uses: actions/upload-artifact@v2
         if: always()
@@ -226,7 +226,7 @@ jobs:
         with:
           script: |
             const fs = require('fs').promises;
-            const output = await fs.readFile('results/Pixel3-30-en_AU-portrait/test_result_1.xml');
+            const output = await fs.readFile('results/test_result_1.xml');
 
             const fields = {
               head_sha: context.sha,
