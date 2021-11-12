@@ -193,6 +193,11 @@ jobs:
           service_account_key: ${{ secrets.SERVICE_TOKEN }}
           export_default_credentials: true
 
+      - run: echo $SERVICE_TOKEN > client-secret.json
+        shell: bash
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+
       # - name: Integration tests
       #   timeout-minutes: 15
       #   run: |
