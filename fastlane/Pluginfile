@@ -2,3 +2,4 @@
 #
 # Ensure this file is checked in to source control!
 gem 'fastlane-plugin-semantic_release'
+gem 'fastlane-plugin-run_tests_firebase_testlab'

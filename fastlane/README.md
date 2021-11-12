@@ -31,6 +31,26 @@ Deploy a new version to the Google Play
 fastlane android validate
 ```
 Validate json key
+### android assemble_application
+```
+fastlane android assemble_application
+```
+Assemble App (for Firebase Test Lab)
+### android assemble_test_application
+```
+fastlane android assemble_test_application
+```
+Assemble Android Test
+### android assemble
+```
+fastlane android assemble
+```
+Assemble Build and Test Application
+### android instrumentation_tests_testlab
+```
+fastlane android instrumentation_tests_testlab
+```
+Run instrumentation tests in Firebase Test Lab
 
 ----
 

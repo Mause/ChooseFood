@@ -42,4 +42,36 @@ platform :android do
   lane :validate do
     validate_play_store_json_key
   end
+
+  desc "Assemble App (for Firebase Test Lab)"
+  lane :assemble_application do
+      gradle(task: "assembleDebug", project_dir: "android/")
+  end
+
+  desc "Assemble Android Test"
+  lane :assemble_test_application do
+      gradle(task: "assembleDebugAndroidTest", project_dir: "android/")
+  end
+
+  desc "Assemble Build and Test Application"
+  lane :assemble do
+    assemble_application
+    assemble_test_application
+  end
+
+  desc "Run instrumentation tests in Firebase Test Lab"
+  lane :instrumentation_tests_testlab do
+    assemble
+    run_tests_firebase_testlab(
+      project_id: "choose-food-330101",
+      app_apk: "android/app/build/outputs/apk/debug/app-debug.apk",
+      android_test_apk: "android/build/outputs/apk/androidTest/debug/lib-debug-androidTest.apk",
+      devices: [
+        {
+          model: "Pixel3",
+          version: "30"
+        }
+      ],
+      delete_firebase_files: true)
+  end
 end
