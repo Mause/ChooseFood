@@ -831,7 +831,8 @@
     "participant": {
       "required": [
         "id",
-        "sessionId"
+        "sessionId",
+        "userId"
       ],
       "properties": {
         "id": {
