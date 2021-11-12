@@ -309,6 +309,11 @@ class MyHomePageState extends State<MyHomePage> {
             elevatedButton('Get places', getPlaces),
           ],
         ),
+        Text(
+          supabaseClient.auth.currentSession == null
+              ? 'Logged in: ${supabaseClient.auth.currentUser?.phone ?? "Unknown"}'
+              : 'Logged out',
+        ),
         Text(sessionId == null
             ? 'No session started yet'
             : 'Session ID: $sessionId'),
