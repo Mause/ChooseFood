@@ -211,7 +211,8 @@ jobs:
       - name: List bucket contents
         if: always()
         run: |
-          gsutil cp -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/** results/
+          mkdir results
+          gsutil cp -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/** ./results/
 
       - uses: actions/upload-artifact@v2
         if: always()
@@ -236,7 +237,7 @@ jobs:
               conclusion: 'neutral'
             };
             console.log(fields);
-            const comment = await github..rest.checks.create(fields);
+            const comment = await github.rest.checks.create(fields);
             console.log(comment);
 
   note_changelog:
