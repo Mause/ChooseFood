@@ -176,16 +176,16 @@ jobs:
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
-      # - name: Build test apk
-      #   working-directory: android
-      #   run: |
-      #     flutter build apk
+      - name: Build test apk
+        working-directory: android
+        run: |
+          flutter build apk
       #     ./gradlew app:assembleAndroidTest
       #     ./gradlew app:assembleDebug -Ptarget=integration_test/screenshot_test.dart
-      #   env:
-      #     SIGNING_KEY: key.store
-      #     KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-      #     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        env:
+          SIGNING_KEY: key.store
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - uses: google-github-actions/setup-gcloud@v0.2.1
         with:
