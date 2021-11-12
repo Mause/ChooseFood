@@ -627,6 +627,9 @@
             "$ref": "#/parameters/rowFilter.users.email"
           },
           {
+            "$ref": "#/parameters/rowFilter.users.phone"
+          },
+          {
             "$ref": "#/parameters/select"
           },
           {
@@ -696,6 +699,9 @@
             "$ref": "#/parameters/rowFilter.users.email"
           },
           {
+            "$ref": "#/parameters/rowFilter.users.phone"
+          },
+          {
             "$ref": "#/parameters/preferReturn"
           }
         ],
@@ -715,6 +721,9 @@
           },
           {
             "$ref": "#/parameters/rowFilter.users.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.phone"
           },
           {
             "$ref": "#/parameters/body.users"
@@ -885,6 +894,11 @@
         "email": {
           "format": "character varying",
           "maxLength": 255,
+          "type": "string"
+        },
+        "phone": {
+          "format": "character varying",
+          "maxLength": 15,
           "type": "string"
         }
       },
@@ -1191,6 +1205,13 @@
     },
     "rowFilter.users.email": {
       "name": "email",
+      "required": false,
+      "format": "character varying",
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.phone": {
+      "name": "phone",
       "required": false,
       "format": "character varying",
       "in": "query",
