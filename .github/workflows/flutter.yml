@@ -232,13 +232,14 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               status: 'completed',
-              output: output
+              output: output,
+              conclusion: 'neutral'
             };
             console.log(fields);
             const comment = await github..rest.checks.create(fields);
             console.log(comment);
 
-note_changelog:
+  note_changelog:
     runs-on: ubuntu-latest
 
     steps:
