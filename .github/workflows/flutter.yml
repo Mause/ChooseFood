@@ -203,46 +203,42 @@ jobs:
             --test android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=Pixel3,version=30,locale=en_AU,orientation=portrait
 
-      - name: List buckets
-        if: always()
-        run: |
-          gsutil ls
-
-      - name: List buckets
-        if: always()
-        run: |
-          gsutil ls -p choose-food-330101
-
-      - name: List bucket
-        if: always()
-        run: |
-          gsutil ls -p choose-food-330101 | head
-
-      - name: List bucket contents
-        if: always()
-        run: |
-          gsutil ls -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/**
-
       - name: List bucket contents
         if: always()
         run: |
           gsutil ls -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/**
 
+      - name: List bucket contents
+        if: always()
+        run: |
+          gsutil cp -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/** results/
+
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: screenshots
-          path: screenshots/
+          name: results
+          path: results/
 
       - name: Upload failed tests
         if: always() && github.ref != 'refs/heads/main'
-        uses: edunad/actions-image@v1.0.1
+        uses: actions/github-script@v5
         with:
-            path: './screenshots/*'
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            title: 'Screenshots'
+          script: |
+            const fs = require('fs').promises;
+            const output = await fs.readFile('results/Pixel3-30-en_AU-portrait/test_result_1.xml');
 
-  note_changelog:
+            const fields = {
+              head_sha: context.sha,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              status: 'completed',
+              output: output
+            };
+            console.log(fields);
+            const comment = await github..rest.checks.create(fields);
+            console.log(comment);
+
+note_changelog:
     runs-on: ubuntu-latest
 
     steps:
