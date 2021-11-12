@@ -359,10 +359,10 @@
             "$ref": "#/parameters/rowFilter.participant.created_at"
           },
           {
-            "$ref": "#/parameters/rowFilter.participant.userId"
+            "$ref": "#/parameters/rowFilter.participant.sessionId"
           },
           {
-            "$ref": "#/parameters/rowFilter.participant.session"
+            "$ref": "#/parameters/rowFilter.participant.userId"
           },
           {
             "$ref": "#/parameters/select"
@@ -434,10 +434,10 @@
             "$ref": "#/parameters/rowFilter.participant.created_at"
           },
           {
-            "$ref": "#/parameters/rowFilter.participant.userId"
+            "$ref": "#/parameters/rowFilter.participant.sessionId"
           },
           {
-            "$ref": "#/parameters/rowFilter.participant.session"
+            "$ref": "#/parameters/rowFilter.participant.userId"
           },
           {
             "$ref": "#/parameters/preferReturn"
@@ -461,10 +461,10 @@
             "$ref": "#/parameters/rowFilter.participant.created_at"
           },
           {
-            "$ref": "#/parameters/rowFilter.participant.userId"
+            "$ref": "#/parameters/rowFilter.participant.sessionId"
           },
           {
-            "$ref": "#/parameters/rowFilter.participant.session"
+            "$ref": "#/parameters/rowFilter.participant.userId"
           },
           {
             "$ref": "#/parameters/body.participant"
@@ -627,6 +627,9 @@
             "$ref": "#/parameters/rowFilter.users.email"
           },
           {
+            "$ref": "#/parameters/rowFilter.users.phone"
+          },
+          {
             "$ref": "#/parameters/select"
           },
           {
@@ -696,6 +699,9 @@
             "$ref": "#/parameters/rowFilter.users.email"
           },
           {
+            "$ref": "#/parameters/rowFilter.users.phone"
+          },
+          {
             "$ref": "#/parameters/preferReturn"
           }
         ],
@@ -715,6 +721,9 @@
           },
           {
             "$ref": "#/parameters/rowFilter.users.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.phone"
           },
           {
             "$ref": "#/parameters/body.users"
@@ -812,9 +821,9 @@
           "type": "string"
         },
         "participantId": {
-          "format": "uuid",
-          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
-          "type": "string"
+          "format": "bigint",
+          "description": "Note:\nThis is a Foreign Key to `participant.id`.<fk table='participant' column='id'/>",
+          "type": "integer"
         }
       },
       "type": "object"
@@ -822,8 +831,7 @@
     "participant": {
       "required": [
         "id",
-        "userId",
-        "session"
+        "sessionId"
       ],
       "properties": {
         "id": {
@@ -836,13 +844,14 @@
           "default": "now()",
           "type": "string"
         },
-        "userId": {
-          "format": "bigint",
-          "type": "integer"
-        },
-        "session": {
+        "sessionId": {
           "format": "uuid",
           "description": "Note:\nThis is a Foreign Key to `session.id`.<fk table='session' column='id'/>",
+          "type": "string"
+        },
+        "userId": {
+          "format": "uuid",
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
           "type": "string"
         }
       },
@@ -885,6 +894,11 @@
         "email": {
           "format": "character varying",
           "maxLength": 255,
+          "type": "string"
+        },
+        "phone": {
+          "format": "character varying",
+          "maxLength": 15,
           "type": "string"
         }
       },
@@ -1095,7 +1109,7 @@
     "rowFilter.decision.participantId": {
       "name": "participantId",
       "required": false,
-      "format": "uuid",
+      "format": "bigint",
       "in": "query",
       "type": "string"
     },
@@ -1122,15 +1136,15 @@
       "in": "query",
       "type": "string"
     },
-    "rowFilter.participant.userId": {
-      "name": "userId",
+    "rowFilter.participant.sessionId": {
+      "name": "sessionId",
       "required": false,
-      "format": "bigint",
+      "format": "uuid",
       "in": "query",
       "type": "string"
     },
-    "rowFilter.participant.session": {
-      "name": "session",
+    "rowFilter.participant.userId": {
+      "name": "userId",
       "required": false,
       "format": "uuid",
       "in": "query",
@@ -1191,6 +1205,13 @@
     },
     "rowFilter.users.email": {
       "name": "email",
+      "required": false,
+      "format": "character varying",
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.phone": {
+      "name": "phone",
       "required": false,
       "format": "character varying",
       "in": "query",

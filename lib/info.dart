@@ -32,7 +32,8 @@ class _InfoPage extends State<InfoPage> {
         rows = [
           AboutListTile(
               applicationName: packageInfo.appName,
-              applicationVersion: packageInfo.version)
+              applicationVersion:
+                  packageInfo.version + '+' + packageInfo.buildNumber)
         ];
       });
     }, onError: (error) async {

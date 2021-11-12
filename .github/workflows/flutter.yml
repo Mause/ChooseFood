@@ -250,6 +250,7 @@ jobs:
 
   create_github_release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs:
       - build_releases
       - integration_tests

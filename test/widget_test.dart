@@ -1,40 +1,45 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+import 'dart:convert' show json;
 
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:choose_food/generated_code/openapi.models.swagger.dart'
+    show Users;
+import 'package:choose_food/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart'
+    show
+        WidgetTester,
+        equals,
+        expect,
+        find,
+        findsNothing,
+        findsOneWidget,
+        findsWidgets,
+        isNull,
+        setUp,
+        tearDown,
+        testWidgets;
 import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:get/get.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:network_image_mock/network_image_mock.dart'
+    show mockNetworkImagesFor;
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
+import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
+    show SelectorButton;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:choose_food/main.dart';
-import 'package:mockito/annotations.dart' show GenerateMocks;
-import 'package:mockito/mockito.dart' show throwOnMissingStub;
-import 'package:network_image_mock/network_image_mock.dart'
-    show mockNetworkImagesFor;
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
-import './widget_test.mocks.dart';
-
-@GenerateMocks([
-  http.Client,
-  supabase.SupabaseClient,
-  supabase.SupabaseQueryBuilder,
-  supabase.PostgrestBuilder,
-])
 void main() {
   late NockScope supabaseScope;
+  late NockScope mapsScope;
+
   setUp(() {
     nock.init();
     supabaseScope = nock("https://supabase");
+    mapsScope = nock("https://maps.googleapis.com");
     supabaseScope
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
@@ -44,8 +49,6 @@ void main() {
   });
 
   testWidgets('Places load', (tester) async {
-    var mockSupabaseClient = MockSupabaseClient();
-    throwOnMissingStub(mockSupabaseClient);
     supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
@@ -57,7 +60,7 @@ void main() {
       }
     ]);
 
-    nock("https://maps.googleapis.com")
+    mapsScope
         .get(
             "/maps/api/place/nearbysearch/json?location=115.8577778%2C-31.9509882&type=restaurant&radius=3000&key")
         .reply(200, {
@@ -101,11 +104,27 @@ void main() {
           {
             ColumnNames.decision.decision: true,
             ColumnNames.decision.placeReference: placeReference,
-            ColumnNames.decision.participantId: 'PID'
+            ColumnNames.decision.participantId: 101
           }
         ]
       }
     ]);
+
+    var placeName = 'The Last Drop';
+    mapsScope
+        .get("/maps/api/place/details/json?placeid=$placeReference&key")
+        .reply(
+            200,
+            PlacesDetailsResponse(
+                status: 'OK',
+                result: PlaceDetails(
+                    name: placeName, placeId: '', reference: placeReference),
+                htmlAttributions: []).toJson());
+    var email2 = 'fake@example.com';
+    var interceptor =
+        supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22101%22%29");
+    interceptor.reply(200, [Users(id: 'PID', email: email2).toJson()]);
+
     await tester.pumpWidget(const MyApp());
 
     await tester
@@ -121,6 +140,83 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'View details'));
     await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
 
-    expect(find.widgetWithText(AlertDialog, placeReference), findsOneWidget);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    // TODO: assert text is displayed
+  });
+
+  testWidgets('Login dialog', (WidgetTester tester) async {
+    Get.put(supabase.SupabaseClient("https://supabase", ""));
+
+    var phone = '416041357';
+
+    supabaseScope
+        .post("/auth/v1/otp", json.encode({"phone": "+61" + phone}))
+        .reply(200, {});
+    var token = '101010';
+    supabaseScope
+        .post(
+            "/auth/v1/verify",
+            json.encode({
+              'phone': "+61" + phone,
+              'token': token,
+              'type': 'sms',
+              'redirect_to': null
+            }))
+        .reply(
+            200, {"error": null, "access_token": "TOKE", 'expires_in': 3600});
+
+    tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
+            (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case "isValidPhoneNumber":
+          return true;
+        case "formatAsYouType":
+          return methodCall.arguments['phoneNumber'];
+        case "normalizePhoneNumber":
+          return methodCall.arguments['phoneNumber'];
+        default:
+          log.e(methodCall);
+      }
+    });
+
+    await tester.pumpWidget(const MyApp());
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pumpAndSettle();
+
+    expect(await tester.takeException(), isNull);
+
+    var inputField = find.byType(TextFormField);
+    expect(inputField, findsOneWidget);
+
+    await tester.tap(find.byType(SelectorButton));
+    await tester.pumpAndSettle();
+    await tester.tapAt(const Offset(400.0, 234.0));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(inputField, phone);
+    await tester.pumpAndSettle();
+
+    var phoneField =
+        tester.state(find.byType(InternationalPhoneNumberInput)) as dynamic;
+    var countries = phoneField.countries as List<dynamic>;
+    var au = countries[13];
+    phoneField.onCountryChanged(au);
+    await tester.pumpAndSettle();
+
+    expect(tester.state<FormState>(find.byType(Form)).validate(), equals(true));
+    expect(tester.state<FormFieldState>(inputField).errorText, isNull);
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.pumpAndSettle();
+
+    var loginCode = find.widgetWithText(TextFormField, "Login code");
+    await tester.enterText(loginCode, token);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.pumpAndSettle();
+
+    expect(find.text("Welcome!"), findsWidgets);
   });
 }

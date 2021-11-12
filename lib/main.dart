@@ -26,8 +26,6 @@ import 'package:flutter/widgets.dart'
         Widget,
         Wrap,
         runApp;
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
-    show FacebookAuth, LoginStatus;
 import 'package:geolocator/geolocator.dart'
     show GeolocatorPlatform, LocationPermission, Position;
 import 'package:get/get.dart';
@@ -48,6 +46,7 @@ import 'common.dart'
         execute,
         makeErrorDialog,
         title;
+import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
@@ -142,7 +141,7 @@ class MyHomePageState extends State<MyHomePage> {
             .is_(ColumnNames.session.concludedTime, null),
         Session.fromJson);
     if (response.error != null) {
-      throw makeError(response.error);
+      throw await makeError(response.error);
     }
 
     setState(() {
@@ -254,30 +253,33 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    log.w('Calling login');
+    await showDialog(
+        context: context, builder: (context) => const LoginDialog());
 
-    var accessToken = await FacebookAuth.i.accessToken;
-    if (accessToken == null) {
-      var loginResult =
-          await FacebookAuth.instance.login(permissions: ["email"]);
-      log.w({"status": loginResult.status, "message": loginResult.message});
-      if (loginResult.status != LoginStatus.success) {
-        await Sentry.captureMessage(loginResult.message!);
-        await showDialog(
-            context: context, builder: makeErrorDialog(loginResult.message!));
-      }
-      accessToken = loginResult.accessToken;
-    }
+    // log.w('Calling login');
 
-    if (accessToken == null) {
-      throw await makeError('Failed to login');
-    }
+    // var accessToken = await FacebookAuth.i.accessToken;
+    // if (accessToken == null) {
+    //   var loginResult =
+    //       await FacebookAuth.instance.login(permissions: ["email"]);
+    //   log.w({"status": loginResult.status, "message": loginResult.message});
+    //   if (loginResult.status != LoginStatus.success) {
+    //     await Sentry.captureMessage(loginResult.message!);
+    //     await showDialog(
+    //         context: context, builder: makeErrorDialog(loginResult.message!));
+    //   }
+    //   accessToken = loginResult.accessToken;
+    // }
 
-    setState(() {
-      userId = accessToken?.userId;
-    });
+    // if (accessToken == null) {
+    //   throw await makeError('Failed to login');
+    // }
 
-    log.i("login complete?");
+    // setState(() {
+    //   userId = accessToken?.userId;
+    // });
+
+    // log.i("login complete?");
   }
 
   @override
@@ -307,6 +309,11 @@ class MyHomePageState extends State<MyHomePage> {
             elevatedButton('Get places', getPlaces),
           ],
         ),
+        Text(
+          supabaseClient.auth.currentSession == null
+              ? 'Logged in: ${supabaseClient.auth.currentUser?.phone ?? "Unknown"}'
+              : 'Logged out',
+        ),
         Text(sessionId == null
             ? 'No session started yet'
             : 'Session ID: $sessionId'),
@@ -326,7 +333,7 @@ class MyHomePageState extends State<MyHomePage> {
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
                 sessionId: sessionId!,
-                participantId: getUser(),
+                participantId: 0,
                 placeReference: reference,
                 decision: state)
             .toJson()))
@@ -375,6 +382,7 @@ class TableNames {
   static const String decision = "decision";
   static const String session = "session";
   static const String participant = "participant";
+  static const String users = "users";
 }
 
 class LocationCard extends StatelessWidget {
