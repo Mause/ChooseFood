@@ -65,7 +65,7 @@ platform :android do
     run_tests_firebase_testlab(
       project_id: "choose-food-330101",
       app_apk: "android/app/build/outputs/apk/debug/app-debug.apk",
-      android_test_apk: "android/build/outputs/apk/androidTest/debug/lib-debug-androidTest.apk",
+      android_test_apk: "android/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
       devices: [
         {
           model: "Pixel3",
