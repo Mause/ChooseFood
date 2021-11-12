@@ -233,7 +233,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               status: 'completed',
-              output: output,
+              output: { title: 'Integration tests', summary: 'Yay?', text: output },
+              name: 'Integration tests',
               conclusion: 'neutral'
             };
             console.log(fields);
