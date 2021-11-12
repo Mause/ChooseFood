@@ -198,9 +198,15 @@ jobs:
         run: |
           gcloud firebase test android run \
             --type instrumentation \
+            --results-dir=${{ github.run_number }}/
             --app build/app/outputs/flutter-apk/app-debug.apk \
             --test android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --device model=Pixel3,version=30,locale=en_AU,orientation=portrait
+
+      - name: List buckets
+        if: always()
+        run: |
+          gsutil ls
 
       - name: List buckets
         if: always()
@@ -215,9 +221,12 @@ jobs:
       - name: List bucket contents
         if: always()
         run: |
-          BUCKET_NAME=$(gsutil ls | head)
-          echo Bucket name: $BUCKET_NAME
-          gsutil ls -r gs://$BUCKET_NAME/**
+          gsutil ls -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/**
+
+      - name: List bucket contents
+        if: always()
+        run: |
+          gsutil ls -r gs://test-lab-99v5vhwbjt2bc-nc69r449qnr4a/${{ github.run_number }}/**
 
       - uses: actions/upload-artifact@v2
         if: always()
