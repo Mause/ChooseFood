@@ -48,6 +48,7 @@ dependencies:
   get: ^4.3.8
   supabase: ^0.2.8
   intl_phone_number_input: ^0.7.0+2
+  flutter_contacts: ^1.1.1+2
 
 dev_dependencies:
   flutter_test:

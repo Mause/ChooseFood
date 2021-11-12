@@ -27,8 +27,10 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         Widget;
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart' show Get, Inst;
 import 'package:google_maps_webservice/places.dart' show GoogleMapsPlaces;
+import 'package:intl_phone_number_input/intl_phone_number_input_test.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
@@ -59,11 +61,52 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
   List<Widget> sessions = [];
 
+  List<Users> yourFriends = [];
+
+  List<Session> friendsSessions = [];
+
   @override
   void initState() {
     super.initState();
 
     initSessions();
+    loadFriends();
+  }
+
+  Future<void> loadFriends() async {
+    if (await FlutterContacts.requestPermission()) {
+      var contacts = await Future.wait((await FlutterContacts.getContacts())
+          .expand((element) =>
+              element.phones.map((e) => NamePhone(element.name, e)))
+          .map((e) async => NamePhone(
+              e.name,
+              Phone((await PhoneNumberTest.getRegionInfoFromPhoneNumber(
+                      e.phone.normalizedNumber))
+                  .phoneNumber!)))
+          .toList());
+
+      var yourFriends = (await execute<Users>(
+              supabaseClient
+                  .from(TableNames.users)
+                  .select()
+                  .in_("phone", contacts.map((e) => e.phone.number).toList()),
+              Users.fromJson))
+          .datam;
+      setState(() {
+        this.yourFriends = yourFriends;
+      });
+
+      var friendsSessions = (await execute<Session>(
+              supabaseClient
+                  .from(TableNames.participant)
+                  .select()
+                  .in_("userId", yourFriends.map((e) => e.id).toList()),
+              Session.fromJson))
+          .datam;
+      setState(() {
+        this.friendsSessions = friendsSessions;
+      });
+    }
   }
 
   void initSessions() async {
@@ -108,7 +151,13 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
   @override
   Widget build(BuildContext context) {
+    var openSessions =
+        friendsSessions.where((e) => e.concludedTime == null).length;
+
     return BasePage(selectedIndex: 1, children: [
+      ListTile(title: Text('You have ${yourFriends.length}')),
+      ListTile(title: Text('Your friends ${friendsSessions.length} sessions')),
+      ListTile(title: Text('$openSessions of which are open')),
       Expanded(child: ListView(children: sessions, primary: true))
     ]);
   }
@@ -250,4 +299,11 @@ extension MapMap<T> on Iterable<T> {
     }
     return result;
   }
+}
+
+class NamePhone {
+  Name name;
+  Phone phone;
+
+  NamePhone(this.name, this.phone);
 }
