@@ -64,7 +64,7 @@ platform :android do
     assemble
     run_tests_firebase_testlab(
       project_id: "choose-food-330101",
-      app_apk: "build/app/outputs/flutter-apk/app-debug.apk"
+      app_apk: "build/app/outputs/flutter-apk/app-debug.apk",
       android_test_apk: "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
       devices: [
         {
