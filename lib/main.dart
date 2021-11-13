@@ -48,9 +48,10 @@ import 'common.dart'
         title;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
-    show Session, Point, Decision;
+    show Decision, Point, Session, Users;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
+import 'sessions.dart';
 
 var log = Logger();
 
@@ -119,6 +120,7 @@ class MyHomePageState extends State<MyHomePage> {
   int index = 0;
   List<PlacesSearchResult> results = [];
   String? sessionId;
+  Value<Users?> user = Users().reactive;
 
   GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
   GoogleMapsPlaces places = Get.find();
@@ -129,6 +131,12 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     loadExistingSession();
+
+    Sessions().getUser().then((value) => user.value = value);
+
+    supabaseClient.auth.onAuthStateChange((event, session) async {
+      user.value = await Sessions().getUser();
+    });
   }
 
   Future<void> loadExistingSession() async {
@@ -253,7 +261,7 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _login() async {
-    await showDialog(
+    user.value = await showDialog(
         context: context, builder: (context) => const LoginDialog());
 
     // log.w('Calling login');
@@ -311,7 +319,7 @@ class MyHomePageState extends State<MyHomePage> {
         ),
         Text(
           supabaseClient.auth.currentSession == null
-              ? 'Logged in: ${supabaseClient.auth.currentUser?.phone ?? "Unknown"}'
+              ? 'Logged in: ${user.value?.phone ?? "Unknown"}'
               : 'Logged out',
         ),
         Text(sessionId == null
@@ -321,11 +329,6 @@ class MyHomePageState extends State<MyHomePage> {
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
     );
-  }
-
-  String getUser() {
-    return supabaseClient.auth.currentUser?.id ??
-        '00000000-0000-0000-0000-000000000000';
   }
 
   Future<void> createDecision(String reference, bool state) async {
