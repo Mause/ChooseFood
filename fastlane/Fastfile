@@ -72,6 +72,6 @@ platform :android do
           version: "30"
         }
       ],
-      delete_firebase_files: true)
+      delete_firebase_files: false)
   end
 end
