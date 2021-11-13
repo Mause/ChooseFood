@@ -50,7 +50,7 @@ platform :android do
 
   desc "Assemble Android Test"
   lane :assemble_test_application do
-      gradle(task: "assembleDebugAndroidTest", project_dir: "android/")
+      gradle(task: "assembleDebugAndroidTest", project_dir: "android/", properties: { target: "integration_test/screenshot_test.dart" })
   end
 
   desc "Assemble Build and Test Application"
