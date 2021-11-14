@@ -13,10 +13,10 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'opened' || github.event.action == 'reopened'
     steps:
       - name: 'Move issue to "Todo"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
+        uses: leonsteinhaeuser/project-beta-automations@feature/user-based-project-support
         with:
           gh_token: ${{ secrets.ACCESS_TOKEN }}
-          organization: Mause
+          user: Mause
           project_id: 3
           resource_node_id: ${{ github.event.issue.node_id }}
           status_value: "Todo"
@@ -27,10 +27,10 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'review_requested'
     steps:
       - name: 'Move PR to "In Progress"'
-        uses: leonsteinhaeuser/project-beta-automations@v1.0.1
+        uses: leonsteinhaeuser/project-beta-automations@feature/user-based-project-support
         with:
           gh_token: ${{ secrets.ACCESS_TOKEN }}
-          organization: Mause
+          user: Mause
           project_id: 3
           resource_node_id: ${{ github.event.pull_request.node_id }}
           status_value: "In Progress"
