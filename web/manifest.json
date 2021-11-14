@@ -1,6 +1,6 @@
 {
-    "name": "myapp",
-    "short_name": "myapp",
+    "name": "Choose Food",
+    "short_name": "Choose Food",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
