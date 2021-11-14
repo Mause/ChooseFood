@@ -25,8 +25,10 @@ import 'package:flutter/widgets.dart'
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart'
     show InternationalPhoneNumberInput, PhoneNumber;
-import 'package:logger/logger.dart';
-import 'package:supabase/supabase.dart';
+import 'package:logger/logger.dart' show Logger;
+import 'package:supabase/supabase.dart' show SupabaseClient;
+
+import '../sessions.dart' show Sessions;
 
 var log = Logger();
 
@@ -101,7 +103,9 @@ class _LoginDialogState extends State<LoginDialog> {
       buildStep(
           'Login code',
           TextFormField(
-              validator: valid,
+              validator: (String? value) {
+                return value?.isEmpty == true ? 'Please enter' : null;
+              },
               autovalidateMode: AutovalidateMode.always,
               onSaved: (String? loginCode) async => await stepTwo(loginCode!),
               decoration: const InputDecoration(
@@ -114,8 +118,8 @@ class _LoginDialogState extends State<LoginDialog> {
         ButtonBar(
           children: [
             ElevatedButton(
-                onPressed: () {
-                  Get.back();
+                onPressed: () async {
+                  Get.back(result: Sessions().getUser());
                 },
                 child: const Text("Ok"))
           ],
@@ -128,9 +132,5 @@ class _LoginDialogState extends State<LoginDialog> {
       scrollDirection: Axis.horizontal,
       child: SizedBox.square(child: steps, dimension: 400),
     ));
-  }
-
-  String? valid(String? value) {
-    return value?.isEmpty == true ? 'Please enter' : null;
   }
 }
