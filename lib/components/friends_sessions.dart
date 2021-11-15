@@ -61,9 +61,9 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
   List<Widget> sessions = [];
 
-  List<Users> yourFriends = [];
+  List<Users>? yourFriends;
 
-  List<Session> friendsSessions = [];
+  List<Session>? friendsSessions;
 
   @override
   void initState() {
@@ -152,12 +152,14 @@ class FriendsSessionsState extends State<FriendsSessions> {
   @override
   Widget build(BuildContext context) {
     var openSessions =
-        friendsSessions.where((e) => e.concludedTime == null).length;
+        friendsSessions?.where((e) => e.concludedTime == null).length;
 
     return BasePage(selectedIndex: 1, children: [
-      ListTile(title: Text('You have ${yourFriends.length}')),
-      ListTile(title: Text('Your friends ${friendsSessions.length} sessions')),
-      ListTile(title: Text('$openSessions of which are open')),
+      ListTile(title: Text('You have ${yourFriends?.length ?? "?"} friends')),
+      ListTile(
+          title: Text(
+              'Your friends ${friendsSessions?.length ?? "?"} have sessions')),
+      ListTile(title: Text('${openSessions ?? "?"} of which are open')),
       Expanded(child: ListView(children: sessions, primary: true))
     ]);
   }
