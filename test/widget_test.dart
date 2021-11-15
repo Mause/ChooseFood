@@ -165,7 +165,13 @@ void main() {
         .reply(200, {
       "error": null,
       "access_token": "ey." +
-          base64Url.encode(jsonEncode({"exp": null, "sub": "id"}).codeUnits) +
+          base64Url.encode(jsonEncode({
+            "sub": "id",
+            "aud": "",
+            'phone': "",
+            'role': "authenticated",
+            'updated_at': "",
+          }).codeUnits) +
           ".ey",
       'expires_in': 3600
     });

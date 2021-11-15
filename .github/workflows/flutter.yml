@@ -197,7 +197,7 @@ jobs:
 
       - name: Integration tests
         uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 15
+        timeout-minutes: 8
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
