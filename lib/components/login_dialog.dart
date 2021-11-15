@@ -19,9 +19,9 @@ import 'package:flutter/widgets.dart'
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart'
     show InternationalPhoneNumberInput, PhoneNumber;
+import 'package:jwt_decode/jwt_decode.dart' show Jwt;
 import 'package:logger/logger.dart';
 import 'package:supabase/supabase.dart';
-import 'package:jwt_decode/jwt_decode.dart' show Jwt;
 
 var log = Logger();
 
@@ -118,9 +118,13 @@ class _LoginDialogState extends State<LoginDialog> {
               currentStep: currentStep,
               steps: steps,
               onStepContinue: () {
-                var _formKey = keys[currentStep];
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
+                if (currentStep == 2) {
+                  Get.back(result: buildAccessToken()!, closeOverlays: true);
+                } else {
+                  var _formKey = keys[currentStep];
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                  }
                 }
               }),
           dimension: 400),
