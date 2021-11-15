@@ -51,6 +51,7 @@ import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
+import 'sessions.dart' show Sessions;
 
 var log = Logger();
 
@@ -342,12 +343,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<void> concludeSession() async {
     context.progress('Closing session');
-    await supabaseClient
-        .from(TableNames.session)
-        .update(excludeNull(Session(
-                id: sessionId, concludedTime: DateTime.now().toIso8601String())
-            .toJson()))
-        .execute();
+
+    await Sessions().concludeSession(sessionId!);
+
     setState(() {
       sessionId = null;
       results = [];
