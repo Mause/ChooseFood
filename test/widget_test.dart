@@ -22,13 +22,13 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
+    show SelectorButton;
 import 'package:network_image_mock/network_image_mock.dart'
     show mockNetworkImagesFor;
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
-import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
-    show SelectorButton;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
@@ -55,12 +55,14 @@ void main() {
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
     supabaseClient = supabase.SupabaseClient("https://supabase", "");
+    supabaseClient.auth.setAuth(accessToken);
   });
   tearDown(() {
     nock.cleanAll();
   });
 
   testWidgets('Places load', (tester) async {
+    var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
@@ -68,7 +70,7 @@ void main() {
       }
     }).reply(200, [
       {
-        "id": "0000-00000-00000-00000",
+        "id": sessionId,
       }
     ]);
 
@@ -88,6 +90,8 @@ void main() {
       ],
       "status": "OK"
     });
+    supabaseScope.post("/rest/v1/participant",
+        {"sessionId": sessionId, "userId": "id"}).reply(200, {});
 
     Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
@@ -133,11 +137,12 @@ void main() {
                     name: placeName, placeId: '', reference: placeReference),
                 htmlAttributions: []).toJson());
     var email2 = 'fake@example.com';
-    var interceptor =
-        supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22101%22%29");
-    interceptor.reply(200, [Users(id: 'PID', email: email2).toJson()]);
-
-    supabaseClient.auth.setAuth(accessToken);
+    supabaseScope
+        .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
+        .reply(200, [Users(id: 'PID', email: email2).toJson()]);
+    supabaseScope
+        .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
+            200, {});
 
     await tester.pumpWidget(const MyApp());
 

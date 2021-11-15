@@ -16,7 +16,7 @@ class Sessions {
 
     return Participant.fromJson((await supabaseClient
             .from(TableNames.participant)
-            .upsert(par.toJson())
+            .upsert(excludeNull(par.toJson()))
             .execute())
         .data);
   }
