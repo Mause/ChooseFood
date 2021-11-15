@@ -1,4 +1,4 @@
-import 'dart:convert' show json;
+import 'dart:convert' show base64Url, json, jsonEncode;
 
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Users;
@@ -162,8 +162,19 @@ void main() {
               'type': 'sms',
               'redirect_to': null
             }))
-        .reply(
-            200, {"error": null, "access_token": "TOKE", 'expires_in': 3600});
+        .reply(200, {
+      "error": null,
+      "access_token": "ey." +
+          base64Url.encode(jsonEncode({
+            "sub": "id",
+            "aud": "",
+            'phone': "",
+            'role': "authenticated",
+            'updated_at': "",
+          }).codeUnits) +
+          ".ey",
+      'expires_in': 3600
+    });
 
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
