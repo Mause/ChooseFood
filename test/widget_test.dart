@@ -8,20 +8,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart'
     show
         WidgetTester,
-        equals,
         expect,
         find,
         findsNothing,
         findsOneWidget,
         findsWidgets,
+        hasLength,
         isNull,
         setUp,
         tearDown,
         testWidgets;
+import 'package:flutter_test/src/finders.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
     show SelectorButton;
 import 'package:network_image_mock/network_image_mock.dart'
@@ -205,7 +205,7 @@ void main() {
 
     expect(await tester.takeException(), isNull);
 
-    var inputField = find.byType(TextFormField);
+    Finder inputField = find.byKey(const Key('phone'));
     expect(inputField, findsOneWidget);
 
     await tester.tap(find.byType(SelectorButton));
@@ -216,26 +216,35 @@ void main() {
     await tester.enterText(inputField, phone);
     await tester.pumpAndSettle();
 
-    var phoneField =
-        tester.state(find.byType(InternationalPhoneNumberInput)) as dynamic;
+    var phoneField = tester.state(inputField) as dynamic;
     var countries = phoneField.countries as List<dynamic>;
     var au = countries[13];
     phoneField.onCountryChanged(au);
     await tester.pumpAndSettle();
 
-    expect(tester.state<FormState>(find.byType(Form)).validate(), equals(true));
-    expect(tester.state<FormFieldState>(inputField).errorText, isNull);
+    expect(
+        (list(ElevatedButton) + list(TextButton) + list(OutlinedButton))
+            .map((e) => e as StatefulElement)
+            .map((e) => e.widget as ButtonStyleButton)
+            .map((e) => e.child as Text)
+            .map((e) => e.data)
+            .toList(),
+        hasLength(9));
 
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(0));
     await tester.pumpAndSettle();
 
     var loginCode = find.widgetWithText(TextFormField, "Login code");
     await tester.enterText(loginCode, token);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(1));
     await tester.pumpAndSettle();
 
     expect(find.text("Welcome!"), findsWidgets);
   });
+}
+
+List<Element> list(Type t) {
+  return find.byType(t).evaluate().toList();
 }

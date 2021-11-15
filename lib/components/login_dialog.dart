@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart'
-    show
-        AlertDialog,
-        ButtonBar,
-        ElevatedButton,
-        InputDecoration,
-        ListTile,
-        TextFormField;
+    show AlertDialog, InputDecoration, Step, Stepper, TextFormField;
 import 'package:flutter/widgets.dart'
     show
         AutovalidateMode,
@@ -74,60 +68,67 @@ class _LoginDialogState extends State<LoginDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    var keys = [
+      GlobalKey<FormState>(debugLabel: 'phone-form'),
+      GlobalKey<FormState>(debugLabel: 'login-code-form')
+    ];
 
-    Widget buildStep(String title, Widget input) => Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
-        child: Column(children: [
-          ListTile(title: Text(title)),
-          input,
-          ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                }
-              },
-              child: const Text('Next'))
-        ]));
+    Step buildStep(String title, Widget input, Key _formKey) {
+      return Step(
+          title: Text(title),
+          content: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.always,
+              child: Column(children: [input])));
+    }
 
-    var steps = <Widget>[
+    var steps = [
       buildStep(
           'Phone',
           InternationalPhoneNumberInput(
+            key: const Key('phone'),
             onInputChanged: (PhoneNumber value) {},
             onSaved: (PhoneNumber phoneNumber) async =>
                 await stepOne(phoneNumber.phoneNumber!),
             inputDecoration: const InputDecoration(labelText: 'Phone number'),
-          )),
+          ),
+          keys[0]),
       buildStep(
           'Login code',
           TextFormField(
+              key: const Key('login-code'),
               validator: valid,
               autovalidateMode: AutovalidateMode.always,
               onSaved: (String? loginCode) async => await stepTwo(loginCode!),
               decoration: const InputDecoration(
                 labelText: 'Login code',
-              ))),
-      Column(children: [
-        const ListTile(title: Text('Welcome!')),
-        Text("welcome!: ${getAccessToken()?.phone}"),
-        ButtonBar(
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text("Ok"))
-          ],
-        )
-      ])
-    ][currentStep];
+              )),
+          keys[1]),
+      Step(
+          title: const Text('Welcome!'),
+          content: Column(children: [
+            Text("welcome!: ${getAccessToken()?.phone}"),
+          ]))
+    ];
 
     return AlertDialog(
         content: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: SizedBox.square(child: steps, dimension: 400),
+      child: SizedBox.square(
+          child: Stepper(
+              currentStep: currentStep,
+              steps: steps,
+              onStepContinue: () {
+                if (currentStep == 2) {
+                  Get.back(result: getAccessToken()!, closeOverlays: true);
+                } else {
+                  var _formKey = keys[currentStep];
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                  }
+                }
+              }),
+          dimension: 400),
     ));
   }
 
