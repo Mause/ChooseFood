@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart'
-    show
-        AlertDialog,
-        ButtonBar,
-        ElevatedButton,
-        InputDecoration,
-        Step,
-        Stepper,
-        TextFormField;
+    show AlertDialog, InputDecoration, Step, Stepper, TextFormField;
 import 'package:flutter/widgets.dart'
     show
         AutovalidateMode,
@@ -114,15 +107,6 @@ class _LoginDialogState extends State<LoginDialog> {
           content: Column(children: [
             Text(
                 "welcome!: ${supabaseClient.auth.currentSession?.user?.phone} ${supabaseClient.auth.currentSession?.accessToken}"),
-            ButtonBar(
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: const Text("Ok"))
-              ],
-            )
           ]))
     ];
 

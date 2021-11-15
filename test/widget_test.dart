@@ -210,7 +210,7 @@ void main() {
             .map((e) => e.child as Text)
             .map((e) => e.data)
             .toList(),
-        hasLength(10));
+        hasLength(9));
 
     await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(0));
     await tester.pumpAndSettle();
