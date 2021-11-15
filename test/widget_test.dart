@@ -32,9 +32,20 @@ import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
+String accessToken = "ey." +
+    base64Url.encode(jsonEncode({
+      "sub": "id",
+      "aud": "",
+      'phone': "",
+      'role': "authenticated",
+      'updated_at': "",
+    }).codeUnits) +
+    ".ey";
+
 void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
+  late supabase.SupabaseClient supabaseClient;
 
   setUp(() {
     nock.init();
@@ -43,6 +54,7 @@ void main() {
     supabaseScope
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
+    supabaseClient = supabase.SupabaseClient("https://supabase", "");
   });
   tearDown(() {
     nock.cleanAll();
@@ -79,7 +91,7 @@ void main() {
 
     Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
-    Get.put(supabase.SupabaseClient("https://supabase", ""));
+    Get.put(supabaseClient);
 
     await tester.pumpWidget(const MyApp());
 
@@ -125,6 +137,8 @@ void main() {
         supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22101%22%29");
     interceptor.reply(200, [Users(id: 'PID', email: email2).toJson()]);
 
+    supabaseClient.auth.setAuth(accessToken);
+
     await tester.pumpWidget(const MyApp());
 
     await tester
@@ -162,19 +176,8 @@ void main() {
               'type': 'sms',
               'redirect_to': null
             }))
-        .reply(200, {
-      "error": null,
-      "access_token": "ey." +
-          base64Url.encode(jsonEncode({
-            "sub": "id",
-            "aud": "",
-            'phone': "",
-            'role': "authenticated",
-            'updated_at': "",
-          }).codeUnits) +
-          ".ey",
-      'expires_in': 3600
-    });
+        .reply(200,
+            {"error": null, "access_token": accessToken, 'expires_in': 3600});
 
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
