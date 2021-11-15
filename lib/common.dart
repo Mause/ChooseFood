@@ -2,11 +2,18 @@ import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' show Get, Inst;
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
 import 'package:loader_overlay/loader_overlay.dart'
     show OverlayControllerWidgetExtension;
 import 'package:supabase/supabase.dart'
-    show PostgrestBuilder, PostgrestError, PostgrestResponse;
+    show
+        PostgrestBuilder,
+        PostgrestError,
+        PostgrestResponse,
+        SupabaseClient,
+        User;
 
 import 'info.dart';
 
@@ -157,4 +164,18 @@ extension LabelledProgressIndicatorExtension on BuildContext {
   progress(String label) {
     loaderOverlay.show(widget: LabelledProgressIndicator(label));
   }
+}
+
+User? getAccessToken() {
+  SupabaseClient supabaseClient = Get.find();
+
+  var accessToken = supabaseClient.auth.currentSession?.accessToken;
+  if (accessToken == null) return null;
+
+  var decode = Jwt.parseJwt(accessToken);
+
+  decode['id'] = decode['sub'];
+  decode['created_at'] = decode['updated_at'] = "0";
+
+  return User.fromJson(decode);
 }

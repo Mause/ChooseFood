@@ -44,6 +44,7 @@ import 'common.dart'
         LabelledProgressIndicatorExtension,
         excludeNull,
         execute,
+        getAccessToken,
         makeErrorDialog,
         title;
 import 'components/login_dialog.dart';
@@ -246,8 +247,12 @@ class MyHomePageState extends State<MyHomePage> {
       throw ArgumentError(response.error);
     }
 
+    var session = response.data[0];
+
+    await Sessions().joinSession(session, getAccessToken()!);
+
     setState(() {
-      sessionId = response.data[0].id;
+      sessionId = session.id;
     });
 
     log.i("started new session: $sessionId");
@@ -365,6 +370,12 @@ class SessionFieldNames {
 class ColumnNames {
   static const session = SessionFieldNames();
   static const decision = DecisionFieldNames();
+  static const participant = ParticipantFieldNames();
+}
+
+class ParticipantFieldNames {
+  final String sessionId = "sessionId";
+  const ParticipantFieldNames();
 }
 
 class DecisionFieldNames {
