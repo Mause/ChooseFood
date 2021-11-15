@@ -158,7 +158,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
       ListTile(title: Text('You have ${yourFriends?.length ?? "?"} friends')),
       ListTile(
           title: Text(
-              'Your friends ${friendsSessions?.length ?? "?"} have sessions')),
+              'Your friends have ${friendsSessions?.length ?? "?"} sessions')),
       ListTile(title: Text('${openSessions ?? "?"} of which are open')),
       Expanded(child: ListView(children: sessions, primary: true))
     ]);
