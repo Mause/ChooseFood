@@ -21,6 +21,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart'
     show InternationalPhoneNumberInput, PhoneNumber;
 import 'package:logger/logger.dart';
 import 'package:supabase/supabase.dart';
+import 'package:jwt_decode/jwt_decode.dart' show Jwt;
 
 var log = Logger();
 
@@ -105,8 +106,7 @@ class _LoginDialogState extends State<LoginDialog> {
       Step(
           title: const Text('Welcome!'),
           content: Column(children: [
-            Text(
-                "welcome!: ${supabaseClient.auth.currentSession?.user?.phone} ${supabaseClient.auth.currentSession?.accessToken}"),
+            Text("welcome!: ${buildAccessToken()?.phone}"),
           ]))
     ];
 
@@ -125,6 +125,18 @@ class _LoginDialogState extends State<LoginDialog> {
               }),
           dimension: 400),
     ));
+  }
+
+  User? buildAccessToken() {
+    var accessToken = supabaseClient.auth.currentSession?.accessToken;
+    if (accessToken == null) return null;
+
+    var decode = Jwt.parseJwt(accessToken);
+
+    decode['id'] = decode['sub'];
+    decode['created_at'] = decode['updated_at'] = "0";
+
+    return User.fromJson(decode);
   }
 
   String? valid(String? value) {
