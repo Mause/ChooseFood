@@ -31,15 +31,31 @@ platform :android do
     # google_play_track_version_codes
     # google_play_track_release_names
     create_notes
-    add_git_tag(build_number: "1.0.0+#{options[:build_number]}")
+    version_number = "1.0.0+#{options[:build_number]}"
+    add_git_tag(build_number: version_number)
     push_git_tags
     upload_to_play_store(
       aab: "build/app/outputs/bundle/release/app-release.aab",
       track: "internal"
     )
+    #firebase_app_distribution(
+    #  app: "1:368264902347:android:1d391b2bfa5f9bd1264d4e",
+    #  testers: "jack.thatch@gmail.com",
+    #  android_artifact_path: "build/app/outputs/bundle/release/app-release.aab",
+    #  debug: true
+    #)
+    notify(version_number: version_number)
   end
   desc "Validate json key"
   lane :validate do
     validate_play_store_json_key
   end
+end
+
+desc "Notify via messaging services"
+lane :notify do |options|
+  line_notify(
+    access_token: ENV["LINE_TOKEN"],
+    message: "Choose Food version #{options[:version_number]} has been pushed to firebase 💜"
+  )
 end
