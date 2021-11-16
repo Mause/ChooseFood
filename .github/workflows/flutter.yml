@@ -207,7 +207,9 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           avd-name: android
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+          script: |
+            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554 --trace-startup
 
       - uses: actions/upload-artifact@v2
         if: always()

@@ -72,6 +72,7 @@ dev_dependencies:
   nock: ^1.2.0
   swagger_dart_code_generator: 2.2.5
   msix: ^2.6.2
+  flutter_gherkin: ^3.0.0-rc.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
