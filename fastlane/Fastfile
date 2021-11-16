@@ -38,7 +38,6 @@ platform :android do
       track: "internal"
     )
     firebase_app_distribution(
-      service_credentials_file: "client-secret.json",
       app: "1:368264902347:android:1d391b2bfa5f9bd1264d4e",
       testers: "jack.thatch@gmail.com",
       android_artifact_path: "build/app/outputs/bundle/release/app-release.aab"
