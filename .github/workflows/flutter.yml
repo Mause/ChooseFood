@@ -307,6 +307,7 @@ jobs:
       - run: bundle exec fastlane android deploy build_number:${{ github.run_number }}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
 
   build_windows:
     runs-on: windows-latest
