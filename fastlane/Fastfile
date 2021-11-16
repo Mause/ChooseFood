@@ -42,9 +42,18 @@ platform :android do
       testers: "jack.thatch@gmail.com",
       android_artifact_path: "build/app/outputs/bundle/release/app-release.aab"
     )
+    notify()
   end
   desc "Validate json key"
   lane :validate do
     validate_play_store_json_key
   end
+end
+
+desc "Notify via messaging services"
+lane :notify do |options|
+  line_notify(
+    access_token: ENV["LINE_TOKEN"],
+    message: "Choose Food version 1.0.0+#{options[:build_number]} has been pushed to firebase 💜"
+  )
 end

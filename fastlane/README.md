@@ -15,6 +15,14 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
+### notify
+```
+fastlane notify
+```
+Notify via messaging services
+
+----
+
 ## Android
 ### android create_notes
 ```
