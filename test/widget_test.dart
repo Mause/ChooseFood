@@ -35,6 +35,20 @@ import 'package:supabase/supabase.dart' as supabase;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
+void setupContacts(WidgetTester tester) =>
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('github.com/QuisApp/flutter_contacts'),
+        (message) async {
+      switch (message.method) {
+        case "requestPermission":
+          return true;
+        case "select":
+          return [];
+        default:
+          log.e(message);
+      }
+    });
+
 void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
@@ -240,6 +254,7 @@ void main() {
   });
 
   testGoldens('golden', (tester) async {
+    setupContacts(tester);
     supabaseScope
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
