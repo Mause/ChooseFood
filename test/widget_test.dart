@@ -32,7 +32,8 @@ import 'package:supabase/supabase.dart' as supabase;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
-String accessToken = "ey." +
+String accessToken({String role = "authenticated"}) =>
+    "ey." +
     base64Url.encode(jsonEncode({
       "sub": "id",
       "aud": "",
@@ -55,7 +56,7 @@ void main() {
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
     supabaseClient = supabase.SupabaseClient("https://supabase", "");
-    supabaseClient.auth.setAuth(accessToken);
+    supabaseClient.auth.setAuth(accessToken());
   });
   tearDown(() {
     nock.cleanAll();

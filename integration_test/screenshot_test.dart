@@ -19,7 +19,9 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
+
 import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
+import '../test/widget_test.dart' show accessToken;
 
 var log = Logger();
 
@@ -36,7 +38,9 @@ void main() {
 
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
-    Get.put(SupabaseClient("https://supabase", "dummy"), permanent: true);
+    var supabaseClient = SupabaseClient("https://supabase", "dummy");
+    supabaseClient.auth.setAuth(accessToken());
+    Get.put(supabaseClient, permanent: true);
     GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
     var nockScope = nock("https://supabase");
