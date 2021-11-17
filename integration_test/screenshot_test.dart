@@ -43,11 +43,12 @@ void main() {
     Get.put(supabaseClient, permanent: true);
     GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
-    var nockScope = nock("https://supabase");
-    nockScope
+    var sessionId = "0000-00000-00000-00000";
+    var supabaseScope = nock("https://supabase");
+    supabaseScope
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
-    nockScope
+    supabaseScope
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
@@ -59,14 +60,14 @@ void main() {
         ]
       }
     ]);
-    nockScope.post("/rest/v1/session", {
+    supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
         "coordinates": [115.8577778, -31.9509882]
       }
     }).reply(200, [
       {
-        "id": "0000-00000-00000-00000",
+        "id": sessionId,
       }
     ]);
     var mapsScope = nock("https://maps.googleapis.com");
@@ -89,6 +90,8 @@ void main() {
     mapsScope
         .get("/maps/api/place/photo?photoreference=1&maxwidth=411&key")
         .reply(200, image, headers: {"Content-Type": "image/png"});
+    supabaseScope.post("/rest/v1/participant",
+        {"sessionId": sessionId, "userId": "id"}).reply(200, {});
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
