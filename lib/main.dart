@@ -374,7 +374,7 @@ class ColumnNames {
 }
 
 class ParticipantFieldNames {
-  static const sessionId = "sessionId";
+  final String sessionId = "sessionId";
 
   const ParticipantFieldNames();
 }

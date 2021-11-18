@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient, User;
 import 'package:json_annotation/json_annotation.dart';
 import 'common.dart';
-import 'generated_code/openapi.models.swagger.dart' show Participant, Session;
 import 'generated_code/openapi.models.swagger.dart'
     show Decision, Participant, Session;
 
