@@ -525,8 +525,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "6df0deb"
-      resolved-ref: "6df0deb11f1156b02a845615c70da5e7a6141171"
+      ref: bf92cd1
+      resolved-ref: bf92cd146c98bc4908ed4c22a293df2ae2723f7a
       url: "https://github.com/Mause/material_you_colours"
     source: git
     version: "0.0.1"
