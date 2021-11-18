@@ -17,7 +17,7 @@ class Sessions {
         .data);
   }
 
-  Future<void> concludeSession(
+  Future<List<String?>> concludeSession(
     String sessionId,
   ) async {
     await supabaseClient
@@ -26,5 +26,28 @@ class Sessions {
                 id: sessionId, concludedTime: DateTime.now().toIso8601String())
             .toJson()))
         .execute();
+
+    var participants = (await execute<ParticipantWithDecisions>(
+            supabaseClient
+                .from(TableNames.participant)
+                .select("userId, decision ( * )")
+                .eq(ColumnNames.participant.sessionId, sessionId),
+            ParticipantWithDecisions.fromJson))
+        .datam;
+
+    var places = participants
+        .map((p) => p.decision.map((d) => d.placeReference))
+        .expand((decision) => decision)
+        .map((pid) => pid!)
+        .toSet();
+
+    var agreements = places
+        .where((place) => participants.every((participant) => participant
+            .decision
+            .firstWhere((element) => place == element.placeReference)
+            .decision!))
+        .toList();
+
+    return agreements;
   }
 }
