@@ -34,6 +34,8 @@ import 'package:google_maps_webservice/places.dart'
 import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
+import 'package:material_you_colours/material_you_colours.dart'
+    show getMaterialYouThemeData;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
 import 'package:supabase/supabase.dart' show SupabaseClient;
@@ -50,7 +52,6 @@ import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision;
 import 'info.dart' show InfoPage;
-import 'platform_colours.dart' show getThemeData;
 import 'sessions.dart' show Sessions;
 
 var log = Logger();
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
     return FutureBuilder<ThemeData>(
-        future: getThemeData(),
+        future: getMaterialYouThemeData(),
         builder: (context, snapshot) => GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
