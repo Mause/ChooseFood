@@ -365,6 +365,13 @@ class SessionFieldNames {
 class ColumnNames {
   static const session = SessionFieldNames();
   static const decision = DecisionFieldNames();
+  static const participant = ParticipantFieldNames();
+}
+
+class ParticipantFieldNames {
+  static const sessionId = "sessionId";
+
+  const ParticipantFieldNames();
 }
 
 class DecisionFieldNames {
