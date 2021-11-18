@@ -169,8 +169,12 @@ class FriendsSessionsState extends State<FriendsSessions> {
 class SessionWithDecisions extends Session {
   List<Decision> decision;
 
-  SessionWithDecisions(this.decision, String? id, String? concludedTime,
-      String? createdAt, Point? point)
+  SessionWithDecisions(
+      {required this.decision,
+      String? id,
+      String? concludedTime,
+      String? createdAt,
+      Point? point})
       : super(
             id: id,
             concludedTime: concludedTime,
