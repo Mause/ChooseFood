@@ -1,12 +1,16 @@
 import 'dart:convert' show base64Url, json, jsonEncode;
 
+import 'package:choose_food/components/friends_sessions.dart'
+    show FriendsSessions, SessionWithDecisions;
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Users;
+    show Decision, Point, Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart'
     show
+        Skip,
         WidgetTester,
         expect,
         find,
@@ -18,6 +22,7 @@ import 'package:flutter_test/flutter_test.dart'
         setUp,
         tearDown,
         testWidgets;
+import 'package:test/test.dart' show group;
 import 'package:flutter_test/src/finders.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
@@ -42,6 +47,20 @@ String accessToken({String role = "authenticated"}) =>
       'updated_at': "",
     }).codeUnits) +
     ".ey";
+
+void setupContacts(WidgetTester tester) =>
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('github.com/QuisApp/flutter_contacts'),
+        (message) async {
+      switch (message.method) {
+        case "requestPermission":
+          return true;
+        case "select":
+          return [];
+        default:
+          log.e(message);
+      }
+    });
 
 void main() {
   late NockScope supabaseScope;
@@ -243,6 +262,38 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text("Welcome!"), findsWidgets);
+  });
+
+  group('golden tests', () {
+    testGoldens('golden', (tester) async {
+      setupContacts(tester);
+      supabaseScope
+          .get(
+              "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
+          .reply(200, [
+        SessionWithDecisions(
+            decision: [Decision()],
+            id: "0",
+            concludedTime: null,
+            createdAt: DateTime.now().toIso8601String(),
+            point: Point())
+      ]);
+
+      var goldens = GoldenBuilder.column(
+          wrap: (widget) => Container(
+              width: 600,
+              height: 1000,
+              margin: const EdgeInsets.all(20),
+              child: widget))
+        ..addScenario('main', const FriendsSessions());
+      await loadAppFonts();
+
+      await tester.pumpWidgetBuilder(goldens.build(),
+          surfaceSize: const Size.square(1500));
+      await screenMatchesGolden(tester, 'main', autoHeight: true);
+    });
+  }, onPlatform: {
+    'windows': [const Skip()]
   });
 }
 
