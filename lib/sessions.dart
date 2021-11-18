@@ -16,7 +16,7 @@ class Sessions {
                 id: sessionId, concludedTime: DateTime.now().toIso8601String())
             .toJson()))
         .execute();
-  
+
     var participants = (await execute<ParticipantWithDecisions>(
             supabaseClient
                 .from(TableNames.participant)
