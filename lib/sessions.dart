@@ -2,9 +2,7 @@ import 'package:choose_food/main.dart';
 import 'package:get/get.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
 import 'package:json_annotation/json_annotation.dart';
-import 'package:supabase/supabase.dart' show SupabaseClient, User;
 import 'common.dart';
-import 'generated_code/openapi.models.swagger.dart' show Session;
 import 'generated_code/openapi.models.swagger.dart'
     show Decision, Participant, Session;
 
