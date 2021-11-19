@@ -1,5 +1,5 @@
 import 'package:choose_food/common.dart'
-    show BasePage, MyPostgrestResponse, execute;
+    show BasePage, MyPostgrestResponse, execute, getAccessToken;
 import 'package:choose_food/main.dart' show ColumnNames, TableNames;
 import 'package:flutter/material.dart'
     show
@@ -39,6 +39,7 @@ import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import '../generated_code/openapi.models.swagger.dart'
     show Decision, Session, Point, Users;
+import '../sessions.dart' show Sessions;
 
 part 'friends_sessions.g.dart';
 
@@ -203,9 +204,9 @@ class SessionCard extends StatelessWidget {
           ListTile(title: Text(sessionWithDecisions.id!)),
           ButtonBar(children: [
             TextButton(
-                onPressed: () {
-                  Sentry.captureMessage(
-                      'User wishes to join ${sessionWithDecisions.id}');
+                onPressed: () async {
+                  await Sessions()
+                      .joinSession(sessionWithDecisions, getAccessToken()!);
                 },
                 child: const Text('Join')),
             TextButton(

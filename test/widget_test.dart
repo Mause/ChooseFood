@@ -37,6 +37,17 @@ import 'package:supabase/supabase.dart' as supabase;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
+String accessToken({String role = "authenticated"}) =>
+    "ey." +
+    base64Url.encode(jsonEncode({
+      "sub": "id",
+      "aud": "",
+      'phone': "",
+      'role': "authenticated",
+      'updated_at': "",
+    }).codeUnits) +
+    ".ey";
+
 void setupContacts(WidgetTester tester) =>
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('github.com/QuisApp/flutter_contacts'),
@@ -54,6 +65,7 @@ void setupContacts(WidgetTester tester) =>
 void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
+  late supabase.SupabaseClient supabaseClient;
 
   setUp(() {
     nock.init();
@@ -62,12 +74,15 @@ void main() {
     supabaseScope
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
+    supabaseClient = supabase.SupabaseClient("https://supabase", "");
+    supabaseClient.auth.setAuth(accessToken());
   });
   tearDown(() {
     nock.cleanAll();
   });
 
   testWidgets('Places load', (tester) async {
+    var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
@@ -75,7 +90,7 @@ void main() {
       }
     }).reply(200, [
       {
-        "id": "0000-00000-00000-00000",
+        "id": sessionId,
       }
     ]);
 
@@ -95,10 +110,12 @@ void main() {
       ],
       "status": "OK"
     });
+    supabaseScope.post("/rest/v1/participant",
+        {"sessionId": sessionId, "userId": "id"}).reply(200, {});
 
     Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
-    Get.put(supabase.SupabaseClient("https://supabase", ""));
+    Get.put(supabaseClient);
 
     await tester.pumpWidget(const MyApp());
 
@@ -140,9 +157,12 @@ void main() {
                     name: placeName, placeId: '', reference: placeReference),
                 htmlAttributions: []).toJson());
     var email2 = 'fake@example.com';
-    var interceptor =
-        supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22101%22%29");
-    interceptor.reply(200, [Users(id: 'PID', email: email2).toJson()]);
+    supabaseScope
+        .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
+        .reply(200, [Users(id: 'PID', email: email2).toJson()]);
+    supabaseScope
+        .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
+            200, {});
 
     await tester.pumpWidget(const MyApp());
 
@@ -181,19 +201,8 @@ void main() {
               'type': 'sms',
               'redirect_to': null
             }))
-        .reply(200, {
-      "error": null,
-      "access_token": "ey." +
-          base64Url.encode(jsonEncode({
-            "sub": "id",
-            "aud": "",
-            'phone': "",
-            'role': "authenticated",
-            'updated_at': "",
-          }).codeUnits) +
-          ".ey",
-      'expires_in': 3600
-    });
+        .reply(200,
+            {"error": null, "access_token": accessToken, 'expires_in': 3600});
 
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),

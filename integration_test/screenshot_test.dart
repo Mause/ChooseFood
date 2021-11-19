@@ -19,7 +19,9 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
+
 import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
+import '../test/widget_test.dart' show accessToken;
 
 var log = Logger();
 
@@ -36,14 +38,17 @@ void main() {
 
   testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
-    Get.put(SupabaseClient("https://supabase", "dummy"), permanent: true);
+    var supabaseClient = SupabaseClient("https://supabase", "dummy");
+    supabaseClient.auth.setAuth(accessToken());
+    Get.put(supabaseClient, permanent: true);
     GeolocatorPlatform.instance = MockGeolocatorPlatform();
 
-    var nockScope = nock("https://supabase");
-    nockScope
+    var sessionId = "0000-00000-00000-00000";
+    var supabaseScope = nock("https://supabase");
+    supabaseScope
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
-    nockScope
+    supabaseScope
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
@@ -55,14 +60,14 @@ void main() {
         ]
       }
     ]);
-    nockScope.post("/rest/v1/session", {
+    supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
         "coordinates": [115.8577778, -31.9509882]
       }
     }).reply(200, [
       {
-        "id": "0000-00000-00000-00000",
+        "id": sessionId,
       }
     ]);
     var mapsScope = nock("https://maps.googleapis.com");
@@ -85,6 +90,8 @@ void main() {
     mapsScope
         .get("/maps/api/place/photo?photoreference=1&maxwidth=411&key")
         .reply(200, image, headers: {"Content-Type": "image/png"});
+    supabaseScope.post("/rest/v1/participant",
+        {"sessionId": sessionId, "userId": "id"}).reply(200, {});
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
