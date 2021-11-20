@@ -312,7 +312,8 @@ class MyHomePageState extends State<MyHomePage> {
             elevatedButton('Login', _login),
             elevatedButton('Conclude session', concludeSession,
                 enabled: sessionId != null),
-            elevatedButton('Get places', getPlaces),
+            elevatedButton('Get places', getPlaces,
+                enabled: getAccessToken() != null),
           ],
         ),
         Text(
