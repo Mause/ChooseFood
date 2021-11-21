@@ -28,7 +28,7 @@ import 'package:flutter/widgets.dart'
         Text,
         Widget;
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:get/get.dart' show Get, Inst;
+import 'package:get/get.dart' show Get, Inst, ExtensionSnackbar;
 import 'package:google_maps_webservice/places.dart' show GoogleMapsPlaces;
 import 'package:intl_phone_number_input/intl_phone_number_input_test.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
@@ -205,8 +205,14 @@ class SessionCard extends StatelessWidget {
           ButtonBar(children: [
             TextButton(
                 onPressed: () async {
-                  await Sessions()
-                      .joinSession(sessionWithDecisions, getAccessToken()!);
+                  var accessToken = getAccessToken();
+                  if (accessToken == null) {
+                    Get.snackbar(
+                        "Cannot join session", "You are not logged in");
+                  } else {
+                    await Sessions()
+                        .joinSession(sessionWithDecisions, accessToken);
+                  }
                 },
                 child: const Text('Join')),
             TextButton(
