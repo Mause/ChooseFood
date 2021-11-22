@@ -59,7 +59,7 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
         supabaseClient
             .from(TableNames.session)
             .select()
-            .neq(ColumnNames.session.concludedTime, null),
+            .not(ColumnNames.session.concludedTime, "is", null),
         Session.fromJson);
     if (sessions.error != null) {
       Get.snackbar(sessions.error!.message, sessions.error!.details.toString(),
