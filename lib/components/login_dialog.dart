@@ -1,5 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart'
-    show AlertDialog, InputDecoration, Step, Stepper, TextFormField;
+    show
+        AlertDialog,
+        InputDecoration,
+        Step,
+        Stepper,
+        TextFormField,
+        TextStyle,
+        Theme;
 import 'package:flutter/widgets.dart'
     show
         AutovalidateMode,
@@ -37,6 +46,7 @@ class _LoginDialogState extends State<LoginDialog> {
   SupabaseClient supabaseClient = Get.find();
   String? phone;
   String? token;
+  String? error;
 
   var currentStep = 0;
 
@@ -44,6 +54,7 @@ class _LoginDialogState extends State<LoginDialog> {
     token = value;
     var res = await supabaseClient.auth.verifyOTP(phone!, token!);
     if (res.error != null) {
+      error = res.error!.message;
       log.e(res.error!.message);
     } else {
       forwardStep();
@@ -60,6 +71,7 @@ class _LoginDialogState extends State<LoginDialog> {
     phone = value;
     var res = await supabaseClient.auth.signIn(phone: phone);
     if (res.error != null) {
+      error = res.error!.message;
       log.e(res.error!.message);
     } else {
       forwardStep();
@@ -76,6 +88,10 @@ class _LoginDialogState extends State<LoginDialog> {
     Step buildStep(String title, Widget input, Key _formKey) {
       return Step(
           title: Text(title),
+          subtitle: error == null
+              ? null
+              : Text(error!,
+                  style: TextStyle(color: Theme.of(context).errorColor)),
           content: Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.always,
