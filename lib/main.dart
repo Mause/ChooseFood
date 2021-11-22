@@ -320,7 +320,7 @@ class MyHomePageState extends State<MyHomePage> {
           ],
         ),
         Text(
-          getAccessToken() == null
+          getAccessToken() != null
               ? 'Logged in: ${getAccessToken()?.phone ?? "Unknown"}'
               : 'Logged out',
         ),
