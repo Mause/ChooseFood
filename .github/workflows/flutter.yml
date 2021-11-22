@@ -80,7 +80,7 @@ jobs:
              --ks-pass pass:${{ secrets.KEY_STORE_PASSWORD}} \
              --key-pass pass:${{ secrets.KEY_PASSWORD }}
           unzip apks.apks
-          mv universal.apk choose-food-1.0.${{ github.run_number }}.apk
+          mv universal.apk choose-food-1.0.0+${{ github.run_number }}.apk
           find . -name "*.apk" -exec echo "APK: {}" \; -exec sh -c 'keytool -printcert -jarfile "{}"' \;
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
