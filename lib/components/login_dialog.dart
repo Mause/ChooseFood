@@ -118,7 +118,10 @@ class _LoginDialogState extends State<LoginDialog> {
           child: Stepper(
               currentStep: currentStep,
               steps: steps,
-              onStepContinue: () {
+              onStepCancel: () {
+                Get.back(closeOverlays: true);
+              },
+              onStepContinue: () async {
                 if (currentStep == 2) {
                   Get.back(result: getAccessToken()!, closeOverlays: true);
                 } else {
