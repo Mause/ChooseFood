@@ -194,10 +194,12 @@ jobs:
         with:
           java-version: '11'
           distribution: adopt-hotspot
+          
+      - run: flutter build apk --debug
 
       - name: Integration tests
         uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 8
+        timeout-minutes: 10
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
