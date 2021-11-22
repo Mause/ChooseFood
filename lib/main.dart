@@ -317,8 +317,8 @@ class MyHomePageState extends State<MyHomePage> {
           ],
         ),
         Text(
-          supabaseClient.auth.currentSession == null
-              ? 'Logged in: ${supabaseClient.auth.currentUser?.phone ?? "Unknown"}'
+          getAccessToken() == null
+              ? 'Logged in: ${getAccessToken()?.phone ?? "Unknown"}'
               : 'Logged out',
         ),
         Text(sessionId == null
