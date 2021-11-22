@@ -75,7 +75,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
   }
 
   Future<void> loadFriends() async {
-    if (await FlutterContacts.requestPermission()) {
+    if (await FlutterContacts.requestPermission(readonly: true)) {
       var contacts = await Future.wait((await FlutterContacts.getContacts())
           .expand((element) =>
               element.phones.map((e) => NamePhone(element.name, e)))
