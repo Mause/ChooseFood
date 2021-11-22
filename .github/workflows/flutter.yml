@@ -194,7 +194,7 @@ jobs:
         with:
           java-version: '11'
           distribution: adopt-hotspot
-          
+
       - run: flutter build apk --debug
 
       - name: Integration tests
