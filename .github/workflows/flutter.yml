@@ -159,8 +159,6 @@ jobs:
             ~/.android/adb*
           key: avd-${{ matrix.api-level }}
 
-      - run: flutter build apk --debug
-
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
@@ -191,6 +189,8 @@ jobs:
 
       - name: Build
         run: flutter pub run build_runner build
+
+      - run: flutter build apk --debug
 
       - uses: actions/setup-java@v2
         with:
