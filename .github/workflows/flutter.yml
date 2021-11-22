@@ -190,12 +190,12 @@ jobs:
       - name: Build
         run: flutter pub run build_runner build
 
-      - run: flutter build apk --debug
-
       - uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: adopt-hotspot
+
+      - run: flutter build apk --debug
 
       - name: Integration tests
         uses: reactivecircus/android-emulator-runner@v2
