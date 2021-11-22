@@ -72,6 +72,7 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
   @override
   Widget build(BuildContext context) {
     return BasePage(selectedIndex: 2, children: [
+      Text("Sessions: ${sessions?.length ?? -1}"),
       ListView(
         children:
             (sessions ?? []).map((session) => SessionCard(session)).toList(),
