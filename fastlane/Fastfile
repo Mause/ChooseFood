@@ -56,6 +56,9 @@ desc "Notify via messaging services"
 lane :notify do |options|
   line_notify(
     access_token: ENV["LINE_TOKEN"],
-    message: "Choose Food version #{options[:version_number]} has been pushed to firebase 💜"
+    message: %Q{Choose Food version #{options[:version_number]} has been pushed to firebase 💜
+
+https://github.com/Mause/ChooseFood/releases/download/latest/choose-food-#{options[:version_number]}.apk
+    }
   )
 end
