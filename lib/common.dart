@@ -1,7 +1,30 @@
-import 'package:choose_food/components/friends_sessions.dart';
-import 'package:choose_food/main.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter/material.dart'
+    show
+        AlertDialog,
+        AppBar,
+        BoxConstraints,
+        BuildContext,
+        Center,
+        CircularProgressIndicator,
+        Column,
+        Container,
+        Icon,
+        Key,
+        ListBody,
+        MainAxisAlignment,
+        NavigationBar,
+        NavigationDestination,
+        NavigationDestinationLabelBehavior,
+        Navigator,
+        Row,
+        Scaffold,
+        SingleChildScrollView,
+        State,
+        StatefulWidget,
+        StatelessWidget,
+        Text,
+        Widget;
 import 'package:get/get.dart' show Get, Inst;
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
@@ -15,7 +38,10 @@ import 'package:supabase/supabase.dart'
         SupabaseClient,
         User;
 
+import 'main.dart';
 import 'info.dart';
+import 'components/friends_sessions.dart' show FriendsSessions;
+import 'components/historical_sessions.dart' show HistoricalSessions;
 
 const title = "Choose Food";
 var log = Logger();
@@ -51,6 +77,9 @@ class _BasePage extends State<BasePage> {
         break;
       case 1:
         Navigator.pushNamed(context, FriendsSessions.routeName);
+        break;
+      case 2:
+        Navigator.pushNamed(context, HistoricalSessions.routeName);
         break;
       case 3:
         Navigator.pushNamed(context, InfoPage.routeName);

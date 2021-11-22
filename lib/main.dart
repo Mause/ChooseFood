@@ -1,6 +1,7 @@
 import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
+import 'package:choose_food/components/historical_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
     show PointType;
@@ -90,7 +91,9 @@ class MyApp extends StatelessWidget {
               ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
-                FriendsSessions.routeName: (context) => const FriendsSessions()
+                FriendsSessions.routeName: (context) => const FriendsSessions(),
+                HistoricalSessions.routeName: (context) =>
+                    const HistoricalSessions(),
               },
             ));
   }
