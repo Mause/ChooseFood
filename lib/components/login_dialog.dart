@@ -28,10 +28,12 @@ import 'package:flutter/widgets.dart'
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart'
     show InternationalPhoneNumberInput, PhoneNumber;
+import 'package:loader_overlay/loader_overlay.dart'
+    show OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart';
 import 'package:supabase/supabase.dart';
 
-import '../common.dart' show getAccessToken;
+import '../common.dart' show getAccessToken, LabelledProgressIndicatorExtension;
 
 var log = Logger();
 
@@ -141,10 +143,12 @@ class _LoginDialogState extends State<LoginDialog> {
                 if (currentStep == 2) {
                   Get.back(result: getAccessToken()!, closeOverlays: true);
                 } else {
+                  context.progress("Loading");
                   var _formKey = keys[currentStep];
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                   }
+                  context.loaderOverlay.hide();
                 }
               }),
           dimension: 400),
