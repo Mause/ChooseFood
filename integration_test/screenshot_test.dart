@@ -1,22 +1,8 @@
-import 'dart:async';
+import 'dart:async' show Future, TimeoutException;
 
-import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart' show MyApp;
-import 'package:flutter/widgets.dart';
-import 'package:flutter_test/flutter_test.dart'
-    show
-        EnginePhase,
-        Future,
-        LiveTestWidgetsFlutterBinding,
-        LiveTestWidgetsFlutterBindingFramePolicy,
-        PointerEventRecord,
-        TestAsyncUtils,
-        TestWidgetsFlutterBinding,
-        Timeout,
-        WidgetController,
-        expect,
-        find,
-        findsOneWidget;
+import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_test/flutter_test.dart' show findsOneWidget;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
 import 'package:integration_test/integration_test.dart'
@@ -25,7 +11,7 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
-import 'package:test/test.dart' show Timeout, fail, setUp, tearDown, test;
+import 'package:test/test.dart' show Timeout, expect, setUp, tearDown, test;
 
 import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
 import '../test/widget_test.dart' show accessToken;
@@ -44,9 +30,9 @@ void main() {
   });
 
   test('screenshot', () async {
+    var tester = await FlutterDriver.connect();
+
     await Get.deleteAll(force: true);
-    var tester = WC(TestWidgetsFlutterBinding.ensureInitialized()
-        as TestWidgetsFlutterBinding);
 
     var supabaseClient = SupabaseClient("https://supabase", "dummy");
     supabaseClient.auth.setAuth(accessToken());
@@ -104,27 +90,24 @@ void main() {
         {"sessionId": sessionId, "userId": "id"}).reply(200, {});
 
     // Build the app.
-    await tester.pumpWidget(const MyApp());
+    binding.attachRootWidget(const MyApp());
+    await binding.pump();
     await binding.convertFlutterSurfaceToImage();
-    await pumpAndSettle(tester, "Inited app");
+    await binding.pump();
 
     await binding.takeScreenshot('screenshot-default');
 
     await tester.tap(find.text("Get places"));
-    await pumpAndSettle(tester, "Tapped Get places");
+    await binding.pump();
     await binding.takeScreenshot('screenshot-get-places');
 
     await tester.tap(find.text("Friends sessions"));
-    await pumpAndSettle(tester, "tapped Friends sessions");
+    await binding.pump();
     await binding.takeScreenshot('screenshot-friends');
 
-    expect(find.byType(SessionCard), findsOneWidget);
+    expect(find.byType("SessionCard"), findsOneWidget);
     await binding.takeScreenshot('screenshot-friends');
-  }, retry: 10, timeout: const Timeout(Duration(minutes: 8)));
-}
-
-Future<void> pumpAndSettle(WidgetController tester, String message) async {
-  await timeout(tester.pumpAndSettle(), message);
+  }, timeout: const Timeout(Duration(seconds: 130)));
 }
 
 Future<T> timeout<T>(Future<T> future, String message) async {
@@ -133,76 +116,4 @@ Future<T> timeout<T>(Future<T> future, String message) async {
     log.e("Timed out on: \"$message\"", e);
     throw e;
   });
-}
-
-class WC extends WidgetController {
-  WC(TestWidgetsFlutterBinding binding) : super(binding);
-
-  /// The binding instance used by the testing framework.
-  @override
-  TestWidgetsFlutterBinding get binding =>
-      super.binding as TestWidgetsFlutterBinding;
-
-  @override
-  Future<List<Duration>> handlePointerEventRecord(
-      List<PointerEventRecord> records) {
-    // TODO: implement handlePointerEventRecord
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> pump([
-    Duration? duration,
-    EnginePhase phase = EnginePhase.sendSemanticsUpdate,
-  ]) {
-    return TestAsyncUtils.guard<void>(() => binding.pump(duration, phase));
-  }
-
-  @override
-  Future<int> pumpAndSettle([
-    Duration duration = const Duration(milliseconds: 100),
-    EnginePhase phase = EnginePhase.sendSemanticsUpdate,
-    Duration timeout = const Duration(minutes: 10),
-  ]) {
-    assert(duration > Duration.zero);
-    assert(timeout > Duration.zero);
-    assert(() {
-      final WidgetsBinding binding = this.binding;
-      if (binding is LiveTestWidgetsFlutterBinding &&
-          binding.framePolicy ==
-              LiveTestWidgetsFlutterBindingFramePolicy.benchmark) {
-        fail(
-          'When using LiveTestWidgetsFlutterBindingFramePolicy.benchmark, '
-          'hasScheduledFrame is never set to true. This means that pumpAndSettle() '
-          'cannot be used, because it has no way to know if the application has '
-          'stopped registering new frames.',
-        );
-      }
-      return true;
-    }());
-    return TestAsyncUtils.guard<int>(() async {
-      final DateTime endTime = binding.clock.fromNowBy(timeout);
-      int count = 0;
-      do {
-        if (binding.clock.now().isAfter(endTime)) {
-          throw FlutterError('pumpAndSettle timed out');
-        }
-        await binding.pump(duration, phase);
-        count += 1;
-      } while (binding.hasScheduledFrame);
-      return count;
-    });
-  }
-
-  Future<void> pumpWidget(
-    Widget widget, [
-    Duration? duration,
-    EnginePhase phase = EnginePhase.sendSemanticsUpdate,
-  ]) {
-    return TestAsyncUtils.guard<void>(() {
-      binding.attachRootWidget(widget);
-      binding.scheduleFrame();
-      return binding.pump(duration, phase);
-    });
-  }
 }
