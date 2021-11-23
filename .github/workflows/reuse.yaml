@@ -36,3 +36,7 @@ jobs:
 
       - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
+
+      #- run: flutter packages pub run sentry_dart_plugin
+      #  env:
+      #    SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

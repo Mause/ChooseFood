@@ -13,13 +13,14 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart'
     show
         BuildContext,
-        Key,
         Column,
-        Text,
+        Expanded,
+        Key,
         ListView,
         State,
         StatefulWidget,
         StatelessWidget,
+        Text,
         Widget;
 import 'package:get/get.dart' show Get, Inst;
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -66,17 +67,26 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
           instantInit: false);
       return;
     }
-    this.sessions = sessions.datam;
+
+    setState(() {
+      this.sessions = sessions.datam;
+    });
+
+    Get.snackbar(
+        'Sessions loaded', 'Loaded ${this.sessions?.length ?? -1}\n$sessions',
+        instantInit: false);
   }
 
   @override
   Widget build(BuildContext context) {
     return BasePage(selectedIndex: 2, children: [
-      Text("Sessions: ${sessions?.length ?? -1}"),
-      ListView(
-        children:
-            (sessions ?? []).map((session) => SessionCard(session)).toList(),
-      )
+      Text("Sessions: ${sessions == null ? -1 : sessions!.length}"),
+      Expanded(
+          child: ListView(
+              children: (sessions ?? [])
+                  .map((session) => SessionCard(session))
+                  .toList(),
+              primary: true))
     ]);
   }
 }

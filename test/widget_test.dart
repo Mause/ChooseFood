@@ -111,7 +111,7 @@ void main() {
       "status": "OK"
     });
     supabaseScope.post("/rest/v1/participant",
-        {"sessionId": sessionId, "userId": "id"}).reply(200, {});
+        {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
 
     Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
@@ -162,7 +162,7 @@ void main() {
         .reply(200, [Users(id: 'PID', email: email2).toJson()]);
     supabaseScope
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
-            200, {});
+            200, [{}]);
 
     await tester.pumpWidget(const MyApp());
 
@@ -184,7 +184,9 @@ void main() {
   });
 
   testWidgets('Login dialog', (WidgetTester tester) async {
-    Get.put(supabase.SupabaseClient("https://supabase", ""));
+    Get.deleteAll();
+    supabaseClient.auth.currentSession = null;
+    Get.put(supabaseClient);
 
     var phone = '416041357';
 
