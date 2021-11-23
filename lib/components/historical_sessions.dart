@@ -66,7 +66,10 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
           instantInit: false);
       return;
     }
-    this.sessions = sessions.datam;
+
+    setState(() {
+      this.sessions = sessions.datam;
+    });
 
     Get.snackbar(
         'Sessions loaded', 'Loaded ${this.sessions?.length ?? -1}\n$sessions',
@@ -76,7 +79,7 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
   @override
   Widget build(BuildContext context) {
     return BasePage(selectedIndex: 2, children: [
-      Text("Sessions: ${sessions?.length ?? -1}"),
+      Text("Sessions: ${sessions == null ? -1 : sessions!.length}"),
       ListView(
         children:
             (sessions ?? []).map((session) => SessionCard(session)).toList(),
