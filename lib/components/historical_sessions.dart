@@ -67,6 +67,10 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
       return;
     }
     this.sessions = sessions.datam;
+
+    Get.snackbar(
+        'Sessions loaded', 'Loaded ${this.sessions?.length ?? -1}\n$sessions',
+        instantInit: false);
   }
 
   @override
