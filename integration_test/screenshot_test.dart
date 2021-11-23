@@ -1,8 +1,16 @@
-import 'dart:async' show Future, TimeoutException;
+import 'dart:async';
 
+import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/main.dart' show MyApp;
-import 'package:flutter_driver/flutter_driver.dart';
-import 'package:flutter_test/flutter_test.dart' show findsOneWidget;
+import 'package:flutter_test/flutter_test.dart'
+    show
+        WidgetTester,
+        find,
+        findsOneWidget,
+        setUp,
+        tearDown,
+        testWidgets,
+        expect;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
 import 'package:integration_test/integration_test.dart'
@@ -11,7 +19,6 @@ import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
 import 'package:supabase/supabase.dart' show SupabaseClient;
-import 'package:test/test.dart' show Timeout, expect, setUp, tearDown, test;
 
 import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
 import '../test/widget_test.dart' show accessToken;
@@ -29,11 +36,8 @@ void main() {
     nock.cleanAll();
   });
 
-  test('screenshot', () async {
-    var tester = await FlutterDriver.connect();
-
+  testWidgets('screenshot', (WidgetTester tester) async {
     await Get.deleteAll(force: true);
-
     var supabaseClient = SupabaseClient("https://supabase", "dummy");
     supabaseClient.auth.setAuth(accessToken());
     Get.put(supabaseClient, permanent: true);
@@ -90,24 +94,27 @@ void main() {
         {"sessionId": sessionId, "userId": "id"}).reply(200, {});
 
     // Build the app.
-    binding.attachRootWidget(const MyApp());
-    await binding.pump();
+    await tester.pumpWidget(const MyApp());
     await binding.convertFlutterSurfaceToImage();
-    await binding.pump();
+    await pumpAndSettle(tester, "Inited app");
 
     await binding.takeScreenshot('screenshot-default');
 
     await tester.tap(find.text("Get places"));
-    await binding.pump();
+    await pumpAndSettle(tester, "Tapped Get places");
     await binding.takeScreenshot('screenshot-get-places');
 
     await tester.tap(find.text("Friends sessions"));
-    await binding.pump();
+    await pumpAndSettle(tester, "tapped Friends sessions");
     await binding.takeScreenshot('screenshot-friends');
 
-    expect(find.byType("SessionCard"), findsOneWidget);
+    expect(find.byType(SessionCard), findsOneWidget);
     await binding.takeScreenshot('screenshot-friends');
-  }, timeout: const Timeout(Duration(seconds: 130)));
+  });
+}
+
+Future<void> pumpAndSettle(WidgetTester tester, String message) async {
+  await timeout(tester.pumpAndSettle(), message);
 }
 
 Future<T> timeout<T>(Future<T> future, String message) async {

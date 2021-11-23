@@ -24,13 +24,15 @@ platform :android do
     File.open("metadata/android/en-GB/changelogs/#{options[:build_number]}.txt","w") {
       |file| file.write(notes)
     };
+
+    notes
   end
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do |options|
     # google_play_track_version_codes
     # google_play_track_release_names
-    create_notes
+    changelog = create_notes
     version_number = "1.0.0+#{options[:build_number]}"
     add_git_tag(build_number: version_number)
     push_git_tags
@@ -44,7 +46,7 @@ platform :android do
     #  android_artifact_path: "build/app/outputs/bundle/release/app-release.aab",
     #  debug: true
     #)
-    notify(version_number: version_number)
+    notify(version_number: version_number, changelog: changelog)
   end
   desc "Validate json key"
   lane :validate do
@@ -59,6 +61,9 @@ lane :notify do |options|
     message: %Q{Choose Food version #{options[:version_number]} has been pushed to firebase 💜
 
 https://github.com/Mause/ChooseFood/releases/download/latest/choose-food-#{options[:version_number]}.apk
+
+## Changelog
+#{options[:changelog]}
     }
   )
 end
