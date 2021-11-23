@@ -130,7 +130,7 @@ sentry:
   upload_native_symbols: true
   upload_source_maps: true
   include_native_sources: true
-  project: '6038886'
+  project: choose-food-app
   org: elliana-may
   wait_for_processing: true
   log_level: info
