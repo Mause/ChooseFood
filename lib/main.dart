@@ -312,7 +312,13 @@ class MyHomePageState extends State<MyHomePage> {
         Wrap(
           direction: Axis.horizontal,
           children: [
-            elevatedButton('Login', _login),
+            getAccessToken() == null
+                ? elevatedButton('Login', _login)
+                : elevatedButton('Logout', () async {
+                    context.progress('Logging out');
+                    await supabaseClient.auth.signOut();
+                    context.loaderOverlay.hide();
+                  }),
             elevatedButton('Conclude session', concludeSession,
                 enabled: sessionId != null),
             elevatedButton('Get places', getPlaces,
