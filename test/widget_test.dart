@@ -202,7 +202,7 @@ void main() {
               'redirect_to': null
             }))
         .reply(200,
-            {"error": null, "access_token": accessToken, 'expires_in': 3600});
+            {"error": null, "access_token": accessToken(), 'expires_in': 3600});
 
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),

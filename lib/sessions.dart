@@ -21,7 +21,7 @@ class Sessions {
         .data);
   }
 
-  Future<List<String?>> concludeSession(
+  Future<List<String>> concludeSession(
     String sessionId,
   ) async {
     await supabaseClient
@@ -31,6 +31,10 @@ class Sessions {
             .toJson()))
         .execute();
 
+    return summariseSession(sessionId);
+  }
+
+  Future<List<String>> summariseSession(String sessionId) async {
     var participants = (await execute<ParticipantWithDecisions>(
             supabaseClient
                 .from(TableNames.participant)

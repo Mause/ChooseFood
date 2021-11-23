@@ -1,6 +1,7 @@
 import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
+import 'package:choose_food/components/historical_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
     show PointType;
@@ -90,7 +91,9 @@ class MyApp extends StatelessWidget {
               ],
               routes: {
                 InfoPage.routeName: (context) => const InfoPage(),
-                FriendsSessions.routeName: (context) => const FriendsSessions()
+                FriendsSessions.routeName: (context) => const FriendsSessions(),
+                HistoricalSessions.routeName: (context) =>
+                    const HistoricalSessions(),
               },
             ));
   }
@@ -226,11 +229,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
+    await Sentry.captureException(e, stackTrace: s, hint: message);
     context.loaderOverlay.hide();
     await showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
-    await Sentry.captureException(e, stackTrace: s, hint: message);
     log.e(message, e, s);
     return ArgumentError(message);
   }
@@ -317,7 +320,7 @@ class MyHomePageState extends State<MyHomePage> {
           ],
         ),
         Text(
-          getAccessToken() == null
+          getAccessToken() != null
               ? 'Logged in: ${getAccessToken()?.phone ?? "Unknown"}'
               : 'Logged out',
         ),
