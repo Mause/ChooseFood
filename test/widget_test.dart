@@ -184,7 +184,9 @@ void main() {
   });
 
   testWidgets('Login dialog', (WidgetTester tester) async {
-    Get.put(supabase.SupabaseClient("https://supabase", ""));
+    Get.deleteAll();
+    supabaseClient.auth.currentSession = null;
+    Get.put(supabaseClient);
 
     var phone = '416041357';
 
