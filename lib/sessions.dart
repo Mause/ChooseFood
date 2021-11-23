@@ -14,11 +14,15 @@ class Sessions {
   Future<Participant> joinSession(Session session, User user) async {
     var par = Participant(sessionId: session.id!, userId: user.id);
 
-    return Participant.fromJson((await supabaseClient
+    var res = await execute<Participant>(
+        supabaseClient
             .from(TableNames.participant)
-            .upsert(excludeNull(par.toJson()))
-            .execute())
-        .data);
+            .upsert(excludeNull(par.toJson())),
+        Participant.fromJson);
+
+    if (res.error != null) throw res.error!;
+
+    return res.datam[0];
   }
 
   Future<List<String>> concludeSession(
