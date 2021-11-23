@@ -13,13 +13,14 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart'
     show
         BuildContext,
-        Key,
         Column,
-        Text,
+        Expanded,
+        Key,
         ListView,
         State,
         StatefulWidget,
         StatelessWidget,
+        Text,
         Widget;
 import 'package:get/get.dart' show Get, Inst;
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -80,10 +81,12 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
   Widget build(BuildContext context) {
     return BasePage(selectedIndex: 2, children: [
       Text("Sessions: ${sessions == null ? -1 : sessions!.length}"),
-      ListView(
-        children:
-            (sessions ?? []).map((session) => SessionCard(session)).toList(),
-      )
+      Expanded(
+          child: ListView(
+              children: (sessions ?? [])
+                  .map((session) => SessionCard(session))
+                  .toList(),
+              primary: true))
     ]);
   }
 }
