@@ -129,12 +129,11 @@ class FriendsSessionsState extends State<FriendsSessions> {
               """).is_(ColumnNames.session.concludedTime, null),
           SessionWithDecisions.fromJson);
     } catch (e, s) {
-      handleError(e, s);
-      return;
+      return await handleError(e, s);
     }
 
     if (sessions.error != null) {
-      handleError(sessions.error, null);
+      return await handleError(sessions.error, null);
     }
 
     setState(() {
@@ -145,9 +144,9 @@ class FriendsSessionsState extends State<FriendsSessions> {
     context.loaderOverlay.hide();
   }
 
-  handleError(error, StackTrace? stackTrace) {
+  Future<void> handleError(dynamic error, StackTrace? stackTrace) async {
     log.e("Failed to load sessions", error, stackTrace);
-    Sentry.captureException(error, hint: "Failed to load sessions");
+    await Sentry.captureException(error, hint: "Failed to load sessions");
 
     context.loaderOverlay.hide();
   }
