@@ -229,11 +229,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
+    await Sentry.captureException(e, stackTrace: s, hint: message);
     context.loaderOverlay.hide();
     await showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
-    await Sentry.captureException(e, stackTrace: s, hint: message);
     log.e(message, e, s);
     return ArgumentError(message);
   }
