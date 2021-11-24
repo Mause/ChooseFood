@@ -152,7 +152,7 @@ void main() {
     setupContacts(tester, contacts: [
       {
         "phones": [
-          {"phone": phone}
+          {"normalizedNumber": phone}
         ]
       }
     ]);
