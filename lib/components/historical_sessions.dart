@@ -29,8 +29,6 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import '../generated_code/openapi.models.swagger.dart' show Session;
-import '../common.dart'
-    show BasePage, LabelledProgressIndicatorExtension, execute;
 import '../sessions.dart';
 
 class HistoricalSessions extends StatefulWidget {
@@ -56,12 +54,11 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
   }
 
   Future<void> loadSessions() async {
-    var sessions = await execute<Session>(
-        supabaseClient
-            .from(TableNames.session)
-            .select()
-            .not(ColumnNames.session.concludedTime, "is", null),
-        Session.fromJson);
+    var sessions = await supabaseClient
+        .from(TableNames.session)
+        .select()
+        .not(ColumnNames.session.concludedTime, "is", null)
+        .typedExecute(Session.fromJson);
     if (sessions.error != null) {
       Get.snackbar(sessions.error!.message, sessions.error!.details.toString(),
           instantInit: false);
