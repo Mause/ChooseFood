@@ -1,10 +1,11 @@
-import 'package:choose_food/main.dart';
-import 'package:get/get.dart';
-import 'package:supabase/supabase.dart' show SupabaseClient, User;
+import 'package:get/get.dart' show Get, Inst;
 import 'package:json_annotation/json_annotation.dart';
-import 'common.dart';
+import 'package:supabase/supabase.dart' show SupabaseClient, User;
+
+import 'common.dart' show excludeNull, TypedExecuteExtension;
 import 'generated_code/openapi.models.swagger.dart'
     show Decision, Participant, Session;
+import 'main.dart' show ColumnNames, TableNames;
 
 part 'sessions.g.dart';
 
@@ -29,9 +30,9 @@ class Sessions {
   ) async {
     await supabaseClient
         .from(TableNames.session)
-        .update(excludeNull(Session(
-                id: sessionId, concludedTime: DateTime.now().toIso8601String())
-            .toJson()))
+        .update(excludeNull(
+            Session(concludedTime: DateTime.now().toIso8601String()).toJson()))
+        .eq(ColumnNames.session.id, sessionId)
         .typedExecute(Session.fromJson);
 
     return summariseSession(sessionId);
