@@ -50,7 +50,7 @@ import 'common.dart'
         title;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
-    show Session, Point, Decision;
+    show Session, Point, Decision, Participant;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
 import 'sessions.dart' show Sessions;
@@ -128,6 +128,8 @@ class MyHomePageState extends State<MyHomePage> {
   GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
+
+  Participant? participant;
 
   @override
   void initState() {
@@ -252,7 +254,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     var session = response.data[0];
 
-    await Sessions().joinSession(session, getAccessToken()!);
+    participant = await Sessions().joinSession(session, getAccessToken()!);
 
     setState(() {
       sessionId = session.id;
@@ -349,7 +351,7 @@ class MyHomePageState extends State<MyHomePage> {
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
                 sessionId: sessionId!,
-                participantId: 0,
+                participantId: participant!.id,
                 placeReference: reference,
                 decision: state)
             .toJson()))
