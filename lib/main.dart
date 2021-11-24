@@ -36,8 +36,13 @@ import 'package:loader_overlay/loader_overlay.dart'
     show LoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
-import 'package:supabase/supabase.dart' show SupabaseClient;
+    show
+        Sentry,
+        SentryEvent,
+        SentryFlutter,
+        SentryNavigatorObserver,
+        SentryUser;
+import 'package:supabase/supabase.dart' show SupabaseClient, AuthChangeEvent;
 
 import 'common.dart'
     show
@@ -67,6 +72,28 @@ Future<void> main() async {
       options.beforeSend = beforeSend;
     }, appRunner: () => runApp(const MyApp()));
   }
+}
+
+void setupUserHook() {
+  SupabaseClient supabaseClient = Get.find();
+  supabaseClient.auth.onAuthStateChange((event, session) {
+    if ([
+      AuthChangeEvent.signedIn,
+      AuthChangeEvent.signedOut,
+      AuthChangeEvent.userUpdated
+    ].contains(event)) {
+      Sentry.configureScope((scope) {
+        var user = session?.user;
+        if (user != null) {
+          scope.user = SentryUser(
+              id: user.id,
+              email: user.email,
+              username: user.phone,
+              extras: user.toJson());
+        }
+      });
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
