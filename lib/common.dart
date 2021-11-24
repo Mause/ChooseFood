@@ -28,9 +28,10 @@ import 'package:flutter/material.dart'
 import 'package:flutter/scheduler.dart' show SchedulerBinding;
 import 'package:get/get.dart' show Get, Inst;
 import 'package:jwt_decode/jwt_decode.dart';
-import 'package:logger/logger.dart';
 import 'package:loader_overlay/loader_overlay.dart'
     show OverlayControllerWidgetExtension;
+import 'package:logger/logger.dart' show Logger;
+import 'package:sentry_flutter/sentry_flutter.dart' show Sentry;
 import 'package:supabase/supabase.dart'
     show
         PostgrestBuilder,
@@ -142,11 +143,19 @@ Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
     T Function(Map<String, dynamic> e) fromJson) async {
   var response = await builder.execute();
 
+  if (response.error != null) {
+    var message = "Failed to request ${builder.method} ${builder.url}";
+    log.e(message, response.error, StackTrace.current);
+    await Sentry.captureException(response.error, hint: message);
+  }
+
   return MyPostgrestResponse(
       datam: ((response.data as List<dynamic>?) ?? [])
           .map((e) => e as Map<String, dynamic>)
           .map((e) => fromJson(e))
           .toList(),
+      count: response.count,
+      status: response.status,
       error: response.error);
 }
 

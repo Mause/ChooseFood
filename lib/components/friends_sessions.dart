@@ -1,7 +1,7 @@
 import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
-    show BasePage, MyPostgrestResponse, execute, getAccessToken;
+    show BasePage, MyPostgrestResponse, TypedExecuteExtension, getAccessToken;
 import 'package:choose_food/main.dart' show ColumnNames, TableNames;
 import 'package:flutter/material.dart'
     show
@@ -104,23 +104,21 @@ class FriendsSessionsState extends State<FriendsSessions> {
           .toList();
       log.i("Parsed ${contacts.length} contacts");
 
-      var yourFriends = (await execute<Users>(
-              supabaseClient
-                  .from(TableNames.users)
-                  .select()
-                  .in_("phone", contacts.map((e) => e.phone.number).toList()),
-              Users.fromJson))
+      var yourFriends = (await supabaseClient
+              .from(TableNames.users)
+              .select()
+              .in_("phone", contacts.map((e) => e.phone.number).toList())
+              .typedExecute(Users.fromJson))
           .datam;
       setState(() {
         this.yourFriends = yourFriends;
       });
 
-      var friendsSessions = (await execute<Session>(
-              supabaseClient
-                  .from(TableNames.participant)
-                  .select()
-                  .in_("userId", yourFriends.map((e) => e.id).toList()),
-              Session.fromJson))
+      var friendsSessions = (await supabaseClient
+              .from(TableNames.participant)
+              .select()
+              .in_("userId", yourFriends.map((e) => e.id).toList())
+              .typedExecute(Session.fromJson))
           .datam;
       setState(() {
         this.friendsSessions = friendsSessions;
@@ -147,16 +145,18 @@ class FriendsSessionsState extends State<FriendsSessions> {
     context.loaderOverlay.show();
 
     try {
-      sessions = await execute<SessionWithDecisions>(
-          supabaseClient.from(TableNames.session).select("""
+      sessions = await supabaseClient
+          .from(TableNames.session)
+          .select("""
               id,
               decision(
                 decision,
                 placeReference,
                 participantId
               )
-              """).is_(ColumnNames.session.concludedTime, null),
-          SessionWithDecisions.fromJson);
+              """)
+          .is_(ColumnNames.session.concludedTime, null)
+          .typedExecute(SessionWithDecisions.fromJson);
     } catch (e, s) {
       return await handleError(e, s);
     }
@@ -297,13 +297,15 @@ class _DecisionDialogState extends State<DecisionDialog> {
         .toMap((e) => e.result.reference!, (e) => e.result.name);
 
     log.d("Loading user names");
-    userNames = (await execute<Users>(
-            supabaseClient.from(TableNames.users).select("name").in_(
+    userNames = (await supabaseClient
+            .from(TableNames.users)
+            .select("name")
+            .in_(
                 "id",
                 widget.sessionWithDecisions.decision
                     .map((e) => e.participantId)
-                    .toList()),
-            Users.fromJson))
+                    .toList())
+            .typedExecute(Users.fromJson))
         .datam
         .toIndexMap((e) => e.id);
     log.d("Loaded: userNames: $userNames, placeNames: $placeNames");

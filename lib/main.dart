@@ -43,14 +43,14 @@ import 'common.dart'
     show
         BasePage,
         LabelledProgressIndicatorExtension,
+        TypedExecuteExtension,
         excludeNull,
-        execute,
         getAccessToken,
         makeErrorDialog,
         title;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
-    show Session, Point, Decision;
+    show Session, Point, Decision, Participant;
 import 'info.dart' show InfoPage;
 import 'platform_colours.dart' show getThemeData;
 import 'sessions.dart' show Sessions;
@@ -129,6 +129,8 @@ class MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
 
+  Participant? participant;
+
   @override
   void initState() {
     super.initState();
@@ -139,12 +141,11 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> loadExistingSession() async {
     context.progress("Loading existing session");
 
-    var response = await execute<Session>(
-        supabaseClient
-            .from(TableNames.session)
-            .select()
-            .is_(ColumnNames.session.concludedTime, null),
-        Session.fromJson);
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .select()
+        .is_(ColumnNames.session.concludedTime, null)
+        .typedExecute(Session.fromJson);
     if (response.error != null) {
       throw await makeError(response.error);
     }
@@ -239,12 +240,13 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> createSession(Location location) async {
-    var response = (await execute<Session>(
-        supabaseClient.from(TableNames.session).insert(excludeNull(Session(
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .insert(excludeNull(Session(
             point: Point(
                 type: PointType.point,
-                coordinates: [location.lat, location.lng])).toJson())),
-        Session.fromJson));
+                coordinates: [location.lat, location.lng])).toJson()))
+        .typedExecute(Session.fromJson);
     if (response.error != null) {
       log.e(response.error);
       throw ArgumentError(response.error);
@@ -252,7 +254,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     var session = response.data[0];
 
-    await Sessions().joinSession(session, getAccessToken()!);
+    participant = await Sessions().joinSession(session, getAccessToken()!);
 
     setState(() {
       sessionId = session.id;
@@ -349,11 +351,11 @@ class MyHomePageState extends State<MyHomePage> {
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
                 sessionId: sessionId!,
-                participantId: 0,
+                participantId: participant!.id,
                 placeReference: reference,
                 decision: state)
             .toJson()))
-        .execute();
+        .typedExecute(Decision.fromJson);
   }
 
   Future<void> concludeSession() async {
