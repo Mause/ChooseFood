@@ -91,7 +91,7 @@ void main() {
         .get("/maps/api/place/photo?photoreference=1&maxwidth=411&key")
         .reply(200, image, headers: {"Content-Type": "image/png"});
     supabaseScope.post("/rest/v1/participant",
-        {"sessionId": sessionId, "userId": "id"}).reply(200, {});
+        {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
 
     // Build the app.
     await tester.pumpWidget(const MyApp());
