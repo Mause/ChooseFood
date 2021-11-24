@@ -149,6 +149,13 @@ Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
       error: response.error);
 }
 
+extension TypedExecuteExtension on PostgrestBuilder {
+  Future<MyPostgrestResponse<T>> typedExecute<T>(
+      T Function(Map<String, dynamic> e) fromJson) async {
+    return execute<T>(this, fromJson);
+  }
+}
+
 class MyPostgrestResponse<T> extends PostgrestResponse {
   @override
   get data => datam;
