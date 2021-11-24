@@ -25,6 +25,7 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Text,
         Widget;
+import 'package:flutter/scheduler.dart' show SchedulerBinding;
 import 'package:get/get.dart' show Get, Inst;
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
@@ -197,8 +198,26 @@ class LabelledProgressIndicator extends StatelessWidget {
 }
 
 extension LabelledProgressIndicatorExtension on BuildContext {
-  progress(String label) {
-    loaderOverlay.show(widget: LabelledProgressIndicator(label));
+  onNextFrame(void Function() callback) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
+      callback();
+    });
+  }
+
+  progress(String label, {instantInit = false}) {
+    if (instantInit) {
+      loaderOverlay.show(widget: LabelledProgressIndicator(label));
+    } else {
+      onNextFrame(() {
+        loaderOverlay.show(widget: LabelledProgressIndicator(label));
+      });
+    }
+  }
+
+  hideProgress() {
+    onNextFrame(() {
+      loaderOverlay.hide();
+    });
   }
 }
 
