@@ -63,6 +63,24 @@ void setupContacts(WidgetTester tester,
       }
     });
 
+void setupLibPhoneNumber(WidgetTester tester) =>
+    tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
+            (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case "isValidPhoneNumber":
+          return true;
+        case "formatAsYouType":
+          return methodCall.arguments['phoneNumber'];
+        case "normalizePhoneNumber":
+          return methodCall.arguments['phoneNumber'];
+        case "getRegionInfo":
+          return {};
+        default:
+          log.e(methodCall);
+      }
+    });
+
 void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
@@ -130,6 +148,7 @@ void main() {
 
   testWidgets('Friends sessions', (WidgetTester tester) async {
     var phone = '+614000000000';
+    setupLibPhoneNumber(tester);
     setupContacts(tester, contacts: [
       {
         "phones": [
@@ -196,6 +215,7 @@ void main() {
   });
 
   testWidgets('Login dialog', (WidgetTester tester) async {
+    setupLibPhoneNumber(tester);
     Get.deleteAll();
     supabaseClient.auth.currentSession = null;
     Get.put(supabaseClient);
@@ -217,21 +237,6 @@ void main() {
             }))
         .reply(200,
             {"error": null, "access_token": accessToken(), 'expires_in': 3600});
-
-    tester.binding.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
-            (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case "isValidPhoneNumber":
-          return true;
-        case "formatAsYouType":
-          return methodCall.arguments['phoneNumber'];
-        case "normalizePhoneNumber":
-          return methodCall.arguments['phoneNumber'];
-        default:
-          log.e(methodCall);
-      }
-    });
 
     await tester.pumpWidget(const MyApp());
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
