@@ -49,7 +49,8 @@ String accessToken({String role = "authenticated"}) =>
     }).codeUnits) +
     ".ey";
 
-void setupContacts(WidgetTester tester, {List<Contact>? contacts}) =>
+void setupContacts(WidgetTester tester,
+        {List<Map<String, dynamic>>? contacts}) =>
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('github.com/QuisApp/flutter_contacts'),
         (message) async {
@@ -131,7 +132,11 @@ void main() {
   testWidgets('Friends sessions', (WidgetTester tester) async {
     var phone = '+614000000000';
     setupContacts(tester, contacts: [
-      Contact(phones: [Phone(phone)])
+      {
+        "phones": [
+          {"phone": phone}
+        ]
+      }
     ]);
 
     var id = "00000-00000-00000-00000";
