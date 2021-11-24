@@ -193,6 +193,13 @@ void main() {
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
 
+    supabaseScope
+        .get(Uri(
+                path: "/rest/v1/users",
+                queryParameters: {"select": '*', "phone": 'in.("$phone")'})
+            .toString())
+        .reply(200, [{}]);
+
     await tester.pumpWidget(const MyApp());
 
     await tester
@@ -297,6 +304,9 @@ void main() {
             createdAt: DateTime.now().toIso8601String(),
             point: Point())
       ]);
+      supabaseScope
+          .get("/rest/v1/participant?select=%2A&userId=in.%28%29")
+          .reply(200, []);
 
       var goldens = GoldenBuilder.column(
           wrap: (widget) => Container(
