@@ -90,7 +90,9 @@ class FriendsSessionsState extends State<FriendsSessions> {
       log.i("Loading friends");
       var possibles = await FlutterContacts.getContacts(withPhoto: true);
       log.i("Loaded contacts: ${possibles.length}");
-      numberOfContacts = possibles.length;
+      setState(() {
+        numberOfContacts = possibles.length;
+      });
 
       List<NamePhone> contacts = (await Future.wait(possibles
               .expand((element) =>
