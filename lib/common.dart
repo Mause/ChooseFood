@@ -204,7 +204,7 @@ extension LabelledProgressIndicatorExtension on BuildContext {
     });
   }
 
-  progress(String label, {instantInit = false}) {
+  progress(String label, {instantInit = true}) {
     if (instantInit) {
       loaderOverlay.show(widget: LabelledProgressIndicator(label));
     } else {
