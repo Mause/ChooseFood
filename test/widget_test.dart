@@ -2,6 +2,7 @@ import 'dart:convert' show base64Url, json, jsonEncode;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
+import 'package:flutter_contacts/flutter_contacts.dart' show Contact, Phone;
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
@@ -48,7 +49,7 @@ String accessToken({String role = "authenticated"}) =>
     }).codeUnits) +
     ".ey";
 
-void setupContacts(WidgetTester tester) =>
+void setupContacts(WidgetTester tester, {List<Contact>? contacts}) =>
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('github.com/QuisApp/flutter_contacts'),
         (message) async {
@@ -56,7 +57,7 @@ void setupContacts(WidgetTester tester) =>
         case "requestPermission":
           return true;
         case "select":
-          return [];
+          return contacts ?? [];
         default:
           log.e(message);
       }
@@ -128,6 +129,11 @@ void main() {
   });
 
   testWidgets('Friends sessions', (WidgetTester tester) async {
+    var phone = '+614000000000';
+    setupContacts(tester, contacts: [
+      Contact(phones: [Phone(phone)])
+    ]);
+
     var id = "00000-00000-00000-00000";
     var placeReference = "placeReference";
     supabaseScope
@@ -156,10 +162,10 @@ void main() {
                 result: PlaceDetails(
                     name: placeName, placeId: '', reference: placeReference),
                 htmlAttributions: []).toJson());
-    var email2 = 'fake@example.com';
+    var email = 'fake@example.com';
     supabaseScope
         .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
-        .reply(200, [Users(id: 'PID', email: email2).toJson()]);
+        .reply(200, [Users(id: 'PID', email: email, phone: phone).toJson()]);
     supabaseScope
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
@@ -170,6 +176,8 @@ void main() {
         .tap(find.widgetWithText(NavigationDestination, 'Friends sessions'))
         .timeout(const Duration(seconds: 10));
     await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
+
+    expect(find.text("You have 1 friends"), findsOneWidget);
 
     expect(find.byType(Card), findsOneWidget);
 
