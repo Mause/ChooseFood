@@ -1,6 +1,6 @@
 ci:
   skip: [flutter-format, flutter-analyze]
-exclude: .devcontainer/devcontainer.json
+exclude: .devcontainer/devcontainer.json|winuwp/runner_uwp/CMakeSettings.json
 repos:
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v1.2.0
