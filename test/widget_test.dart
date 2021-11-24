@@ -48,7 +48,8 @@ String accessToken({String role = "authenticated"}) =>
     }).codeUnits) +
     ".ey";
 
-void setupContacts(WidgetTester tester) =>
+void setupContacts(WidgetTester tester,
+        {List<Map<String, dynamic>>? contacts}) =>
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('github.com/QuisApp/flutter_contacts'),
         (message) async {
@@ -56,9 +57,27 @@ void setupContacts(WidgetTester tester) =>
         case "requestPermission":
           return true;
         case "select":
-          return [];
+          return contacts ?? [];
         default:
           log.e(message);
+      }
+    });
+
+void setupLibPhoneNumber(WidgetTester tester) =>
+    tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
+            (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case "isValidPhoneNumber":
+          return true;
+        case "formatAsYouType":
+          return methodCall.arguments['phoneNumber'];
+        case "normalizePhoneNumber":
+          return methodCall.arguments['phoneNumber'];
+        case "getRegionInfo":
+          return {};
+        default:
+          log.e(methodCall);
       }
     });
 
@@ -128,6 +147,16 @@ void main() {
   });
 
   testWidgets('Friends sessions', (WidgetTester tester) async {
+    var phone = '+614000000000';
+    setupLibPhoneNumber(tester);
+    setupContacts(tester, contacts: [
+      {
+        "phones": [
+          {"normalizedNumber": phone}
+        ]
+      }
+    ]);
+
     var id = "00000-00000-00000-00000";
     var placeReference = "placeReference";
     supabaseScope
@@ -156,13 +185,20 @@ void main() {
                 result: PlaceDetails(
                     name: placeName, placeId: '', reference: placeReference),
                 htmlAttributions: []).toJson());
-    var email2 = 'fake@example.com';
+    var email = 'fake@example.com';
     supabaseScope
         .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
-        .reply(200, [Users(id: 'PID', email: email2).toJson()]);
+        .reply(200, [Users(id: 'PID', email: email, phone: phone).toJson()]);
     supabaseScope
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
+
+    supabaseScope
+        .get(Uri(
+                path: "/rest/v1/users",
+                queryParameters: {"select": '*', "phone": 'in.("$phone")'})
+            .toString())
+        .reply(200, [{}]);
 
     await tester.pumpWidget(const MyApp());
 
@@ -170,6 +206,8 @@ void main() {
         .tap(find.widgetWithText(NavigationDestination, 'Friends sessions'))
         .timeout(const Duration(seconds: 10));
     await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
+
+    expect(find.text("You have 1 friends"), findsOneWidget);
 
     expect(find.byType(Card), findsOneWidget);
 
@@ -184,6 +222,7 @@ void main() {
   });
 
   testWidgets('Login dialog', (WidgetTester tester) async {
+    setupLibPhoneNumber(tester);
     Get.deleteAll();
     supabaseClient.auth.currentSession = null;
     Get.put(supabaseClient);
@@ -205,21 +244,6 @@ void main() {
             }))
         .reply(200,
             {"error": null, "access_token": accessToken(), 'expires_in': 3600});
-
-    tester.binding.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
-            (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case "isValidPhoneNumber":
-          return true;
-        case "formatAsYouType":
-          return methodCall.arguments['phoneNumber'];
-        case "normalizePhoneNumber":
-          return methodCall.arguments['phoneNumber'];
-        default:
-          log.e(methodCall);
-      }
-    });
 
     await tester.pumpWidget(const MyApp());
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
@@ -280,6 +304,9 @@ void main() {
             createdAt: DateTime.now().toIso8601String(),
             point: Point())
       ]);
+      supabaseScope
+          .get("/rest/v1/participant?select=%2A&userId=in.%28%29")
+          .reply(200, []);
 
       var goldens = GoldenBuilder.column(
           wrap: (widget) => Container(
