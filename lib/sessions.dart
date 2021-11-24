@@ -14,11 +14,10 @@ class Sessions {
   Future<Participant> joinSession(Session session, User user) async {
     var par = Participant(sessionId: session.id!, userId: user.id);
 
-    var res = await execute<Participant>(
-        supabaseClient
-            .from(TableNames.participant)
-            .upsert(excludeNull(par.toJson())),
-        Participant.fromJson);
+    var res = await supabaseClient
+        .from(TableNames.participant)
+        .upsert(excludeNull(par.toJson()))
+        .typedExecute(Participant.fromJson);
 
     if (res.error != null) throw res.error!;
 
@@ -33,18 +32,17 @@ class Sessions {
         .update(excludeNull(Session(
                 id: sessionId, concludedTime: DateTime.now().toIso8601String())
             .toJson()))
-        .execute();
+        .typedExecute(Session.fromJson);
 
     return summariseSession(sessionId);
   }
 
   Future<List<String>> summariseSession(String sessionId) async {
-    var participants = (await execute<ParticipantWithDecisions>(
-            supabaseClient
-                .from(TableNames.participant)
-                .select("userId, decision ( * )")
-                .eq(ColumnNames.participant.sessionId, sessionId),
-            ParticipantWithDecisions.fromJson))
+    var participants = (await supabaseClient
+            .from(TableNames.participant)
+            .select("userId, decision ( * )")
+            .eq(ColumnNames.participant.sessionId, sessionId)
+            .typedExecute(ParticipantWithDecisions.fromJson))
         .datam;
 
     var places = participants

@@ -43,8 +43,8 @@ import 'common.dart'
     show
         BasePage,
         LabelledProgressIndicatorExtension,
+        TypedExecuteExtension,
         excludeNull,
-        execute,
         getAccessToken,
         makeErrorDialog,
         title;
@@ -139,12 +139,11 @@ class MyHomePageState extends State<MyHomePage> {
   Future<void> loadExistingSession() async {
     context.progress("Loading existing session");
 
-    var response = await execute<Session>(
-        supabaseClient
-            .from(TableNames.session)
-            .select()
-            .is_(ColumnNames.session.concludedTime, null),
-        Session.fromJson);
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .select()
+        .is_(ColumnNames.session.concludedTime, null)
+        .typedExecute(Session.fromJson);
     if (response.error != null) {
       throw await makeError(response.error);
     }
@@ -239,12 +238,13 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> createSession(Location location) async {
-    var response = (await execute<Session>(
-        supabaseClient.from(TableNames.session).insert(excludeNull(Session(
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .insert(excludeNull(Session(
             point: Point(
                 type: PointType.point,
-                coordinates: [location.lat, location.lng])).toJson())),
-        Session.fromJson));
+                coordinates: [location.lat, location.lng])).toJson()))
+        .typedExecute(Session.fromJson);
     if (response.error != null) {
       log.e(response.error);
       throw ArgumentError(response.error);
@@ -353,7 +353,7 @@ class MyHomePageState extends State<MyHomePage> {
                 placeReference: reference,
                 decision: state)
             .toJson()))
-        .execute();
+        .typedExecute(Decision.fromJson);
   }
 
   Future<void> concludeSession() async {
