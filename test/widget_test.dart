@@ -2,7 +2,6 @@ import 'dart:convert' show base64Url, json, jsonEncode;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
-import 'package:flutter_contacts/flutter_contacts.dart' show Contact, Phone;
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
