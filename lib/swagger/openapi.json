@@ -630,6 +630,9 @@
             "$ref": "#/parameters/rowFilter.users.phone"
           },
           {
+            "$ref": "#/parameters/rowFilter.users.name"
+          },
+          {
             "$ref": "#/parameters/select"
           },
           {
@@ -702,6 +705,9 @@
             "$ref": "#/parameters/rowFilter.users.phone"
           },
           {
+            "$ref": "#/parameters/rowFilter.users.name"
+          },
+          {
             "$ref": "#/parameters/preferReturn"
           }
         ],
@@ -724,6 +730,9 @@
           },
           {
             "$ref": "#/parameters/rowFilter.users.phone"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.name"
           },
           {
             "$ref": "#/parameters/body.users"
@@ -900,6 +909,10 @@
         "phone": {
           "format": "character varying",
           "maxLength": 15,
+          "type": "string"
+        },
+        "name": {
+          "format": "character varying",
           "type": "string"
         }
       },
@@ -1213,6 +1226,13 @@
     },
     "rowFilter.users.phone": {
       "name": "phone",
+      "required": false,
+      "format": "character varying",
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.name": {
+      "name": "name",
       "required": false,
       "format": "character varying",
       "in": "query",
