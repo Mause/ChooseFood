@@ -157,7 +157,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-${{ matrix.api-level }}-2021-11-25
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
@@ -173,6 +173,7 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: Nexus 6
+          ram-size: 3072M
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
@@ -209,6 +210,7 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           avd-name: android
+          ram-size: 3072M
           script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
 
       - uses: actions/upload-artifact@v2
