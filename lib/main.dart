@@ -387,6 +387,9 @@ class ColumnNames {
 
 class ParticipantFieldNames {
   final String sessionId = "sessionId";
+  final userId = "userId";
+  final createdAt = "created_at";
+  final id = "id";
 
   const ParticipantFieldNames();
 }
