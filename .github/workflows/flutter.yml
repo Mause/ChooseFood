@@ -313,6 +313,22 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
 
+  publish_to_fdroid:
+    runs-on: ubuntu-latest
+    needs: publish
+    
+    steps:
+    - name: Deploy Stage
+      uses: actions/github-script@v5
+      with:
+        script: |
+          await github.rest.actions.createWorkflowDispatch({
+            'Mause',
+            'fdroidrepo',
+            'workflows/update.yaml',
+            'main',
+          });
+
   build_windows:
     runs-on: windows-latest
     needs: build
