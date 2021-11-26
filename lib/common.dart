@@ -13,6 +13,7 @@ import 'package:flutter/material.dart'
         Key,
         ListBody,
         MainAxisAlignment,
+        Material,
         NavigationBar,
         NavigationDestination,
         NavigationDestinationLabelBehavior,
@@ -198,9 +199,11 @@ class LabelledProgressIndicator extends StatelessWidget {
         minWidth: 36.0,
         minHeight: 36.0,
       ),
-      child: Row(
+      child: Center(
+          child: Material(
+              child: Row(
         children: [const CircularProgressIndicator(), Text(label)],
-      ),
+      ))),
     );
   }
 }
