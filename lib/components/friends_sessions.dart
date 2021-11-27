@@ -78,7 +78,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
     context.progress("Loading...");
     Future.wait([initSessions(), loadFriends()]).whenComplete(() {
-      context.loaderOverlay.hide();
+      context.hideProgress();
     });
   }
 
@@ -170,14 +170,14 @@ class FriendsSessionsState extends State<FriendsSessions> {
           .map((e) => SessionCard(sessionWithDecisions: e))
           .toList();
     });
-    context.loaderOverlay.hide();
+    context.hideProgress();
   }
 
   Future<void> handleError(dynamic error, StackTrace? stackTrace) async {
     log.e("Failed to load sessions", error, stackTrace);
     await Sentry.captureException(error, hint: "Failed to load sessions");
 
-    context.loaderOverlay.hide();
+    context.hideProgress();
   }
 
   @override
@@ -281,7 +281,7 @@ class _DecisionDialogState extends State<DecisionDialog> {
 
     context.progress("Loading");
     loadData().then((void t) {
-      context.loaderOverlay.hide();
+      context.hideProgress();
     }, onError: (error) {
       log.e(error);
     });
