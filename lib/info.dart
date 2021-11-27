@@ -22,7 +22,7 @@ class _InfoPage extends State<InfoPage> {
 
   @override
   void initState() {
-    context.progress("Loading versions");
+    context.progress("Loading versions", instantInit: false);
     super.initState();
     PackageInfo.fromPlatform().then((packageInfo) {
       context.hideProgress();

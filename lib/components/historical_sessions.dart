@@ -47,7 +47,7 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
   void initState() {
     super.initState();
 
-    context.progress("Loading historical sessions");
+    context.progress("Loading historical sessions", instantInit: false);
     loadSessions().whenComplete(() => context.hideProgress());
   }
 

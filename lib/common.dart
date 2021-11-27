@@ -40,10 +40,10 @@ import 'package:supabase/supabase.dart'
         SupabaseClient,
         User;
 
-import 'main.dart';
-import 'info.dart';
 import 'components/friends_sessions.dart' show FriendsSessions;
 import 'components/historical_sessions.dart' show HistoricalSessions;
+import 'info.dart' show InfoPage;
+import 'main.dart' show MyHomePage;
 
 const title = "Choose Food";
 var log = Logger();

@@ -76,14 +76,14 @@ class FriendsSessionsState extends State<FriendsSessions> {
   void initState() {
     super.initState();
 
-    context.progress("Loading...");
+    context.progress("Loading...", instantInit: false);
     Future.wait([initSessions(), loadFriends()]).whenComplete(() {
       context.hideProgress();
     });
   }
 
   Future<void> loadFriends() async {
-    context.progress("Loading friends");
+    context.progress("Loading friends", instantInit: false);
     if (await FlutterContacts.requestPermission(readonly: true)) {
       FlutterContacts.config.includeNonVisibleOnAndroid = true;
 
