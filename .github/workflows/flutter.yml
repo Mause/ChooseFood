@@ -325,7 +325,7 @@ jobs:
           await github.rest.actions.createWorkflowDispatch({
             owner: 'Mause',
             repo: 'fdroidrepo',
-            workflow_id: 'workflows/update.yaml',
+            workflow_id: 'update.yaml',
             ref: 'main'
           });
 
