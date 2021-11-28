@@ -130,7 +130,10 @@ class FriendsSessionsState extends State<FriendsSessions> {
     PhoneNumberTest phoneNumberTest;
     try {
       phoneNumberTest = await PhoneNumberTest.getRegionInfoFromPhoneNumber(
-          e.phone.normalizedNumber, 'AU');
+          e.phone.normalizedNumber.isEmpty
+              ? e.phone.number
+              : e.phone.normalizedNumber,
+          'AU');
     } on PlatformException {
       log.e('failed to parse "${e.phone}" for ${e.name}');
       return null;
