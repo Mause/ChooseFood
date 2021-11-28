@@ -2,7 +2,6 @@ import 'dart:convert' show base64Url, json, jsonEncode;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
-import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
 import 'package:choose_food/main.dart';
@@ -22,10 +21,10 @@ import 'package:flutter_test/flutter_test.dart'
         setUp,
         tearDown,
         testWidgets;
-import 'package:test/test.dart' show group;
 import 'package:flutter_test/src/finders.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
     show SelectorButton;
@@ -34,6 +33,7 @@ import 'package:network_image_mock/network_image_mock.dart'
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
+import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
@@ -193,12 +193,9 @@ void main() {
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
 
-    supabaseScope
-        .get(Uri(
-                path: "/rest/v1/users",
-                queryParameters: {"select": '*', "phone": 'in.("$phone")'})
-            .toString())
-        .reply(200, [{}]);
+    supabaseScope.post("/rest/v1/rpc/get_matching_users", {
+      "phones": [phone]
+    }).reply(200, [{}]);
 
     await tester.pumpWidget(const MyApp());
 
