@@ -405,6 +405,10 @@ class TableNames {
   static const String users = "users";
 }
 
+class RpcNames {
+  static const String getMatchingUsers = "get_matching_users";
+}
+
 class LocationCard extends StatelessWidget {
   final PlacesSearchResult location;
   final GoogleMapsPlaces places = Get.find();

@@ -2,7 +2,7 @@ import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
     show BasePage, MyPostgrestResponse, TypedExecuteExtension, getAccessToken;
-import 'package:choose_food/main.dart' show ColumnNames, TableNames;
+import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -88,27 +88,30 @@ class FriendsSessionsState extends State<FriendsSessions> {
       FlutterContacts.config.includeNonVisibleOnAndroid = true;
 
       log.i("Loading friends");
-      var possibles = await FlutterContacts.getContacts(withPhoto: true);
+      var possibles = await FlutterContacts.getContacts(
+          withPhoto: true, withProperties: true);
       log.i("Loaded contacts: ${possibles.length}");
       setState(() {
         numberOfContacts = possibles.length;
       });
 
-      List<NamePhone> contacts = (await Future.wait(possibles
-              .expand((element) =>
-                  element.phones.map((e) => NamePhone(element.name, e)))
-              .map(formatNumbers)
-              .toList()))
-          .where((NamePhone? element) => element != null)
-          .map((e) => e!)
+      var numbers = possibles
+          .expand((element) =>
+              element.phones.map((e) => NamePhone(element.name, e)))
           .toList();
+      log.i("Numbers to parse: ${numbers.length}");
+
+      List<NamePhone> contacts =
+          (await Future.wait(numbers.map(formatNumbers).toList()))
+              .where((NamePhone? element) => element != null)
+              .map((e) => e!)
+              .toList();
       log.i("Parsed ${contacts.length} contacts");
 
-      var yourFriends = (await supabaseClient
-              .from(TableNames.users)
-              .select()
-              .in_("phone", contacts.map((e) => e.phone.number).toList())
-              .typedExecute(Users.fromJson))
+      var yourFriends = (await supabaseClient.rpc(RpcNames.getMatchingUsers,
+              params: {
+            "phones": contacts.map((e) => e.phone.number).toList()
+          }).typedExecute(Users.fromJson))
           .datam;
       setState(() {
         this.yourFriends = yourFriends;
