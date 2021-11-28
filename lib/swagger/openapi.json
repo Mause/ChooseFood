@@ -747,6 +747,44 @@
           }
         }
       }
+    },
+    "/rpc/get_matching_users": {
+      "post": {
+        "tags": [
+          "(rpc) get_matching_users"
+        ],
+        "produces": [
+          "application/json",
+          "application/vnd.pgrst.object+json"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "required": [
+                "phones"
+              ],
+              "properties": {
+                "phones": {
+                  "format": "character varying[]",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": "args",
+            "in": "body"
+          },
+          {
+            "$ref": "#/parameters/preferParams"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "definitions": {
