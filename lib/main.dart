@@ -1,10 +1,5 @@
 import 'dart:async' show Future, FutureOr;
 
-import 'package:choose_food/components/friends_sessions.dart';
-import 'package:choose_food/components/historical_sessions.dart';
-import 'package:choose_food/environment_config.dart';
-import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
-    show PointType;
 import 'package:flutter/material.dart'
     show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
@@ -48,7 +43,12 @@ import 'common.dart'
         getAccessToken,
         makeErrorDialog,
         title;
+import 'components/friends_sessions.dart' show FriendsSessions;
+import 'components/historical_sessions.dart'
+    show HistoricalSessions, HistoricalSessionsController;
 import 'components/login_dialog.dart';
+import 'environment_config.dart';
+import 'generated_code/openapi.enums.swagger.dart' show PointType;
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision, Participant;
 import 'info.dart' show InfoPage;
@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
     Get.put(SupabaseClient(
         EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
+    Get.lazyPut(() => HistoricalSessionsController());
 
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
