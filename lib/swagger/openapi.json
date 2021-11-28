@@ -766,7 +766,7 @@
               ],
               "properties": {
                 "phones": {
-                  "format": "character varying[]",
+                  "format": "text[]",
                   "type": "string"
                 }
               },
