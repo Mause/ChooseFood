@@ -316,7 +316,7 @@ jobs:
   publish_to_fdroid:
     runs-on: ubuntu-latest
     needs: publish
-    
+
     steps:
     - name: Deploy Stage
       uses: actions/github-script@v5
