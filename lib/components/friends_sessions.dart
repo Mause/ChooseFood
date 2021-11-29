@@ -13,6 +13,7 @@ import 'package:flutter/material.dart'
         DataRow,
         DataTable,
         ListTile,
+        RefreshIndicator,
         TextButton,
         showDialog;
 import 'package:flutter/services.dart' show PlatformException;
@@ -76,6 +77,10 @@ class FriendsSessionsState extends State<FriendsSessions> {
   void initState() {
     super.initState();
 
+    reload();
+  }
+
+  Future<void> reload() async {
     context.progress("Loading...");
     Future.wait([initSessions(), loadFriends()]).whenComplete(() {
       context.loaderOverlay.hide();
@@ -198,7 +203,10 @@ class FriendsSessionsState extends State<FriendsSessions> {
           title: Text(
               'Your friends have ${friendsSessions?.length ?? "?"} sessions')),
       ListTile(title: Text('${openSessions ?? "?"} of which are open')),
-      Expanded(child: ListView(children: sessions, primary: true))
+      Expanded(
+          child: RefreshIndicator(
+              onRefresh: reload,
+              child: ListView(children: sessions, primary: true)))
     ]);
   }
 }
