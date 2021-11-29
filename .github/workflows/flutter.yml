@@ -325,7 +325,7 @@ jobs:
       uses: actions/github-script@v5
       with:
         script: |
-          await github.rest.actions.createDispatchEvent({
+          await github.rest.repos.createDispatchEvent({
             owner: 'Mause',
             repo: 'fdroidrepo',
             event_type: 'repository_dispatch'
