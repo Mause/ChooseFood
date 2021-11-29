@@ -2,7 +2,7 @@ import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
     show BasePage, TypedExecuteExtension, getAccessToken;
-import 'package:choose_food/main.dart' show RpcNames, TableNames;
+import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -135,6 +135,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
                 participantId
               )
               """)
+              .not(ColumnNames.session.concludedTime, "is", "null")
               .in_("participant.userId", yourFriends.map((e) => e.id).toList())
               .typedExecute(SessionWithDecisions.fromJson))
           .datam;
