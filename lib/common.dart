@@ -1,25 +1,29 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart'
     show
-        AlertDialog,
+        Material,
+        NavigationBar,
+        Scaffold,
+        NavigationDestinationLabelBehavior,
+        NavigationDestination,
         AppBar,
+        AlertDialog,
+        EdgeInsets,
+        Padding,
+        CircularProgressIndicator;
+import 'package:flutter/widgets.dart'
+    show
         BoxConstraints,
         BuildContext,
         Center,
-        CircularProgressIndicator,
         Column,
         Container,
         Icon,
         Key,
         ListBody,
         MainAxisAlignment,
-        Material,
-        NavigationBar,
-        NavigationDestination,
-        NavigationDestinationLabelBehavior,
         Navigator,
         Row,
-        Scaffold,
         SingleChildScrollView,
         State,
         StatefulWidget,
@@ -195,16 +199,22 @@ class LabelledProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(
-        minWidth: 36.0,
-        minHeight: 36.0,
-      ),
-      child: Center(
-          child: Material(
-              child: Row(
-        children: [const CircularProgressIndicator(), Text(label)],
-      ))),
-    );
+        constraints: const BoxConstraints(
+          minWidth: 36.0,
+          minHeight: 36.0,
+        ),
+        padding: const EdgeInsets.all(20),
+        width: 100,
+        child: Center(
+            child: Material(
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        const CircularProgressIndicator(),
+                        Text(label)
+                      ],
+                    )))));
   }
 }
 
