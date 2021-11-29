@@ -33,7 +33,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
-    show LoaderOverlay, OverlayControllerWidgetExtension;
+    show GlobalLoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
@@ -82,10 +82,11 @@ class MyApp extends StatelessWidget {
 
     return FutureBuilder<ThemeData>(
         future: getThemeData(),
-        builder: (context, snapshot) => GetMaterialApp(
+        builder: (context, snapshot) => GlobalLoaderOverlay(
+                child: GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
-              home: const LoaderOverlay(child: MyHomePage(title: title)),
+              home: const MyHomePage(title: title),
               navigatorObservers: [
                 SentryNavigatorObserver(),
               ],
@@ -95,7 +96,7 @@ class MyApp extends StatelessWidget {
                 HistoricalSessions.routeName: (context) =>
                     const HistoricalSessions(),
               },
-            ));
+            )));
   }
 }
 
