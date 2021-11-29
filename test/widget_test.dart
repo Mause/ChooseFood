@@ -1,4 +1,5 @@
 import 'dart:convert' show base64Url, json, jsonEncode;
+import 'dart:io' show Platform;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
@@ -322,7 +323,9 @@ void main() {
       await screenMatchesGolden(tester, 'main', autoHeight: true);
     });
   }, onPlatform: {
-    'windows': [const Skip()]
+    'windows': Platform.environment.containsKey('CI')
+        ? [const Skip("Only run on CI if not on windows")]
+        : []
   });
 }
 
