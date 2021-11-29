@@ -211,7 +211,10 @@ jobs:
           profile: Nexus 6
           avd-name: android
           ram-size: 3072M
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+          script: |
+            echo "::group::Integration tests"
+            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+            echo "::endgroup::"
 
       - uses: actions/upload-artifact@v2
         if: always()
