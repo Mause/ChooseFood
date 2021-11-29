@@ -76,14 +76,14 @@ class FriendsSessionsState extends State<FriendsSessions> {
   void initState() {
     super.initState();
 
-    context.progress("Loading...");
+    context.progress("Loading...", instantInit: false);
     Future.wait([initSessions(), loadFriends()]).whenComplete(() {
-      context.loaderOverlay.hide();
+      context.hideProgress();
     });
   }
 
   Future<void> loadFriends() async {
-    context.progress("Loading friends");
+    context.progress("Loading friends", instantInit: false);
     if (await FlutterContacts.requestPermission(readonly: true)) {
       FlutterContacts.config.includeNonVisibleOnAndroid = true;
 
@@ -176,14 +176,14 @@ class FriendsSessionsState extends State<FriendsSessions> {
           .map((e) => SessionCard(sessionWithDecisions: e))
           .toList();
     });
-    context.loaderOverlay.hide();
+    context.hideProgress();
   }
 
   Future<void> handleError(dynamic error, StackTrace? stackTrace) async {
     log.e("Failed to load sessions", error, stackTrace);
     await Sentry.captureException(error, hint: "Failed to load sessions");
 
-    context.loaderOverlay.hide();
+    context.hideProgress();
   }
 
   @override
@@ -287,7 +287,7 @@ class _DecisionDialogState extends State<DecisionDialog> {
 
     context.progress("Loading");
     loadData().then((void t) {
-      context.loaderOverlay.hide();
+      context.hideProgress();
     }, onError: (error) {
       log.e(error);
     });

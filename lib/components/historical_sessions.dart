@@ -24,8 +24,6 @@ import 'package:flutter/widgets.dart'
         Widget;
 import 'package:get/get.dart' show Get, Inst;
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:loader_overlay/loader_overlay.dart'
-    show OverlayControllerWidgetExtension;
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import '../generated_code/openapi.models.swagger.dart' show Session;
@@ -49,8 +47,8 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
   void initState() {
     super.initState();
 
-    context.progress("Loading historical sessions");
-    loadSessions().whenComplete(() => context.loaderOverlay.hide());
+    context.progress("Loading historical sessions", instantInit: false);
+    loadSessions().whenComplete(() => context.hideProgress());
   }
 
   Future<void> loadSessions() async {
@@ -107,7 +105,7 @@ class SessionCard extends StatelessWidget {
               onPressed: () async {
                 context.progress("Loading summary");
                 var summary = await Sessions().summariseSession(session.id!);
-                context.loaderOverlay.hide();
+                context.hideProgress();
 
                 await Get.defaultDialog(
                     title: "Session summary",

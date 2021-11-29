@@ -28,8 +28,6 @@ import 'package:flutter/widgets.dart'
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart'
     show InternationalPhoneNumberInput, PhoneNumber;
-import 'package:loader_overlay/loader_overlay.dart'
-    show OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart';
 import 'package:supabase/supabase.dart';
 
@@ -148,7 +146,7 @@ class _LoginDialogState extends State<LoginDialog> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                   }
-                  context.loaderOverlay.hide();
+                  context.hideProgress();
                 }
               }),
           dimension: 400),

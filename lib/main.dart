@@ -32,8 +32,7 @@ import 'package:geolocator/geolocator.dart'
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
-import 'package:loader_overlay/loader_overlay.dart'
-    show LoaderOverlay, OverlayControllerWidgetExtension;
+import 'package:loader_overlay/loader_overlay.dart' show LoaderOverlay;
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
@@ -157,7 +156,7 @@ class MyHomePageState extends State<MyHomePage> {
     if (response.datam.isNotEmpty) {
       await loadPlaces(toLocation(response.datam[0].point!));
     } else {
-      context.loaderOverlay.hide();
+      context.hideProgress();
     }
   }
 
@@ -189,7 +188,7 @@ class MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       results = response.results;
-      context.loaderOverlay.hide();
+      context.hideProgress();
     });
   }
 
@@ -231,7 +230,7 @@ class MyHomePageState extends State<MyHomePage> {
   Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
     await Sentry.captureException(e, stackTrace: s, hint: message);
-    context.loaderOverlay.hide();
+    context.hideProgress();
     await showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
@@ -319,7 +318,7 @@ class MyHomePageState extends State<MyHomePage> {
                 : elevatedButton('Logout', () async {
                     context.progress('Logging out');
                     await supabaseClient.auth.signOut();
-                    context.loaderOverlay.hide();
+                    context.hideProgress();
                   }),
             elevatedButton('Conclude session', concludeSession,
                 enabled: sessionId != null),
@@ -363,7 +362,7 @@ class MyHomePageState extends State<MyHomePage> {
       results = [];
       index = 0;
     });
-    context.loaderOverlay.hide();
+    context.hideProgress();
   }
 }
 
