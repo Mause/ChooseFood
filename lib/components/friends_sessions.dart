@@ -1,8 +1,8 @@
 import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
-    show BasePage, TypedExecuteExtension, getAccessToken;
-import 'package:choose_food/main.dart' show RpcNames, TableNames;
+    show BasePage, MyPostgrestResponse, TypedExecuteExtension, getAccessToken;
+import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -65,9 +65,11 @@ List<Map<String, dynamic>> toMapList(dynamic data) =>
 class FriendsSessionsState extends State<FriendsSessions> {
   SupabaseClient supabaseClient = Get.find();
 
+  List<Widget> sessions = [];
+
   List<Users>? yourFriends;
 
-  List<SessionWithDecisions>? friendsSessions;
+  List<Session>? friendsSessions;
 
   num? numberOfContacts;
 
@@ -80,15 +82,13 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
   Future<void> reload() async {
     context.progress("Loading...");
-
-    await loadFriends();
-
-    context.loaderOverlay.hide();
+    Future.wait([initSessions(), loadFriends()]).whenComplete(() {
+      context.loaderOverlay.hide();
+    });
   }
 
   Future<void> loadFriends() async {
-    context.progress("Loading contacts");
-
+    context.progress("Loading friends");
     if (await FlutterContacts.requestPermission(readonly: true)) {
       FlutterContacts.config.includeNonVisibleOnAndroid = true;
 
@@ -106,7 +106,6 @@ class FriendsSessionsState extends State<FriendsSessions> {
           .toList();
       log.i("Numbers to parse: ${numbers.length}");
 
-      context.progress("Analyzing contacts");
       List<NamePhone> contacts =
           (await Future.wait(numbers.map(formatNumbers).toList()))
               .where((NamePhone? element) => element != null)
@@ -114,7 +113,6 @@ class FriendsSessionsState extends State<FriendsSessions> {
               .toList();
       log.i("Parsed ${contacts.length} contacts");
 
-      context.progress("Looking up friends numbers");
       var yourFriends = (await supabaseClient.rpc(RpcNames.getMatchingUsers,
               params: {
             "phones": contacts.map((e) => e.phone.number).toList()
@@ -124,19 +122,11 @@ class FriendsSessionsState extends State<FriendsSessions> {
         this.yourFriends = yourFriends;
       });
 
-      context.progress("Loading friends sessions");
       var friendsSessions = (await supabaseClient
-              .from(TableNames.session)
-              .select("""
-              id,
-              decision(
-                decision,
-                placeReference,
-                participantId
-              )
-              """)
-              .in_("participant.userId", yourFriends.map((e) => e.id).toList())
-              .typedExecute(SessionWithDecisions.fromJson))
+              .from(TableNames.participant)
+              .select()
+              .in_("userId", yourFriends.map((e) => e.id).toList())
+              .typedExecute(Session.fromJson))
           .datam;
       setState(() {
         this.friendsSessions = friendsSessions;
@@ -158,6 +148,40 @@ class FriendsSessionsState extends State<FriendsSessions> {
     }
 
     return NamePhone(e.name, Phone((phoneNumberTest).phoneNumber!));
+  }
+
+  Future<void> initSessions() async {
+    MyPostgrestResponse<SessionWithDecisions> sessions;
+
+    context.loaderOverlay.show();
+
+    try {
+      sessions = await supabaseClient
+          .from(TableNames.session)
+          .select("""
+              id,
+              decision(
+                decision,
+                placeReference,
+                participantId
+              )
+              """)
+          .is_(ColumnNames.session.concludedTime, null)
+          .typedExecute(SessionWithDecisions.fromJson);
+    } catch (e, s) {
+      return await handleError(e, s);
+    }
+
+    if (sessions.error != null) {
+      return await handleError(sessions.error, null);
+    }
+
+    setState(() {
+      this.sessions = sessions.datam
+          .map((e) => SessionCard(sessionWithDecisions: e))
+          .toList();
+    });
+    context.loaderOverlay.hide();
   }
 
   Future<void> handleError(dynamic error, StackTrace? stackTrace) async {
@@ -182,12 +206,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
       Expanded(
           child: RefreshIndicator(
               onRefresh: reload,
-              child: ListView(
-                  children: (friendsSessions ?? [])
-                      .map((session) =>
-                          SessionCard(sessionWithDecisions: session))
-                      .toList(),
-                  primary: true)))
+              child: ListView(children: sessions, primary: true)))
     ]);
   }
 }
