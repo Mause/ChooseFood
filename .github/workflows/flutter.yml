@@ -319,11 +319,12 @@ jobs:
   publish_to_fdroid:
     runs-on: ubuntu-latest
     needs: publish
-
+    
     steps:
     - name: Deploy Stage
       uses: actions/github-script@v5
       with:
+        github-token: ${{ secrets.TRIGGER_FDROID_UPDATE }}
         script: |
           await github.rest.repos.createDispatchEvent({
             owner: 'Mause',
