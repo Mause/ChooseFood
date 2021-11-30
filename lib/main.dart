@@ -25,6 +25,8 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         Widget,
+        WidgetsBinding,
+        WidgetsFlutterBinding,
         Wrap,
         runApp;
 import 'package:geolocator/geolocator.dart'
@@ -37,7 +39,8 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
-import 'package:supabase/supabase.dart' show SupabaseClient;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Supabase, SupabaseClient;
 
 import 'common.dart'
     show
@@ -48,6 +51,7 @@ import 'common.dart'
         getAccessToken,
         makeErrorDialog,
         title;
+import 'common/auth_required_state.dart' show AuthRequiredState;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision, Participant;
@@ -76,8 +80,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
-    Get.put(SupabaseClient(
-        EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
+
+    var isTesting = WidgetsBinding.instance is! WidgetsFlutterBinding;
+    if (!isTesting) {
+      Supabase.initialize(
+          url: EnvironmentConfig.supabaseUrl,
+          anonKey: EnvironmentConfig.supabaseKey);
+    }
+    Get.put(Supabase.instance.client);
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
     return FutureBuilder<ThemeData>(
@@ -91,6 +101,7 @@ class MyApp extends StatelessWidget {
                 SentryNavigatorObserver(),
               ],
               routes: {
+                LoginDialog.routeName: (context) => const LoginDialog(),
                 InfoPage.routeName: (context) => const InfoPage(),
                 FriendsSessions.routeName: (context) => const FriendsSessions(),
                 HistoricalSessions.routeName: (context) =>
@@ -120,7 +131,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends AuthRequiredState<MyHomePage> {
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
@@ -133,9 +144,7 @@ class MyHomePageState extends State<MyHomePage> {
   Participant? participant;
 
   @override
-  void initState() {
-    super.initState();
-
+  void onAuthenticated(session) {
     loadExistingSession();
   }
 
