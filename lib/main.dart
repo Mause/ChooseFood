@@ -25,6 +25,8 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         Widget,
+        WidgetsBinding,
+        WidgetsFlutterBinding,
         Wrap,
         runApp;
 import 'package:geolocator/geolocator.dart'
@@ -79,12 +81,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
 
-    try {
+    var isTesting = WidgetsBinding.instance is! WidgetsFlutterBinding;
+    if (!isTesting) {
       Supabase.initialize(
           url: EnvironmentConfig.supabaseUrl,
           anonKey: EnvironmentConfig.supabaseKey);
-    } catch (e) {
-      log.d("Supabase already initialised");
     }
     Get.put(Supabase.instance.client);
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
