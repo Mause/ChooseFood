@@ -169,11 +169,8 @@ void main() {
     var id = "00000-00000-00000-00000";
     var placeReference = "placeReference";
     supabaseScope
-        .get(Uri(path: "/rest/v1/session", queryParameters: {
-      "select": "id,decision(decision,placeReference,participantId)",
-      "concludedTime": "not.is.null",
-      "participant.userId": 'in.("null")'
-    }).toString())
+        .get(
+            "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
       {
         ColumnNames.session.id: id,
