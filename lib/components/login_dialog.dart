@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:choose_food/main.dart' show MyHomePage;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -38,6 +39,8 @@ import '../common.dart' show getAccessToken, LabelledProgressIndicatorExtension;
 var log = Logger();
 
 class LoginDialog extends StatefulWidget {
+  static var routeName = "/login";
+
   const LoginDialog({Key? key}) : super(key: key);
 
   @override
@@ -136,12 +139,9 @@ class _LoginDialogState extends State<LoginDialog> {
           child: Stepper(
               currentStep: currentStep,
               steps: steps,
-              onStepCancel: () {
-                Get.back(closeOverlays: true);
-              },
               onStepContinue: () async {
                 if (currentStep == 2) {
-                  Get.back(result: getAccessToken()!, closeOverlays: true);
+                  Get.to(const MyHomePage(title: 'title'));
                 } else {
                   context.progress("Loading");
                   var _formKey = keys[currentStep];

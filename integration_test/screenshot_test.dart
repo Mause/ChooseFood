@@ -5,12 +5,13 @@ import 'package:choose_food/main.dart' show MyApp;
 import 'package:flutter_test/flutter_test.dart'
     show
         WidgetTester,
+        expect,
         find,
         findsOneWidget,
         setUp,
+        setUpAll,
         tearDown,
-        testWidgets,
-        expect;
+        testWidgets;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' show Get, Inst;
 import 'package:integration_test/integration_test.dart'
@@ -18,7 +19,8 @@ import 'package:integration_test/integration_test.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:network_image_mock/src/network_image_mock.dart' show image;
 import 'package:nock/nock.dart' show nock;
-import 'package:supabase/supabase.dart' show SupabaseClient;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Session, Supabase, SupabaseClient;
 
 import '../test/geolocator_platform.dart' show MockGeolocatorPlatform;
 import '../test/widget_test.dart' show accessToken;
@@ -28,6 +30,12 @@ var log = Logger();
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
       as IntegrationTestWidgetsFlutterBinding;
+
+  setUpAll(() {
+    Supabase.initialize(url: "https://supabase", anonKey: "");
+    Supabase.instance.client.auth.currentSession =
+        Session(accessToken: accessToken());
+  });
 
   setUp(() {
     nock.init();
