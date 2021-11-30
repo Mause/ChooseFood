@@ -2,7 +2,8 @@ import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
     show BasePage, TypedExecuteExtension, getAccessToken;
-import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
+import '../common/auth_required_state.dart' show AuthRequiredState;
+import '../main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -62,7 +63,7 @@ class FriendsSessions extends StatefulWidget {
 List<Map<String, dynamic>> toMapList(dynamic data) =>
     (data as List<dynamic>).map((e) => e as Map<String, dynamic>).toList();
 
-class FriendsSessionsState extends State<FriendsSessions> {
+class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
   SupabaseClient supabaseClient = Get.find();
 
   List<Users>? yourFriends;
@@ -72,9 +73,7 @@ class FriendsSessionsState extends State<FriendsSessions> {
   num? numberOfContacts;
 
   @override
-  void initState() {
-    super.initState();
-
+  void onAuthenticated(session) {
     reload();
   }
 

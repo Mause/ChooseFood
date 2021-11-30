@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart'
         Skip,
         WidgetTester,
         expect,
+        setUpAll,
         find,
         findsNothing,
         findsOneWidget,
@@ -34,6 +35,7 @@ import 'package:network_image_mock/network_image_mock.dart'
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
 import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
@@ -86,6 +88,12 @@ void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
   late supabase.SupabaseClient supabaseClient;
+
+  setUpAll(() {
+    Supabase.initialize(url: "https://supabase", anonKey: "");
+    Supabase.instance.client.auth.currentSession =
+        Session(accessToken: accessToken());
+  });
 
   setUp(() {
     nock.init();
