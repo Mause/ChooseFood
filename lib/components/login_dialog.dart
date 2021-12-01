@@ -141,7 +141,7 @@ class _LoginDialogState extends State<LoginDialog> {
               steps: steps,
               onStepContinue: () async {
                 if (currentStep == 2) {
-                  Get.to(const MyHomePage(title: 'title'));
+                  Get.toNamed(MyHomePage.routeName);
                 } else {
                   context.progress("Loading");
                   var _formKey = keys[currentStep];
