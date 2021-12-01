@@ -86,8 +86,10 @@ void setupLibPhoneNumber(WidgetTester tester) =>
 
 void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {
   flutter_test.testWidgets(name, (tester) async {
+    // ignore: avoid_print
     print("::group::$name");
     await fn();
+    // ignore: avoid_print
     print("::endgroup::");
   });
 }
