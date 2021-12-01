@@ -1,6 +1,8 @@
+import 'dart:async' show Future;
 import 'dart:convert' show base64Url, json, jsonEncode;
 import 'dart:io' show Platform;
 
+import 'package:fake_async/fake_async.dart' show fakeAsync;
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
@@ -19,7 +21,6 @@ import 'package:flutter_test/flutter_test.dart'
         findsOneWidget,
         findsWidgets,
         hasLength,
-        isNull,
         setUp,
         tearDown,
         testWidgets;
@@ -35,7 +36,8 @@ import 'package:network_image_mock/network_image_mock.dart'
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
-import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Session, Supabase, AuthChangeEvent;
 import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
@@ -66,6 +68,10 @@ void setupContacts(WidgetTester tester,
       }
     });
 
+void setupUniLinks(WidgetTester tester) =>
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('uni_links/events'), (message) => null);
+
 void setupLibPhoneNumber(WidgetTester tester) =>
     tester.binding.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
@@ -89,11 +95,22 @@ void main() {
   late NockScope mapsScope;
   late supabase.SupabaseClient supabaseClient;
 
-  setUpAll(() {
-    Supabase.initialize(url: "https://supabase", anonKey: "");
+  setUpAll(() async {
+    await Supabase.initialize(url: "https://supabase", anonKey: "");
     Supabase.instance.client.auth.currentSession =
         Session(accessToken: accessToken());
   });
+
+  Future<void> triggerLogin(tester, AuthChangeEvent event) async {
+    var auth = Supabase.instance.client.auth;
+    var currentSession = auth.currentSession;
+    fakeAsync((fake) {
+      auth.stateChangeEmitters.forEach((k, v) => v.callback(
+          event, event == AuthChangeEvent.signedIn ? currentSession : null));
+      fake.flushMicrotasks();
+    });
+    await tester.pumpAndSettle();
+  }
 
   setUp(() {
     nock.init();
@@ -207,6 +224,9 @@ void main() {
     }).reply(200, [{}]);
 
     await tester.pumpWidget(const MyApp());
+    await triggerLogin(tester, AuthChangeEvent.userUpdated);
+    await triggerLogin(tester, AuthChangeEvent.signedIn);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
 
     await tester
         .tap(find.widgetWithText(NavigationDestination, 'Friends sessions'))
@@ -229,6 +249,7 @@ void main() {
 
   testWidgets('Login dialog', (WidgetTester tester) async {
     setupLibPhoneNumber(tester);
+    setupUniLinks(tester);
     Get.deleteAll();
     supabaseClient.auth.currentSession = null;
     Get.put(supabaseClient);
@@ -252,10 +273,7 @@ void main() {
             {"error": null, "access_token": accessToken(), 'expires_in': 3600});
 
     await tester.pumpWidget(const MyApp());
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
-    await tester.pumpAndSettle();
-
-    expect(await tester.takeException(), isNull);
+    await triggerLogin(tester, AuthChangeEvent.signedOut);
 
     Finder inputField = find.byKey(const Key('phone'));
     expect(inputField, findsOneWidget);
@@ -281,7 +299,7 @@ void main() {
             .map((e) => e.child as Text)
             .map((e) => e.data)
             .toList(),
-        hasLength(9));
+        hasLength(6));
 
     await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(0));
     await tester.pumpAndSettle();
