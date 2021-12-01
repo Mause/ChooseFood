@@ -25,8 +25,6 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         Widget,
-        WidgetsBinding,
-        WidgetsFlutterBinding,
         Wrap,
         runApp;
 import 'package:geolocator/geolocator.dart'
@@ -62,21 +60,22 @@ import 'sessions.dart' show Sessions;
 var log = Logger();
 
 Future<void> main() async {
-  var isTesting = WidgetsBinding.instance is! WidgetsFlutterBinding;
-  if (!isTesting) {
-    await Supabase.initialize(
-        url: EnvironmentConfig.supabaseUrl,
-        anonKey: EnvironmentConfig.supabaseKey);
-  }
   if (EnvironmentConfig.sentryDsn == 'https://...') {
     log.w("Running without sentry");
-    runApp(const MyApp());
+    await _runApp();
   } else {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
       options.beforeSend = beforeSend;
-    }, appRunner: () => runApp(const MyApp()));
+    }, appRunner: _runApp);
   }
+}
+
+Future<void> _runApp() async {
+  await Supabase.initialize(
+      url: EnvironmentConfig.supabaseUrl,
+      anonKey: EnvironmentConfig.supabaseKey);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
