@@ -8,6 +8,7 @@ import 'package:choose_food/generated_code/openapi.models.swagger.dart'
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:flutter_test/flutter_test.dart'
     show
         Skip,
@@ -21,8 +22,7 @@ import 'package:flutter_test/flutter_test.dart'
         hasLength,
         isNull,
         setUp,
-        tearDown,
-        testWidgets;
+        tearDown;
 import 'package:flutter_test/src/finders.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
@@ -83,6 +83,14 @@ void setupLibPhoneNumber(WidgetTester tester) =>
           log.e(methodCall);
       }
     });
+
+void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {
+  flutter_test.testWidgets(name, (tester) async {
+    print("::group::$name");
+    await fn();
+    print("::endgroup::");
+  });
+}
 
 void main() {
   late NockScope supabaseScope;
