@@ -62,6 +62,12 @@ import 'sessions.dart' show Sessions;
 var log = Logger();
 
 Future<void> main() async {
+  var isTesting = WidgetsBinding.instance is! WidgetsFlutterBinding;
+  if (!isTesting) {
+    await Supabase.initialize(
+        url: EnvironmentConfig.supabaseUrl,
+        anonKey: EnvironmentConfig.supabaseKey);
+  }
   if (EnvironmentConfig.sentryDsn == 'https://...') {
     log.w("Running without sentry");
     runApp(const MyApp());
@@ -81,12 +87,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
 
-    var isTesting = WidgetsBinding.instance is! WidgetsFlutterBinding;
-    if (!isTesting) {
-      Supabase.initialize(
-          url: EnvironmentConfig.supabaseUrl,
-          anonKey: EnvironmentConfig.supabaseKey);
-    }
     Get.put(Supabase.instance.client);
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
