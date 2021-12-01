@@ -88,7 +88,7 @@ void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {
   flutter_test.testWidgets(name, (tester) async {
     // ignore: avoid_print
     print("::group::$name");
-    await fn();
+    await fn(tester);
     // ignore: avoid_print
     print("::endgroup::");
   });
