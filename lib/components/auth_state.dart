@@ -1,7 +1,7 @@
-import 'package:choose_food/components/login_dialog.dart';
-import 'package:choose_food/main.dart';
+import 'package:choose_food/components/login_dialog.dart' show LoginDialog;
+import 'package:choose_food/main.dart' show MyHomePage;
 import 'package:flutter/widgets.dart' show Navigator, StatefulWidget;
-import 'package:get/get.dart';
+import 'package:get/get.dart' show Get, ExtensionSnackbar;
 import 'package:supabase_flutter/supabase_flutter.dart'
     show Session, SupabaseAuthState;
 
