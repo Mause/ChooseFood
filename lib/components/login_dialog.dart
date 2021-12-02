@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:choose_food/main.dart' show MyHomePage;
 import 'package:flutter/material.dart'
     show
+        AppBar,
         InputDecoration,
         ListTile,
         Scaffold,
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart'
     show
         AutovalidateMode,
-        Axis,
         BuildContext,
         Column,
         Form,
@@ -22,8 +22,6 @@ import 'package:flutter/widgets.dart'
         GlobalKey,
         Key,
         ListView,
-        SingleChildScrollView,
-        SizedBox,
         State,
         StatefulWidget,
         Text,
@@ -108,7 +106,7 @@ class _LoginDialogState extends State<LoginDialog> {
     var steps = [
       buildStep(
           'Phone',
-          ListView(children: [
+          ListView(shrinkWrap: true, children: [
             const ListTile(
                 title: Text(
                     'To login, please enter your mobile phone number below')),
@@ -124,6 +122,7 @@ class _LoginDialogState extends State<LoginDialog> {
       buildStep(
           'Login code',
           ListView(
+            shrinkWrap: true,
             children: [
               const ListTile(
                   title: Text(
@@ -147,26 +146,24 @@ class _LoginDialogState extends State<LoginDialog> {
     ];
 
     return Scaffold(
-        body: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox.square(
-          child: Stepper(
-              currentStep: currentStep,
-              steps: steps,
-              onStepContinue: () async {
-                if (currentStep == 2) {
-                  Get.toNamed(MyHomePage.routeName);
-                } else {
-                  context.progress("Loading");
-                  var _formKey = keys[currentStep];
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                  }
-                  context.loaderOverlay.hide();
+        appBar: AppBar(
+          title: const Text('Please login'),
+        ),
+        body: Stepper(
+            currentStep: currentStep,
+            steps: steps,
+            onStepContinue: () async {
+              if (currentStep == 2) {
+                Get.toNamed(MyHomePage.routeName);
+              } else {
+                context.progress("Loading");
+                var _formKey = keys[currentStep];
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
                 }
-              }),
-          dimension: 400),
-    ));
+                context.loaderOverlay.hide();
+              }
+            }));
   }
 
   String? valid(String? value) {
