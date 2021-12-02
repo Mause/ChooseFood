@@ -4,6 +4,7 @@ import 'package:choose_food/main.dart' show MyHomePage;
 import 'package:flutter/material.dart'
     show
         InputDecoration,
+        ListTile,
         Scaffold,
         Step,
         Stepper,
@@ -20,6 +21,7 @@ import 'package:flutter/widgets.dart'
         FormState,
         GlobalKey,
         Key,
+        ListView,
         SingleChildScrollView,
         SizedBox,
         State,
@@ -106,24 +108,37 @@ class _LoginDialogState extends State<LoginDialog> {
     var steps = [
       buildStep(
           'Phone',
-          InternationalPhoneNumberInput(
-            key: const Key('phone'),
-            onInputChanged: (PhoneNumber value) {},
-            onSaved: (PhoneNumber phoneNumber) async =>
-                await stepOne(phoneNumber.phoneNumber!),
-            inputDecoration: const InputDecoration(labelText: 'Phone number'),
-          ),
+          ListView(children: [
+            const ListTile(
+                title: Text(
+                    'To login, please enter your mobile phone number below')),
+            InternationalPhoneNumberInput(
+              key: const Key('phone'),
+              onInputChanged: (PhoneNumber value) {},
+              onSaved: (PhoneNumber phoneNumber) async =>
+                  await stepOne(phoneNumber.phoneNumber!),
+              inputDecoration: const InputDecoration(labelText: 'Phone number'),
+            )
+          ]),
           keys[0]),
       buildStep(
           'Login code',
-          TextFormField(
-              key: const Key('login-code'),
-              validator: valid,
-              autovalidateMode: AutovalidateMode.always,
-              onSaved: (String? loginCode) async => await stepTwo(loginCode!),
-              decoration: const InputDecoration(
-                labelText: 'Login code',
-              )),
+          ListView(
+            children: [
+              const ListTile(
+                  title: Text(
+                      'You have been sent a text message with a 6 digit code, please enter it below')),
+              TextFormField(
+                  key: const Key('login-code'),
+                  validator: valid,
+                  autovalidateMode: AutovalidateMode.always,
+                  onSaved: (String? loginCode) async =>
+                      await stepTwo(loginCode!),
+                  decoration: const InputDecoration(
+                    labelText: 'Login code',
+                  ))
+            ],
+          ),
           keys[1]),
       Step(
           title: Text("Welcome ${getAccessToken()?.phone}"),
