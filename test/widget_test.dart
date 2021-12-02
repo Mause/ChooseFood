@@ -303,7 +303,7 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(1));
     await tester.pumpAndSettle();
 
-    expect(find.text("Welcome!"), findsWidgets);
+    expect(find.text('You are now logged in. Eat well 💜'), findsWidgets);
   });
 
   group('golden tests', () {
