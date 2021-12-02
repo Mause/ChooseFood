@@ -126,10 +126,9 @@ class _LoginDialogState extends State<LoginDialog> {
               )),
           keys[1]),
       Step(
-          title: const Text('Welcome!'),
-          content: Column(children: [
-            Text("welcome!: ${getAccessToken()?.phone}"),
-          ]))
+          title: Text("Welcome ${getAccessToken()?.phone}"),
+          content: Column(
+              children: const [Text('You are now logged in. Eat well 💜')]))
     ];
 
     return Scaffold(
