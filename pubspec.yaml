@@ -64,16 +64,16 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
-  test: ^1.17.12
-  build_runner: ^2.1.4
-  mockito: ^5.0.16
-  network_image_mock: ^2.0.1
-  nock: ^1.2.0
+  flutter_lints: 1.0.4
+  test: 1.17.12
+  build_runner: 2.1.5
+  mockito: 5.0.16
+  network_image_mock: 2.0.1
+  nock: 1.2.0
   swagger_dart_code_generator: 2.2.7
-  msix: ^2.6.2
-  golden_toolkit: ^0.12.0
-  sentry_dart_plugin: ^1.0.0-beta.1
+  msix: 2.6.5
+  golden_toolkit: 0.12.0
+  sentry_dart_plugin: 1.0.0-beta.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
