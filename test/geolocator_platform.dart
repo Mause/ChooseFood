@@ -9,10 +9,7 @@ class MockGeolocatorPlatform extends GeolocatorPlatform {
   Future<bool> isLocationServiceEnabled() => Future.value(true);
 
   @override
-  Future<Position> getCurrentPosition(
-          {LocationAccuracy desiredAccuracy = LocationAccuracy.best,
-          bool forceAndroidLocationManager = false,
-          Duration? timeLimit}) =>
+  Future<Position> getCurrentPosition({LocationSettings? locationSettings}) =>
       Future.value(Position(
           longitude: -31.9509882,
           latitude: 115.8577778,

@@ -28,7 +28,7 @@ import 'package:flutter/widgets.dart'
         Wrap,
         runApp;
 import 'package:geolocator/geolocator.dart'
-    show GeolocatorPlatform, LocationPermission, Position;
+    show GeolocatorPlatform, LocationPermission, LocationSettings, Position;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
@@ -228,7 +228,8 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
     Position geoposition;
     try {
       geoposition = await geolocatorPlatform.getCurrentPosition(
-          timeLimit: const Duration(seconds: 10));
+          locationSettings:
+              const LocationSettings(timeLimit: Duration(seconds: 10)));
     } catch (e, s) {
       throw await makeError("Location request timed out", e: e, s: s);
     }
