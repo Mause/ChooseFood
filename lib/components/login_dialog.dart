@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:choose_food/main.dart' show MyHomePage;
 import 'package:flutter/material.dart'
     show
-        AlertDialog,
         InputDecoration,
+        Scaffold,
         Step,
         Stepper,
         TextFormField,
@@ -132,8 +132,8 @@ class _LoginDialogState extends State<LoginDialog> {
           ]))
     ];
 
-    return AlertDialog(
-        content: SingleChildScrollView(
+    return Scaffold(
+        body: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox.square(
           child: Stepper(
