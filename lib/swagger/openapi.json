@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "PostgREST API",
-    "version": "9.0.0",
-    "description": "standard public schema"
+    "description": "standard public schema",
+    "version": "8.0.0.20211102 (pre-release)"
   },
   "host": "0.0.0.0:3000",
   "basePath": "/",
@@ -759,21 +759,21 @@
         ],
         "parameters": [
           {
+            "in": "body",
+            "name": "args",
             "required": true,
             "schema": {
+              "type": "object",
               "required": [
                 "phones"
               ],
               "properties": {
                 "phones": {
-                  "format": "character varying[]",
-                  "type": "string"
+                  "type": "string",
+                  "format": "character varying[]"
                 }
-              },
-              "type": "object"
-            },
-            "name": "args",
-            "in": "body"
+              }
+            }
           },
           {
             "$ref": "#/parameters/preferParams"
@@ -796,31 +796,32 @@
       ],
       "properties": {
         "id": {
+          "type": "integer",
           "format": "bigint",
-          "description": "Note:\nThis is a Primary Key.<pk/>",
-          "type": "integer"
+          "description": "Note:\nThis is a Primary Key.<pk/>"
         },
         "name": {
+          "type": "string",
           "format": "text",
-          "description": "Full country name.",
-          "type": "string"
+          "description": "Full country name."
         },
         "iso2": {
+          "type": "string",
           "format": "text",
-          "description": "ISO 3166-1 alpha-2 code.",
-          "type": "string"
+          "description": "ISO 3166-1 alpha-2 code."
         },
         "iso3": {
+          "type": "string",
           "format": "text",
-          "description": "ISO 3166-1 alpha-3 code.",
-          "type": "string"
+          "description": "ISO 3166-1 alpha-3 code."
         },
         "local_name": {
+          "type": "string",
           "format": "text",
-          "description": "Local variation of the name.",
-          "type": "string"
+          "description": "Local variation of the name."
         },
         "continent": {
+          "type": "string",
           "format": "public.continents",
           "enum": [
             "Africa",
@@ -830,8 +831,7 @@
             "Oceania",
             "North America",
             "South America"
-          ],
-          "type": "string"
+          ]
         }
       },
       "type": "object"
@@ -845,32 +845,32 @@
       ],
       "properties": {
         "id": {
+          "type": "integer",
           "format": "bigint",
-          "description": "Note:\nThis is a Primary Key.<pk/>",
-          "type": "integer"
+          "description": "Note:\nThis is a Primary Key.<pk/>"
         },
         "created_at": {
+          "type": "string",
           "format": "timestamp with time zone",
-          "default": "now()",
-          "type": "string"
+          "default": "now()"
         },
         "sessionId": {
+          "type": "string",
           "format": "uuid",
-          "description": "Note:\nThis is a Foreign Key to `session.id`.<fk table='session' column='id'/>",
-          "type": "string"
+          "description": "Note:\nThis is a Foreign Key to `session.id`.<fk table='session' column='id'/>"
         },
         "decision": {
-          "format": "boolean",
-          "type": "boolean"
+          "type": "boolean",
+          "format": "boolean"
         },
         "placeReference": {
-          "format": "character varying",
-          "type": "string"
+          "type": "string",
+          "format": "character varying"
         },
         "participantId": {
+          "type": "integer",
           "format": "bigint",
-          "description": "Note:\nThis is a Foreign Key to `participant.id`.<fk table='participant' column='id'/>",
-          "type": "integer"
+          "description": "Note:\nThis is a Foreign Key to `participant.id`.<fk table='participant' column='id'/>"
         }
       },
       "type": "object"
@@ -883,24 +883,24 @@
       ],
       "properties": {
         "id": {
+          "type": "integer",
           "format": "bigint",
-          "description": "Note:\nThis is a Primary Key.<pk/>",
-          "type": "integer"
+          "description": "Note:\nThis is a Primary Key.<pk/>"
         },
         "created_at": {
+          "type": "string",
           "format": "timestamp with time zone",
-          "default": "now()",
-          "type": "string"
+          "default": "now()"
         },
         "sessionId": {
+          "type": "string",
           "format": "uuid",
-          "description": "Note:\nThis is a Foreign Key to `session.id`.<fk table='session' column='id'/>",
-          "type": "string"
+          "description": "Note:\nThis is a Foreign Key to `session.id`.<fk table='session' column='id'/>"
         },
         "userId": {
+          "type": "string",
           "format": "uuid",
-          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
-          "type": "string"
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>"
         }
       },
       "type": "object"
@@ -912,19 +912,19 @@
       ],
       "properties": {
         "id": {
+          "type": "string",
           "format": "uuid",
-          "description": "Note:\nThis is a Primary Key.<pk/>",
           "default": "extensions.uuid_generate_v4()",
-          "type": "string"
+          "description": "Note:\nThis is a Primary Key.<pk/>"
         },
         "created_at": {
+          "type": "string",
           "format": "timestamp with time zone",
-          "default": "now()",
-          "type": "string"
+          "default": "now()"
         },
         "concludedTime": {
-          "format": "timestamp with time zone",
-          "type": "string"
+          "type": "string",
+          "format": "timestamp with time zone"
         },
         "point": {
           "$ref": "#/definitions/Point"
@@ -935,23 +935,23 @@
     "users": {
       "properties": {
         "id": {
+          "type": "string",
           "format": "uuid",
-          "description": "Note:\nThis is a Primary Key.<pk/>",
-          "type": "string"
+          "description": "Note:\nThis is a Primary Key.<pk/>"
         },
         "email": {
-          "format": "character varying",
+          "type": "string",
           "maxLength": 255,
-          "type": "string"
+          "format": "character varying"
         },
         "phone": {
-          "format": "character varying",
+          "type": "string",
           "maxLength": 15,
-          "type": "string"
+          "format": "character varying"
         },
         "name": {
-          "format": "character varying",
-          "type": "string"
+          "type": "string",
+          "format": "character varying"
         }
       },
       "type": "object"
@@ -982,32 +982,32 @@
       "description": "Preference",
       "required": false,
       "in": "header",
+      "type": "string",
       "enum": [
         "params=single-object"
-      ],
-      "type": "string"
+      ]
     },
     "preferReturn": {
       "name": "Prefer",
       "description": "Preference",
       "required": false,
       "in": "header",
+      "type": "string",
       "enum": [
         "return=representation",
         "return=minimal",
         "return=none"
-      ],
-      "type": "string"
+      ]
     },
     "preferCount": {
       "name": "Prefer",
       "description": "Preference",
       "required": false,
       "in": "header",
+      "type": "string",
       "enum": [
         "count=none"
-      ],
-      "type": "string"
+      ]
     },
     "select": {
       "name": "select",
@@ -1042,8 +1042,8 @@
       "description": "Limiting and Pagination",
       "required": false,
       "in": "header",
-      "default": "items",
-      "type": "string"
+      "type": "string",
+      "default": "items"
     },
     "offset": {
       "name": "offset",
@@ -1063,222 +1063,222 @@
       "name": "countries",
       "description": "countries",
       "required": false,
+      "in": "body",
       "schema": {
         "$ref": "#/definitions/countries"
-      },
-      "in": "body"
+      }
     },
     "rowFilter.countries.id": {
       "name": "id",
       "required": false,
-      "format": "bigint",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "bigint"
     },
     "rowFilter.countries.name": {
       "name": "name",
       "description": "Full country name.",
       "required": false,
-      "format": "text",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "text"
     },
     "rowFilter.countries.iso2": {
       "name": "iso2",
       "description": "ISO 3166-1 alpha-2 code.",
       "required": false,
-      "format": "text",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "text"
     },
     "rowFilter.countries.iso3": {
       "name": "iso3",
       "description": "ISO 3166-1 alpha-3 code.",
       "required": false,
-      "format": "text",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "text"
     },
     "rowFilter.countries.local_name": {
       "name": "local_name",
       "description": "Local variation of the name.",
       "required": false,
-      "format": "text",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "text"
     },
     "rowFilter.countries.continent": {
       "name": "continent",
       "required": false,
-      "format": "public.continents",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "public.continents"
     },
     "body.decision": {
       "name": "decision",
       "description": "decision",
       "required": false,
+      "in": "body",
       "schema": {
         "$ref": "#/definitions/decision"
-      },
-      "in": "body"
+      }
     },
     "rowFilter.decision.id": {
       "name": "id",
       "required": false,
-      "format": "bigint",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "bigint"
     },
     "rowFilter.decision.created_at": {
       "name": "created_at",
       "required": false,
-      "format": "timestamp with time zone",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "timestamp with time zone"
     },
     "rowFilter.decision.sessionId": {
       "name": "sessionId",
       "required": false,
-      "format": "uuid",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "uuid"
     },
     "rowFilter.decision.decision": {
       "name": "decision",
       "required": false,
-      "format": "boolean",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "boolean"
     },
     "rowFilter.decision.placeReference": {
       "name": "placeReference",
       "required": false,
-      "format": "character varying",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "character varying"
     },
     "rowFilter.decision.participantId": {
       "name": "participantId",
       "required": false,
-      "format": "bigint",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "bigint"
     },
     "body.participant": {
       "name": "participant",
       "description": "participant",
       "required": false,
+      "in": "body",
       "schema": {
         "$ref": "#/definitions/participant"
-      },
-      "in": "body"
+      }
     },
     "rowFilter.participant.id": {
       "name": "id",
       "required": false,
-      "format": "bigint",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "bigint"
     },
     "rowFilter.participant.created_at": {
       "name": "created_at",
       "required": false,
-      "format": "timestamp with time zone",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "timestamp with time zone"
     },
     "rowFilter.participant.sessionId": {
       "name": "sessionId",
       "required": false,
-      "format": "uuid",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "uuid"
     },
     "rowFilter.participant.userId": {
       "name": "userId",
       "required": false,
-      "format": "uuid",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "uuid"
     },
     "body.session": {
       "name": "session",
       "description": "session",
       "required": false,
+      "in": "body",
       "schema": {
         "$ref": "#/definitions/session"
-      },
-      "in": "body"
+      }
     },
     "rowFilter.session.id": {
       "name": "id",
       "required": false,
-      "format": "uuid",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "uuid"
     },
     "rowFilter.session.created_at": {
       "name": "created_at",
       "required": false,
-      "format": "timestamp with time zone",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "timestamp with time zone"
     },
     "rowFilter.session.concludedTime": {
       "name": "concludedTime",
       "required": false,
-      "format": "timestamp with time zone",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "timestamp with time zone"
     },
     "rowFilter.session.point": {
       "name": "point",
       "required": false,
-      "format": "extensions.geometry(Point,4326)",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "extensions.geometry(Point,4326)"
     },
     "body.users": {
       "name": "users",
       "description": "users",
       "required": false,
+      "in": "body",
       "schema": {
         "$ref": "#/definitions/users"
-      },
-      "in": "body"
+      }
     },
     "rowFilter.users.id": {
       "name": "id",
       "required": false,
-      "format": "uuid",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "uuid"
     },
     "rowFilter.users.email": {
       "name": "email",
       "required": false,
-      "format": "character varying",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "character varying"
     },
     "rowFilter.users.phone": {
       "name": "phone",
       "required": false,
-      "format": "character varying",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "character varying"
     },
     "rowFilter.users.name": {
       "name": "name",
       "required": false,
-      "format": "character varying",
       "in": "query",
-      "type": "string"
+      "type": "string",
+      "format": "character varying"
     }
   },
   "externalDocs": {
-    "description": "PostgREST Documentation",
-    "url": "https://postgrest.org/en/v9.0/api.html"
+    "url": "https://postgrest.org/en/v8.0/api.html",
+    "description": "PostgREST Documentation"
   }
 }
