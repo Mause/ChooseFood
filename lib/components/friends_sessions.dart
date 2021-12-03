@@ -37,7 +37,8 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart' show Get, Inst, ExtensionSnackbar;
 import 'package:google_maps_webservice/places.dart' show GoogleMapsPlaces;
 import 'package:intl_phone_number_input/intl_phone_number_input_test.dart';
-import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
+import 'package:json_annotation/json_annotation.dart'
+    show JsonSerializable, $checkedCreate;
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
