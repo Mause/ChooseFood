@@ -1,7 +1,8 @@
 import 'dart:convert' show jsonDecode;
 
 import 'package:flutter/services.dart' show ServicesBinding, rootBundle;
-import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
+import 'package:json_annotation/json_annotation.dart'
+    show JsonSerializable, $checkedCreate;
 import 'package:logger/logger.dart' show Logger;
 
 part 'config.g.dart';
