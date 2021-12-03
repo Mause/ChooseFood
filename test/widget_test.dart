@@ -8,7 +8,6 @@ import 'package:choose_food/generated_code/openapi.models.swagger.dart'
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:flutter_test/flutter_test.dart'
     show
         Skip,
@@ -20,6 +19,7 @@ import 'package:flutter_test/flutter_test.dart'
         findsOneWidget,
         findsWidgets,
         hasLength,
+        testWidgets,
         isNull,
         setUp,
         tearDown;
@@ -110,16 +110,6 @@ void setupLibPhoneNumber(WidgetTester tester) =>
           log.e(methodCall);
       }
     });
-
-void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {
-  flutter_test.testWidgets(name, (tester) async {
-    // ignore: avoid_print
-    print("::group::$name");
-    await fn(tester);
-    // ignore: avoid_print
-    print("::endgroup::");
-  });
-}
 
 void main() {
   late NockScope supabaseScope;
