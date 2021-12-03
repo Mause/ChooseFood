@@ -22,7 +22,6 @@ import 'package:flutter/widgets.dart'
         Key,
         ListBody,
         MainAxisAlignment,
-        Navigator,
         Row,
         SingleChildScrollView,
         State,
@@ -30,7 +29,7 @@ import 'package:flutter/widgets.dart'
         StatelessWidget,
         Text,
         Widget;
-import 'package:get/get.dart' show Get, Inst;
+import 'package:get/get.dart' show Get, Inst, GetNavigation;
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loader_overlay/loader_overlay.dart'
     show OverlayControllerWidgetExtension;
@@ -79,16 +78,16 @@ class _BasePage extends State<BasePage> {
     });
     switch (value) {
       case 0:
-        Navigator.pushNamed(context, MyHomePage.routeName);
+        Get.toNamed(MyHomePage.routeName);
         break;
       case 1:
-        Navigator.pushNamed(context, FriendsSessions.routeName);
+        Get.toNamed(FriendsSessions.routeName);
         break;
       case 2:
-        Navigator.pushNamed(context, HistoricalSessions.routeName);
+        Get.toNamed(HistoricalSessions.routeName);
         break;
       case 3:
-        Navigator.pushNamed(context, InfoPage.routeName);
+        Get.toNamed(InfoPage.routeName);
         break;
       default:
         log.e("fell through", value);
