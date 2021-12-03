@@ -65,7 +65,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: 1.0.4
-  test: 1.17.12
+  test: 1.19.5
   build_runner: 2.1.5
   mockito: 5.0.16
   network_image_mock: 2.0.1
