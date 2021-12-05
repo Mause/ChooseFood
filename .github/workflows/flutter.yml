@@ -11,6 +11,10 @@ on:
   pull_request:
     branches: [ main ]
 
+concurrency:
+  group: ci-tests-${{ github.ref }}-1
+  cancel-in-progress: true
+
 jobs:
   build:
     uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
