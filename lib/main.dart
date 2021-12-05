@@ -95,11 +95,12 @@ class MyApp extends StatelessWidget {
                 child: GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
-              home: const MyHomePage(title: title),
+              initialRoute: MyHomePage.routeName,
               navigatorObservers: [
                 SentryNavigatorObserver(),
               ],
               routes: {
+                MyHomePage.routeName: (context) =>  const MyHomePage(title: title),
                 LoginDialog.routeName: (context) => const LoginDialog(),
                 InfoPage.routeName: (context) => const InfoPage(),
                 FriendsSessions.routeName: (context) => const FriendsSessions(),
