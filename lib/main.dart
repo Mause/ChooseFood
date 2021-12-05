@@ -100,7 +100,8 @@ class MyApp extends StatelessWidget {
                 SentryNavigatorObserver(),
               ],
               routes: {
-                MyHomePage.routeName: (context) =>  const MyHomePage(title: title),
+                MyHomePage.routeName: (context) =>
+                    const MyHomePage(title: title),
                 LoginDialog.routeName: (context) => const LoginDialog(),
                 InfoPage.routeName: (context) => const InfoPage(),
                 FriendsSessions.routeName: (context) => const FriendsSessions(),
