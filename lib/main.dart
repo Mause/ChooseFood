@@ -37,6 +37,7 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
+import 'package:sentry_logging/sentry_logging.dart' show LoggingIntegration;
 import 'package:supabase_flutter/supabase_flutter.dart'
     show Supabase, SupabaseClient;
 
@@ -67,6 +68,7 @@ Future<void> main() async {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
       options.beforeSend = beforeSend;
+      options.addIntegration(LoggingIntegration());
     }, appRunner: _runApp);
   }
 }
