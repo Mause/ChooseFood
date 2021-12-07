@@ -83,7 +83,7 @@ class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
 
   Future<void> reload() async {
     context.progress("Loading...");
-    Future.wait([initSessions(), loadFriends()]).whenComplete(() {
+    await Future.wait([initSessions(), loadFriends()]).whenComplete(() {
       context.loaderOverlay.hide();
     });
   }

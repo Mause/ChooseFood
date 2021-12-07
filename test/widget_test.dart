@@ -168,7 +168,7 @@ void main() {
     supabaseScope.post("/rest/v1/participant",
         {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
 
-    Get.deleteAll();
+    await Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
     Get.put(supabaseClient);
 
@@ -260,7 +260,7 @@ void main() {
   testWidgets('Login dialog', (WidgetTester tester) async {
     setupLibPhoneNumber(tester);
     setupUniLinks(tester);
-    Get.deleteAll();
+    await Get.deleteAll();
     supabaseClient.auth.currentSession = null;
     Get.put(supabaseClient);
 
