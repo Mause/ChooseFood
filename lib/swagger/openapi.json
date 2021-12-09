@@ -3,7 +3,7 @@
   "info": {
     "title": "PostgREST API",
     "description": "standard public schema",
-    "version": "8.0.0.20211102 (pre-release)"
+    "version": "9.0.0 (c9f017c)"
   },
   "host": "0.0.0.0:3000",
   "basePath": "/",
@@ -1278,7 +1278,7 @@
     }
   },
   "externalDocs": {
-    "url": "https://postgrest.org/en/v8.0/api.html",
+    "url": "https://postgrest.org/en/v9.0/api.html",
     "description": "PostgREST Documentation"
   }
 }
