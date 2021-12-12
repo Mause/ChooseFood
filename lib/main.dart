@@ -164,11 +164,11 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
     }
 
     setState(() {
-      sessionId = response.datam.isEmpty ? null : response.datam[0].id;
+      sessionId = response.data!.isEmpty ? null : response.data![0].id;
     });
 
-    if (response.datam.isNotEmpty) {
-      await loadPlaces(toLocation(response.datam[0].point!));
+    if (response.data!.isNotEmpty) {
+      await loadPlaces(toLocation(response.data![0].point!));
     } else {
       context.loaderOverlay.hide();
     }
@@ -266,7 +266,7 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
       throw ArgumentError(response.error);
     }
 
-    var session = response.data[0];
+    var session = response.data![0];
 
     participant = await Sessions().joinSession(session, getAccessToken()!);
 

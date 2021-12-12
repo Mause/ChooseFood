@@ -36,12 +36,7 @@ import 'package:loader_overlay/loader_overlay.dart'
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart' show Sentry;
 import 'package:supabase/supabase.dart'
-    show
-        PostgrestBuilder,
-        PostgrestError,
-        PostgrestResponse,
-        SupabaseClient,
-        User;
+    show PostgrestBuilder, PostgrestResponse, SupabaseClient, User;
 
 import 'components/friends_sessions.dart' show FriendsSessions;
 import 'components/historical_sessions.dart' show HistoricalSessions;
@@ -142,9 +137,14 @@ class _BasePage extends State<BasePage> {
   }
 }
 
-Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
+Future<PostgrestResponse<List<T>>> execute<T>(PostgrestBuilder builder,
     T Function(Map<String, dynamic> e) fromJson) async {
-  var response = await builder.execute();
+  var response = await builder
+      .withConverter<List<T>>((data) => ((data as List<dynamic>?) ?? [])
+          .map((e) => e as Map<String, dynamic>)
+          .map((e) => fromJson(e))
+          .toList())
+      .execute();
 
   if (response.error != null) {
     var message = "Failed to request ${builder.method} ${builder.url}";
@@ -152,32 +152,14 @@ Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
     await Sentry.captureException(response.error, hint: message);
   }
 
-  return MyPostgrestResponse(
-      datam: ((response.data as List<dynamic>?) ?? [])
-          .map((e) => e as Map<String, dynamic>)
-          .map((e) => fromJson(e))
-          .toList(),
-      count: response.count,
-      status: response.status,
-      error: response.error);
+  return response;
 }
 
 extension TypedExecuteExtension on PostgrestBuilder {
-  Future<MyPostgrestResponse<T>> typedExecute<T>(
+  Future<PostgrestResponse<List<T>>> typedExecute<T>(
       T Function(Map<String, dynamic> e) fromJson) async {
-    return execute<T>(this, fromJson);
+    return await execute<T>(this, fromJson);
   }
-}
-
-class MyPostgrestResponse<T> extends PostgrestResponse {
-  @override
-  get data => datam;
-
-  List<T> datam;
-
-  MyPostgrestResponse(
-      {required this.datam, int? count, PostgrestError? error, int? status})
-      : super(count: count, error: error, status: status);
 }
 
 Widget Function(BuildContext) makeErrorDialog(String error,
