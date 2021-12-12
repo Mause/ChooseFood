@@ -2,12 +2,12 @@ import 'dart:async' show Future;
 import 'dart:convert' show base64Url, json, jsonEncode;
 import 'dart:io' show Platform;
 
-import 'package:fake_async/fake_async.dart' show fakeAsync;
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
 import 'package:choose_food/main.dart';
+import 'package:fake_async/fake_async.dart' show fakeAsync;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
@@ -133,6 +133,14 @@ void main() {
         Session(accessToken: accessToken());
   });
 
+  void initialRequest(count) {
+    for (var _ in Iterable.generate(count)) {
+      supabaseScope
+          .get("/rest/v1/session?select=%2A&concludedTime=is.null")
+          .reply(200, []);
+    }
+  }
+
   Future<void> triggerLogin(tester, AuthChangeEvent event) async {
     var auth = Supabase.instance.client.auth;
     var currentSession = auth.currentSession;
@@ -148,9 +156,7 @@ void main() {
     nock.init();
     supabaseScope = nock("https://supabase");
     mapsScope = nock("https://maps.googleapis.com");
-    supabaseScope
-        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
-        .reply(200, []);
+    initialRequest(3);
     supabaseClient = supabase.SupabaseClient("https://supabase", "");
     supabaseClient.auth.setAuth(accessToken());
   });
@@ -196,6 +202,7 @@ void main() {
     Get.put(supabaseClient);
 
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
     expect(find.byType(Card), findsNothing);
 
@@ -251,6 +258,9 @@ void main() {
     supabaseScope
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
+    supabaseScope
+        .get("/rest/v1/participant?select=%2A&userId=in.%28%22null%22%29")
+        .reply(200, []);
 
     supabaseScope.post("/rest/v1/rpc/get_matching_users", {
       "phones": [phone]
@@ -364,6 +374,9 @@ void main() {
       supabaseScope
           .get("/rest/v1/participant?select=%2A&userId=in.%28%29")
           .reply(200, []);
+      supabaseScope.post("/rest/v1/rpc/get_matching_users", {
+        "phones": [null]
+      }).reply(200, [{}]);
 
       var goldens = GoldenBuilder.column(
           wrap: (widget) => Container(
