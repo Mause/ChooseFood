@@ -55,38 +55,60 @@ String accessToken({String role = "authenticated"}) =>
 
 void setupContacts(WidgetTester tester,
         {List<Map<String, dynamic>>? contacts}) =>
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('github.com/QuisApp/flutter_contacts'),
-        (message) async {
-      switch (message.method) {
+    handler(tester, 'github.com/QuisApp/flutter_contacts',
+        (method, args) async {
+      switch (method) {
         case "requestPermission":
           return true;
         case "select":
           return contacts ?? [];
         default:
-          log.e(message);
+          log.e(method);
       }
     });
 
-void setupUniLinks(WidgetTester tester) =>
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('uni_links/events'), (message) => null);
+void setupUniLinks(WidgetTester tester) {
+  handler(tester, 'uni_links/events', (method, args) async {
+    switch (method) {
+      case "listen":
+        return null;
+      case "cancel":
+        return null;
+      default:
+        log.e(method);
+    }
+  });
+
+  handler(tester, 'uni_links/messages', (method, args) {
+    switch (method) {
+      case "getInitialLink":
+        return null;
+      default:
+        log.e(method);
+    }
+  });
+}
+
+void handler(flutter_test.WidgetTester tester, String channel,
+    Future<Object?>? Function(String, dynamic) callback) {
+  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      MethodChannel(channel),
+      (message) => callback(message.method, message.arguments));
+}
 
 void setupLibPhoneNumber(WidgetTester tester) =>
-    tester.binding.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
-            (MethodCall methodCall) async {
-      switch (methodCall.method) {
+    handler(tester, 'plugin.libphonenumber', (method, args) async {
+      switch (method) {
         case "isValidPhoneNumber":
           return true;
         case "formatAsYouType":
-          return methodCall.arguments['phoneNumber'];
+          return args['phoneNumber'];
         case "normalizePhoneNumber":
-          return methodCall.arguments['phoneNumber'];
+          return args['phoneNumber'];
         case "getRegionInfo":
           return {};
         default:
-          log.e(methodCall);
+          log.e(method);
       }
     });
 
@@ -137,6 +159,7 @@ void main() {
   });
 
   testWidgets('Places load', (tester) async {
+    setupUniLinks(tester);
     var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
       "point": {
