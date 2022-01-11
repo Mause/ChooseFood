@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  flutter_facebook_auth: 3.5.7
+  flutter_facebook_auth: 4.0.0
   logger: 1.1.0
   google_maps_webservice: 0.0.20-nullsafety.5
   geolocator: 8.0.1
@@ -48,7 +48,7 @@ dependencies:
   get: 4.6.1
   supabase_flutter: 0.2.9
   intl_phone_number_input: 0.7.0+2
-  flutter_contacts: 1.1.1+2
+  flutter_contacts: 1.1.2
   jwt_decode: 0.3.1
   sentry_logging: 6.2.2
 
@@ -71,8 +71,8 @@ dev_dependencies:
   mockito: 5.0.17
   network_image_mock: 2.0.1
   nock: 1.2.0
-  swagger_dart_code_generator: 2.3.2
-  msix: 2.6.7
+  swagger_dart_code_generator: 2.3.4
+  msix: 2.8.1
   golden_toolkit: 0.12.0
   sentry_dart_plugin: 1.0.0-beta.1
 
