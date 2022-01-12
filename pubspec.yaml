@@ -54,7 +54,7 @@ dependencies:
   material_you_colours:
     git:
       url: https://github.com/Mause/material_you_colours
-      ref: bf92cd1
+      ref: 9bec0cb3
 
 dev_dependencies:
   flutter_test:
