@@ -568,7 +568,7 @@ packages:
     description:
       path: "."
       ref: bf92cd1
-      resolved-ref: bf92cd146c98bc4908ed4c22a293df2ae2723f7a
+      resolved-ref: 9bec0cb305124ef7f4e350627f01bf1e6cd6396f
       url: "https://github.com/Mause/material_you_colours"
     source: git
     version: "0.0.1"
