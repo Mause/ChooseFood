@@ -40,6 +40,33 @@ import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
+List<MapEntry<String, String>> getColours(String prefix) => {
+      '${prefix}_100': '000000000',
+      '${prefix}_50': '000000000',
+      '${prefix}_100': '000000000',
+      '${prefix}_200': '000000000',
+      '${prefix}_300': '000000000',
+      '${prefix}_400': '000000000',
+      '${prefix}_500': '000000000',
+      '${prefix}_600': '000000000',
+      '${prefix}_700': '000000000',
+      '${prefix}_800': '000000000',
+      '${prefix}_900': '000000000',
+    }.entries.toList();
+
+void setupColours(WidgetTester tester) => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('material_you_colours'),
+            (message) async {
+      switch (message.method) {
+        case "getMaterialYouColours":
+          return Map.fromEntries(getColours('system_accent1') +
+              getColours('system_accent2') +
+              getColours('system_accent3') +
+              getColours('system_neutral1') +
+              getColours('system_neutral2'));
+      }
+    });
+
 String accessToken({String role = "authenticated"}) =>
     "ey." +
     base64Url.encode(jsonEncode({
@@ -120,6 +147,7 @@ void main() {
   });
 
   testWidgets('Places load', (tester) async {
+    setupColours(tester);
     var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
       "point": {
