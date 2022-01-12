@@ -257,7 +257,7 @@ packages:
       name: flutter_contacts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1+2"
+    version: "1.1.2"
   flutter_driver:
     dependency: "direct dev"
     description: flutter
@@ -269,21 +269,21 @@ packages:
       name: flutter_facebook_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.5.7"
+    version: "4.0.0"
   flutter_facebook_auth_platform_interface:
     dependency: transitive
     description:
       name: flutter_facebook_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.7.1"
+    version: "3.0.1"
   flutter_facebook_auth_web:
     dependency: transitive
     description:
       name: flutter_facebook_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.0+2"
+    version: "3.0.0+1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -432,6 +432,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   injector:
     dependency: transitive
     description:
@@ -590,7 +597,7 @@ packages:
       name: msix
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.7"
+    version: "2.8.1"
   network_image_mock:
     dependency: "direct dev"
     description:
@@ -695,28 +702,35 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   path_provider_macos:
     dependency: transitive
     description:
       name: path_provider_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   path_provider_platform_interface:
     dependency: transitive
     description:
       name: path_provider_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   path_provider_windows:
     dependency: transitive
     description:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.4.0"
   platform:
     dependency: transitive
     description:
@@ -730,7 +744,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.2"
   pool:
     dependency: transitive
     description:
@@ -772,7 +786,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.12+1"
+    version: "0.1.13"
   recase:
     dependency: transitive
     description:
@@ -931,7 +945,7 @@ packages:
       name: swagger_dart_code_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.2"
+    version: "2.3.4"
   sync_http:
     dependency: transitive
     description:
@@ -1022,21 +1036,21 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.17"
+    version: "6.0.18"
   url_launcher_android:
     dependency: transitive
     description:
       name: url_launcher_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.13"
+    version: "6.0.14"
   url_launcher_ios:
     dependency: transitive
     description:
       name: url_launcher_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.13"
+    version: "6.0.14"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1057,14 +1071,14 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   url_launcher_web:
     dependency: transitive
     description:
       name: url_launcher_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.6"
   url_launcher_windows:
     dependency: transitive
     description:
@@ -1135,6 +1149,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.3.1"
   yaml:
     dependency: transitive
     description:
