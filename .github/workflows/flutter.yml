@@ -36,7 +36,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: beta
       - name: Install dependencies
@@ -84,7 +84,7 @@ jobs:
              --ks-pass pass:${{ secrets.KEY_STORE_PASSWORD}} \
              --key-pass pass:${{ secrets.KEY_PASSWORD }}
           unzip apks.apks
-          mv universal.apk choose-food-1.0.0+${{ github.run_number }}.apk
+          mv universal.apk me.mause.choosefood_${{ github.run_number }}.apk
           find . -name "*.apk" -exec echo "APK: {}" \; -exec sh -c 'keytool -printcert -jarfile "{}"' \;
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -129,7 +129,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
 
@@ -185,7 +185,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
 
@@ -349,7 +349,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
 
