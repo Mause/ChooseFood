@@ -1,18 +1,20 @@
 import 'dart:convert' show base64Url, json, jsonEncode;
+import 'dart:io' show Platform;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
-import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:flutter_test/flutter_test.dart'
     show
         Skip,
         WidgetTester,
         expect,
+        setUpAll,
         find,
         findsNothing,
         findsOneWidget,
@@ -20,12 +22,11 @@ import 'package:flutter_test/flutter_test.dart'
         hasLength,
         isNull,
         setUp,
-        tearDown,
-        testWidgets;
-import 'package:test/test.dart' show group;
+        tearDown;
 import 'package:flutter_test/src/finders.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
     show SelectorButton;
@@ -34,6 +35,8 @@ import 'package:network_image_mock/network_image_mock.dart'
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
+import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
 
@@ -64,7 +67,19 @@ void setupColours(WidgetTester tester) => tester.binding.defaultBinaryMessenger
       }
     });
 
-void setupContacts(WidgetTester tester) =>
+String accessToken({String role = "authenticated"}) =>
+    "ey." +
+    base64Url.encode(jsonEncode({
+      "sub": "id",
+      "aud": "",
+      'phone': "",
+      'role': "authenticated",
+      'updated_at': "",
+    }).codeUnits) +
+    ".ey";
+
+void setupContacts(WidgetTester tester,
+        {List<Map<String, dynamic>>? contacts}) =>
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('github.com/QuisApp/flutter_contacts'),
         (message) async {
@@ -72,15 +87,50 @@ void setupContacts(WidgetTester tester) =>
         case "requestPermission":
           return true;
         case "select":
-          return [];
+          return contacts ?? [];
         default:
           log.e(message);
       }
     });
 
+void setupLibPhoneNumber(WidgetTester tester) =>
+    tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
+            (MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case "isValidPhoneNumber":
+          return true;
+        case "formatAsYouType":
+          return methodCall.arguments['phoneNumber'];
+        case "normalizePhoneNumber":
+          return methodCall.arguments['phoneNumber'];
+        case "getRegionInfo":
+          return {};
+        default:
+          log.e(methodCall);
+      }
+    });
+
+void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {
+  flutter_test.testWidgets(name, (tester) async {
+    // ignore: avoid_print
+    print("::group::$name");
+    await fn(tester);
+    // ignore: avoid_print
+    print("::endgroup::");
+  });
+}
+
 void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
+  late supabase.SupabaseClient supabaseClient;
+
+  setUpAll(() {
+    Supabase.initialize(url: "https://supabase", anonKey: "");
+    Supabase.instance.client.auth.currentSession =
+        Session(accessToken: accessToken());
+  });
 
   setUp(() {
     nock.init();
@@ -89,6 +139,8 @@ void main() {
     supabaseScope
         .get("/rest/v1/session?select=%2A&concludedTime=is.null")
         .reply(200, []);
+    supabaseClient = supabase.SupabaseClient("https://supabase", "");
+    supabaseClient.auth.setAuth(accessToken());
   });
   tearDown(() {
     nock.cleanAll();
@@ -96,6 +148,7 @@ void main() {
 
   testWidgets('Places load', (tester) async {
     setupColours(tester);
+    var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
       "point": {
         "type": "Point",
@@ -103,7 +156,7 @@ void main() {
       }
     }).reply(200, [
       {
-        "id": "0000-00000-00000-00000",
+        "id": sessionId,
       }
     ]);
 
@@ -123,10 +176,12 @@ void main() {
       ],
       "status": "OK"
     });
+    supabaseScope.post("/rest/v1/participant",
+        {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
 
-    Get.deleteAll();
+    await Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
-    Get.put(supabase.SupabaseClient("https://supabase", ""));
+    Get.put(supabaseClient);
 
     await tester.pumpWidget(const MyApp());
 
@@ -139,6 +194,16 @@ void main() {
   });
 
   testWidgets('Friends sessions', (WidgetTester tester) async {
+    var phone = '+614000000000';
+    setupLibPhoneNumber(tester);
+    setupContacts(tester, contacts: [
+      {
+        "phones": [
+          {"normalizedNumber": phone}
+        ]
+      }
+    ]);
+
     var id = "00000-00000-00000-00000";
     var placeReference = "placeReference";
     supabaseScope
@@ -167,10 +232,17 @@ void main() {
                 result: PlaceDetails(
                     name: placeName, placeId: '', reference: placeReference),
                 htmlAttributions: []).toJson());
-    var email2 = 'fake@example.com';
-    var interceptor =
-        supabaseScope.get("/rest/v1/users?select=name&id=in.%28%22101%22%29");
-    interceptor.reply(200, [Users(id: 'PID', email: email2).toJson()]);
+    var email = 'fake@example.com';
+    supabaseScope
+        .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
+        .reply(200, [Users(id: 'PID', email: email, phone: phone).toJson()]);
+    supabaseScope
+        .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
+            200, [{}]);
+
+    supabaseScope.post("/rest/v1/rpc/get_matching_users", {
+      "phones": [phone]
+    }).reply(200, [{}]);
 
     await tester.pumpWidget(const MyApp());
 
@@ -178,6 +250,8 @@ void main() {
         .tap(find.widgetWithText(NavigationDestination, 'Friends sessions'))
         .timeout(const Duration(seconds: 10));
     await tester.pumpAndSettle().timeout(const Duration(seconds: 10));
+
+    expect(find.text("You have 1 friends"), findsOneWidget);
 
     expect(find.byType(Card), findsOneWidget);
 
@@ -192,7 +266,10 @@ void main() {
   });
 
   testWidgets('Login dialog', (WidgetTester tester) async {
-    Get.put(supabase.SupabaseClient("https://supabase", ""));
+    setupLibPhoneNumber(tester);
+    await Get.deleteAll();
+    supabaseClient.auth.currentSession = null;
+    Get.put(supabaseClient);
 
     var phone = '416041357';
 
@@ -209,34 +286,8 @@ void main() {
               'type': 'sms',
               'redirect_to': null
             }))
-        .reply(200, {
-      "error": null,
-      "access_token": "ey." +
-          base64Url.encode(jsonEncode({
-            "sub": "id",
-            "aud": "",
-            'phone': "",
-            'role': "authenticated",
-            'updated_at': "",
-          }).codeUnits) +
-          ".ey",
-      'expires_in': 3600
-    });
-
-    tester.binding.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
-            (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case "isValidPhoneNumber":
-          return true;
-        case "formatAsYouType":
-          return methodCall.arguments['phoneNumber'];
-        case "normalizePhoneNumber":
-          return methodCall.arguments['phoneNumber'];
-        default:
-          log.e(methodCall);
-      }
-    });
+        .reply(200,
+            {"error": null, "access_token": accessToken(), 'expires_in': 3600});
 
     await tester.pumpWidget(const MyApp());
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
@@ -280,7 +331,7 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(1));
     await tester.pumpAndSettle();
 
-    expect(find.text("Welcome!"), findsWidgets);
+    expect(find.text('You are now logged in. Eat well 💜'), findsWidgets);
   });
 
   group('golden tests', () {
@@ -297,6 +348,9 @@ void main() {
             createdAt: DateTime.now().toIso8601String(),
             point: Point())
       ]);
+      supabaseScope
+          .get("/rest/v1/participant?select=%2A&userId=in.%28%29")
+          .reply(200, []);
 
       var goldens = GoldenBuilder.column(
           wrap: (widget) => Container(
@@ -312,7 +366,9 @@ void main() {
       await screenMatchesGolden(tester, 'main', autoHeight: true);
     });
   }, onPlatform: {
-    'windows': [const Skip()]
+    'windows': Platform.environment.containsKey('CI')
+        ? [const Skip("Only run on CI if not on windows")]
+        : []
   });
 }
 

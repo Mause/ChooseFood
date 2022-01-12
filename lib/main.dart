@@ -1,6 +1,7 @@
 import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
+import 'package:choose_food/components/historical_sessions.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
     show PointType;
@@ -27,30 +28,34 @@ import 'package:flutter/widgets.dart'
         Wrap,
         runApp;
 import 'package:geolocator/geolocator.dart'
-    show GeolocatorPlatform, LocationPermission, Position;
+    show GeolocatorPlatform, LocationPermission, LocationSettings, Position;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
-    show LoaderOverlay, OverlayControllerWidgetExtension;
+    show GlobalLoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
 import 'package:material_you_colours/material_you_colours.dart'
     show getMaterialYouThemeData;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
-import 'package:supabase/supabase.dart' show SupabaseClient;
+import 'package:sentry_logging/sentry_logging.dart' show LoggingIntegration;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Supabase, SupabaseClient;
 
 import 'common.dart'
     show
         BasePage,
         LabelledProgressIndicatorExtension,
+        TypedExecuteExtension,
         excludeNull,
-        execute,
+        getAccessToken,
         makeErrorDialog,
         title;
+import 'common/auth_required_state.dart' show AuthRequiredState;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
-    show Session, Point, Decision;
+    show Session, Point, Decision, Participant;
 import 'info.dart' show InfoPage;
 import 'sessions.dart' show Sessions;
 
@@ -59,13 +64,21 @@ var log = Logger();
 Future<void> main() async {
   if (EnvironmentConfig.sentryDsn == 'https://...') {
     log.w("Running without sentry");
-    runApp(const MyApp());
+    await _runApp();
   } else {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
       options.beforeSend = beforeSend;
-    }, appRunner: () => runApp(const MyApp()));
+      options.addIntegration(LoggingIntegration());
+    }, appRunner: _runApp);
   }
+}
+
+Future<void> _runApp() async {
+  await Supabase.initialize(
+      url: EnvironmentConfig.supabaseUrl,
+      anonKey: EnvironmentConfig.supabaseKey);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -75,24 +88,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
-    Get.put(SupabaseClient(
-        EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
+
+    Get.put(Supabase.instance.client);
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
     return FutureBuilder<ThemeData>(
         future: getMaterialYouThemeData(),
-        builder: (context, snapshot) => GetMaterialApp(
+        builder: (context, snapshot) => GlobalLoaderOverlay(
+                child: GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
-              home: const LoaderOverlay(child: MyHomePage(title: title)),
+              initialRoute: MyHomePage.routeName,
               navigatorObservers: [
                 SentryNavigatorObserver(),
               ],
               routes: {
+                MyHomePage.routeName: (context) =>
+                    const MyHomePage(title: title),
+                LoginDialog.routeName: (context) => const LoginDialog(),
                 InfoPage.routeName: (context) => const InfoPage(),
-                FriendsSessions.routeName: (context) => const FriendsSessions()
+                FriendsSessions.routeName: (context) => const FriendsSessions(),
+                HistoricalSessions.routeName: (context) =>
+                    const HistoricalSessions(),
               },
-            ));
+            )));
   }
 }
 
@@ -116,7 +135,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends AuthRequiredState<MyHomePage> {
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
@@ -126,22 +145,21 @@ class MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
 
-  @override
-  void initState() {
-    super.initState();
+  Participant? participant;
 
+  @override
+  void onAuthenticated(session) {
     loadExistingSession();
   }
 
   Future<void> loadExistingSession() async {
     context.progress("Loading existing session");
 
-    var response = await execute<Session>(
-        supabaseClient
-            .from(TableNames.session)
-            .select()
-            .is_(ColumnNames.session.concludedTime, null),
-        Session.fromJson);
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .select()
+        .is_(ColumnNames.session.concludedTime, null)
+        .typedExecute(Session.fromJson);
     if (response.error != null) {
       throw await makeError(response.error);
     }
@@ -215,7 +233,8 @@ class MyHomePageState extends State<MyHomePage> {
     Position geoposition;
     try {
       geoposition = await geolocatorPlatform.getCurrentPosition(
-          timeLimit: const Duration(seconds: 10));
+          locationSettings:
+              const LocationSettings(timeLimit: Duration(seconds: 10)));
     } catch (e, s) {
       throw await makeError("Location request timed out", e: e, s: s);
     }
@@ -226,29 +245,34 @@ class MyHomePageState extends State<MyHomePage> {
 
   Future<ArgumentError> makeError(dynamic message,
       {dynamic e, StackTrace? s}) async {
+    await Sentry.captureException(e, stackTrace: s, hint: message);
     context.loaderOverlay.hide();
     await showDialog(
         context: context,
         builder: makeErrorDialog(e.toString(), title: message));
-    await Sentry.captureException(e, stackTrace: s, hint: message);
     log.e(message, e, s);
     return ArgumentError(message);
   }
 
   Future<void> createSession(Location location) async {
-    var response = (await execute<Session>(
-        supabaseClient.from(TableNames.session).insert(excludeNull(Session(
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .insert(excludeNull(Session(
             point: Point(
                 type: PointType.point,
-                coordinates: [location.lat, location.lng])).toJson())),
-        Session.fromJson));
+                coordinates: [location.lat, location.lng])).toJson()))
+        .typedExecute(Session.fromJson);
     if (response.error != null) {
       log.e(response.error);
       throw ArgumentError(response.error);
     }
 
+    var session = response.data[0];
+
+    participant = await Sessions().joinSession(session, getAccessToken()!);
+
     setState(() {
-      sessionId = response.data[0].id;
+      sessionId = session.id;
     });
 
     log.i("started new session: $sessionId");
@@ -305,15 +329,22 @@ class MyHomePageState extends State<MyHomePage> {
         Wrap(
           direction: Axis.horizontal,
           children: [
-            elevatedButton('Login', _login),
+            getAccessToken() == null
+                ? elevatedButton('Login', _login)
+                : elevatedButton('Logout', () async {
+                    context.progress('Logging out');
+                    await supabaseClient.auth.signOut();
+                    context.loaderOverlay.hide();
+                  }),
             elevatedButton('Conclude session', concludeSession,
                 enabled: sessionId != null),
-            elevatedButton('Get places', getPlaces),
+            elevatedButton('Get places', getPlaces,
+                enabled: getAccessToken() != null),
           ],
         ),
         Text(
-          supabaseClient.auth.currentSession == null
-              ? 'Logged in: ${supabaseClient.auth.currentUser?.phone ?? "Unknown"}'
+          getAccessToken() != null
+              ? 'Logged in: ${getAccessToken()?.phone ?? "Unknown"}'
               : 'Logged out',
         ),
         Text(sessionId == null
@@ -325,21 +356,16 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String getUser() {
-    return supabaseClient.auth.currentUser?.id ??
-        '00000000-0000-0000-0000-000000000000';
-  }
-
   Future<void> createDecision(String reference, bool state) async {
     await supabaseClient
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
                 sessionId: sessionId!,
-                participantId: 0,
+                participantId: participant!.id,
                 placeReference: reference,
                 decision: state)
             .toJson()))
-        .execute();
+        .typedExecute(Decision.fromJson);
   }
 
   Future<void> concludeSession() async {
@@ -366,6 +392,16 @@ class SessionFieldNames {
 class ColumnNames {
   static const session = SessionFieldNames();
   static const decision = DecisionFieldNames();
+  static const participant = ParticipantFieldNames();
+}
+
+class ParticipantFieldNames {
+  final String sessionId = "sessionId";
+  final userId = "userId";
+  final createdAt = "created_at";
+  final id = "id";
+
+  const ParticipantFieldNames();
 }
 
 class DecisionFieldNames {
@@ -382,6 +418,10 @@ class TableNames {
   static const String session = "session";
   static const String participant = "participant";
   static const String users = "users";
+}
+
+class RpcNames {
+  static const String getMatchingUsers = "get_matching_users";
 }
 
 class LocationCard extends StatelessWidget {

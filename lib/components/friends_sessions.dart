@@ -1,6 +1,10 @@
+import 'dart:async' show Future;
+
 import 'package:choose_food/common.dart'
-    show BasePage, MyPostgrestResponse, execute;
-import 'package:choose_food/main.dart' show ColumnNames, TableNames;
+    show BasePage, MyPostgrestResponse, TypedExecuteExtension, getAccessToken;
+import '../common/auth_required_state.dart' show AuthRequiredState;
+import '../main.dart' show ColumnNames, RpcNames, TableNames;
+import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -11,16 +15,18 @@ import 'package:flutter/material.dart'
         DataRow,
         DataTable,
         ListTile,
+        RefreshIndicator,
         TextButton,
         showDialog;
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter/widgets.dart'
     show
+        Axis,
         BuildContext,
         Column,
         Expanded,
         Key,
         ListView,
-        Axis,
         SingleChildScrollView,
         State,
         StatefulWidget,
@@ -28,17 +34,20 @@ import 'package:flutter/widgets.dart'
         Text,
         Widget;
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:get/get.dart' show Get, Inst;
+import 'package:get/get.dart' show Get, Inst, ExtensionSnackbar;
 import 'package:google_maps_webservice/places.dart' show GoogleMapsPlaces;
 import 'package:intl_phone_number_input/intl_phone_number_input_test.dart';
-import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
+import 'package:json_annotation/json_annotation.dart'
+    show JsonSerializable, $checkedCreate;
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient;
 
+import '../common.dart' show LabelledProgressIndicatorExtension;
 import '../generated_code/openapi.models.swagger.dart'
     show Decision, Session, Point, Users;
+import '../sessions.dart' show Sessions;
 
 part 'friends_sessions.g.dart';
 
@@ -56,7 +65,7 @@ class FriendsSessions extends StatefulWidget {
 List<Map<String, dynamic>> toMapList(dynamic data) =>
     (data as List<dynamic>).map((e) => e as Map<String, dynamic>).toList();
 
-class FriendsSessionsState extends State<FriendsSessions> {
+class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
   SupabaseClient supabaseClient = Get.find();
 
   List<Widget> sessions = [];
@@ -65,43 +74,60 @@ class FriendsSessionsState extends State<FriendsSessions> {
 
   List<Session>? friendsSessions;
 
-  @override
-  void initState() {
-    super.initState();
+  num? numberOfContacts;
 
-    initSessions();
-    loadFriends();
+  @override
+  void onAuthenticated(session) {
+    reload();
+  }
+
+  Future<void> reload() async {
+    context.progress("Loading...");
+    await Future.wait([initSessions(), loadFriends()]).whenComplete(() {
+      context.loaderOverlay.hide();
+    });
   }
 
   Future<void> loadFriends() async {
-    if (await FlutterContacts.requestPermission()) {
-      var contacts = await Future.wait((await FlutterContacts.getContacts())
+    context.progress("Loading friends");
+    if (await FlutterContacts.requestPermission(readonly: true)) {
+      FlutterContacts.config.includeNonVisibleOnAndroid = true;
+
+      log.i("Loading friends");
+      var possibles = await FlutterContacts.getContacts(
+          withPhoto: true, withProperties: true);
+      log.i("Loaded contacts: ${possibles.length}");
+      setState(() {
+        numberOfContacts = possibles.length;
+      });
+
+      var numbers = possibles
           .expand((element) =>
               element.phones.map((e) => NamePhone(element.name, e)))
-          .map((e) async => NamePhone(
-              e.name,
-              Phone((await PhoneNumberTest.getRegionInfoFromPhoneNumber(
-                      e.phone.normalizedNumber))
-                  .phoneNumber!)))
-          .toList());
+          .toList();
+      log.i("Numbers to parse: ${numbers.length}");
 
-      var yourFriends = (await execute<Users>(
-              supabaseClient
-                  .from(TableNames.users)
-                  .select()
-                  .in_("phone", contacts.map((e) => e.phone.number).toList()),
-              Users.fromJson))
+      List<NamePhone> contacts =
+          (await Future.wait(numbers.map(formatNumbers).toList()))
+              .where((NamePhone? element) => element != null)
+              .map((e) => e!)
+              .toList();
+      log.i("Parsed ${contacts.length} contacts");
+
+      var yourFriends = (await supabaseClient.rpc(RpcNames.getMatchingUsers,
+              params: {
+            "phones": contacts.map((e) => e.phone.number).toList()
+          }).typedExecute(Users.fromJson))
           .datam;
       setState(() {
         this.yourFriends = yourFriends;
       });
 
-      var friendsSessions = (await execute<Session>(
-              supabaseClient
-                  .from(TableNames.participant)
-                  .select()
-                  .in_("userId", yourFriends.map((e) => e.id).toList()),
-              Session.fromJson))
+      var friendsSessions = (await supabaseClient
+              .from(TableNames.participant)
+              .select()
+              .in_("userId", yourFriends.map((e) => e.id).toList())
+              .typedExecute(Session.fromJson))
           .datam;
       setState(() {
         this.friendsSessions = friendsSessions;
@@ -109,29 +135,46 @@ class FriendsSessionsState extends State<FriendsSessions> {
     }
   }
 
-  void initSessions() async {
+  Future<NamePhone?> formatNumbers(NamePhone e) async {
+    PhoneNumberTest phoneNumberTest;
+    try {
+      phoneNumberTest = await PhoneNumberTest.getRegionInfoFromPhoneNumber(
+          e.phone.normalizedNumber.isEmpty
+              ? e.phone.number
+              : e.phone.normalizedNumber,
+          'AU');
+    } on PlatformException {
+      log.e('failed to parse "${e.phone}" for ${e.name}');
+      return null;
+    }
+
+    return NamePhone(e.name, Phone((phoneNumberTest).phoneNumber!));
+  }
+
+  Future<void> initSessions() async {
     MyPostgrestResponse<SessionWithDecisions> sessions;
 
     context.loaderOverlay.show();
 
     try {
-      sessions = await execute<SessionWithDecisions>(
-          supabaseClient.from(TableNames.session).select("""
+      sessions = await supabaseClient
+          .from(TableNames.session)
+          .select("""
               id,
               decision(
                 decision,
                 placeReference,
                 participantId
               )
-              """).is_(ColumnNames.session.concludedTime, null),
-          SessionWithDecisions.fromJson);
+              """)
+          .is_(ColumnNames.session.concludedTime, null)
+          .typedExecute(SessionWithDecisions.fromJson);
     } catch (e, s) {
-      handleError(e, s);
-      return;
+      return await handleError(e, s);
     }
 
     if (sessions.error != null) {
-      handleError(sessions.error, null);
+      return await handleError(sessions.error, null);
     }
 
     setState(() {
@@ -142,9 +185,9 @@ class FriendsSessionsState extends State<FriendsSessions> {
     context.loaderOverlay.hide();
   }
 
-  handleError(error, StackTrace? stackTrace) {
+  Future<void> handleError(dynamic error, StackTrace? stackTrace) async {
     log.e("Failed to load sessions", error, stackTrace);
-    Sentry.captureException(error, hint: "Failed to load sessions");
+    await Sentry.captureException(error, hint: "Failed to load sessions");
 
     context.loaderOverlay.hide();
   }
@@ -155,12 +198,16 @@ class FriendsSessionsState extends State<FriendsSessions> {
         friendsSessions?.where((e) => e.concludedTime == null).length;
 
     return BasePage(selectedIndex: 1, children: [
+      ListTile(title: Text('You have ${numberOfContacts ?? "?"} contacts')),
       ListTile(title: Text('You have ${yourFriends?.length ?? "?"} friends')),
       ListTile(
           title: Text(
               'Your friends have ${friendsSessions?.length ?? "?"} sessions')),
       ListTile(title: Text('${openSessions ?? "?"} of which are open')),
-      Expanded(child: ListView(children: sessions, primary: true))
+      Expanded(
+          child: RefreshIndicator(
+              onRefresh: reload,
+              child: ListView(children: sessions, primary: true)))
     ]);
   }
 }
@@ -203,9 +250,15 @@ class SessionCard extends StatelessWidget {
           ListTile(title: Text(sessionWithDecisions.id!)),
           ButtonBar(children: [
             TextButton(
-                onPressed: () {
-                  Sentry.captureMessage(
-                      'User wishes to join ${sessionWithDecisions.id}');
+                onPressed: () async {
+                  var accessToken = getAccessToken();
+                  if (accessToken == null) {
+                    Get.snackbar(
+                        "Cannot join session", "You are not logged in");
+                  } else {
+                    await Sessions()
+                        .joinSession(sessionWithDecisions, accessToken);
+                  }
                 },
                 child: const Text('Join')),
             TextButton(
@@ -241,7 +294,10 @@ class _DecisionDialogState extends State<DecisionDialog> {
   void initState() {
     super.initState();
 
-    loadData().catchError((error) {
+    context.progress("Loading");
+    loadData().then((void t) {
+      context.loaderOverlay.hide();
+    }, onError: (error) {
       log.e(error);
     });
   }
@@ -256,13 +312,15 @@ class _DecisionDialogState extends State<DecisionDialog> {
         .toMap((e) => e.result.reference!, (e) => e.result.name);
 
     log.d("Loading user names");
-    userNames = (await execute<Users>(
-            supabaseClient.from(TableNames.users).select("name").in_(
+    userNames = (await supabaseClient
+            .from(TableNames.users)
+            .select("name")
+            .in_(
                 "id",
                 widget.sessionWithDecisions.decision
                     .map((e) => e.participantId)
-                    .toList()),
-            Users.fromJson))
+                    .toList())
+            .typedExecute(Users.fromJson))
         .datam
         .toIndexMap((e) => e.id);
     log.d("Loaded: userNames: $userNames, placeNames: $placeNames");

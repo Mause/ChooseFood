@@ -11,6 +11,10 @@ on:
   pull_request:
     branches: [ main ]
 
+concurrency:
+  group: ci-tests-${{ github.ref }}-1
+  cancel-in-progress: true
+
 jobs:
   build:
     uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
@@ -32,7 +36,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: beta
       - name: Install dependencies
@@ -80,7 +84,7 @@ jobs:
              --ks-pass pass:${{ secrets.KEY_STORE_PASSWORD}} \
              --key-pass pass:${{ secrets.KEY_PASSWORD }}
           unzip apks.apks
-          mv universal.apk choose-food-1.0.${{ github.run_number }}.apk
+          mv universal.apk me.mause.choosefood_${{ github.run_number }}.apk
           find . -name "*.apk" -exec echo "APK: {}" \; -exec sh -c 'keytool -printcert -jarfile "{}"' \;
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -125,7 +129,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
 
@@ -157,7 +161,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-${{ matrix.api-level }}-2021-11-25
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
@@ -173,6 +177,7 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: Nexus 6
+          ram-size: 3072M
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
@@ -180,7 +185,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
 
@@ -195,9 +200,11 @@ jobs:
           java-version: '11'
           distribution: adopt-hotspot
 
+      - run: flutter build apk --debug
+
       - name: Integration tests
         uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 8
+        timeout-minutes: 10
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
@@ -207,7 +214,11 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           avd-name: android
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+          ram-size: 3072M
+          script: |
+            echo "::group::Integration tests"
+            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
+            echo "::endgroup::"
 
       - uses: actions/upload-artifact@v2
         if: always()
@@ -309,6 +320,22 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
 
+  publish_to_fdroid:
+    runs-on: ubuntu-latest
+    needs: publish
+
+    steps:
+    - name: Deploy Stage
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.TRIGGER_FDROID_UPDATE }}
+        script: |
+          await github.rest.repos.createDispatchEvent({
+            owner: 'Mause',
+            repo: 'fdroidrepo',
+            event_type: 'repository_dispatch'
+          });
+
   build_windows:
     runs-on: windows-latest
     needs: build
@@ -322,7 +349,7 @@ jobs:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
 
