@@ -30,9 +30,7 @@ jobs:
       # - name: Verify formatting
       #   run: flutter format --output=none --set-exit-if-changed .
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: flutter analyze
+      - uses: invertase/github-action-dart-analyzer@v1
 
       - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
