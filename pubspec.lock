@@ -389,7 +389,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.5"
   graphs:
     dependency: transitive
     description:
@@ -786,7 +786,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.14"
+    version: "0.1.15"
   recase:
     dependency: transitive
     description:
@@ -931,14 +931,14 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.13"
+    version: "0.2.14"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.11"
+    version: "0.2.12"
   swagger_dart_code_generator:
     dependency: "direct dev"
     description:
