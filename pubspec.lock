@@ -604,7 +604,7 @@ packages:
       name: msix
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.15"
+    version: "2.8.17"
   network_image_mock:
     dependency: "direct dev"
     description:
@@ -1148,7 +1148,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.10"
+    version: "2.3.11"
   xdg_directories:
     dependency: transitive
     description:
