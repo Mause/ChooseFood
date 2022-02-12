@@ -68,7 +68,7 @@ dev_dependencies:
   flutter_lints: 1.0.4
   test: 1.19.5
   build_runner: 2.1.7
-  mockito: 5.0.17
+  mockito: ^5.1.0
   network_image_mock: 2.0.1
   nock: 1.2.0
   swagger_dart_code_generator: ^2.3.5
