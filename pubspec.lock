@@ -410,7 +410,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.6"
   graphs:
     dependency: transitive
     description:
@@ -555,7 +555,7 @@ packages:
       name: loader_overlay
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.5+1"
   logger:
     dependency: "direct main"
     description:
