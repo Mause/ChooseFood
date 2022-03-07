@@ -952,7 +952,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.14"
+    version: "0.2.15"
   supabase_flutter:
     dependency: "direct main"
     description:
