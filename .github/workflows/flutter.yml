@@ -138,6 +138,7 @@ jobs:
 
   integration_tests:
     runs-on: macos-latest
+    if: never()
 
     strategy:
       matrix:
@@ -254,7 +255,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs:
       - build_releases
-      - integration_tests
+     # - integration_tests
       - build_windows
     steps:
       - uses: actions/checkout@v2
