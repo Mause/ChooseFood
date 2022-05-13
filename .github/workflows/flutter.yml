@@ -38,6 +38,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '2.8.0'
           channel: beta
       - name: Install dependencies
         run: flutter pub get
@@ -132,12 +133,14 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
+          flutter-version: '2.8.0'
 
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
 
   integration_tests:
     runs-on: macos-latest
+    if: false
 
     strategy:
       matrix:
@@ -187,6 +190,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '2.8.0'
           channel: 'beta'
 
       - name: Install dependencies
@@ -254,7 +258,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs:
       - build_releases
-      - integration_tests
+     # - integration_tests
       - build_windows
     steps:
       - uses: actions/checkout@v2
@@ -351,6 +355,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '2.9.0'
           channel: 'beta'
 
       - run: flutter config --enable-windows-desktop
