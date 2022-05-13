@@ -138,7 +138,7 @@ jobs:
 
   integration_tests:
     runs-on: macos-latest
-    if: never()
+    if: false
 
     strategy:
       matrix:
