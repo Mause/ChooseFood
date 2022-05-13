@@ -37,11 +37,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter_version }}
+          flutter-version: ${{ env.flutter-version }}
           channel: beta
       - name: Install dependencies
         run: flutter pub get
@@ -131,12 +131,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
-          flutter-version: ${{ env.flutter_version }}
+          flutter-version: ${{ env.flutter-version }}
 
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
@@ -189,11 +189,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter_version }}
+          flutter-version: ${{ env.flutter-version }}
           channel: 'beta'
 
       - name: Install dependencies
@@ -354,11 +354,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter_version }}
+          flutter-version: ${{ env.flutter-version }}
           channel: 'beta'
 
       - run: flutter config --enable-windows-desktop
