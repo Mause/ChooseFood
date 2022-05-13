@@ -75,7 +75,7 @@ dev_dependencies:
   mockito: 5.0.17
   network_image_mock: 2.0.1
   nock: 1.2.0
-  swagger_dart_code_generator: 2.3.4+1
+  swagger_dart_code_generator: 2.5.1+1
   msix: 2.8.1
   golden_toolkit: 0.13.0
   sentry_dart_plugin: 1.0.0-beta.1
