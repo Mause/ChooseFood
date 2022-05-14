@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:choose_food/main.dart' show MyHomePage;
 import 'package:flutter/material.dart'
     show
-        AlertDialog,
+        AppBar,
         InputDecoration,
+        ListTile,
+        Scaffold,
         Step,
         Stepper,
         TextFormField,
@@ -12,15 +15,13 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart'
     show
         AutovalidateMode,
-        Axis,
         BuildContext,
         Column,
         Form,
         FormState,
         GlobalKey,
         Key,
-        SingleChildScrollView,
-        SizedBox,
+        ListView,
         State,
         StatefulWidget,
         Text,
@@ -38,6 +39,8 @@ import '../common.dart' show getAccessToken, LabelledProgressIndicatorExtension;
 var log = Logger();
 
 class LoginDialog extends StatefulWidget {
+  static var routeName = "/login";
+
   const LoginDialog({Key? key}) : super(key: key);
 
   @override
@@ -103,56 +106,64 @@ class _LoginDialogState extends State<LoginDialog> {
     var steps = [
       buildStep(
           'Phone',
-          InternationalPhoneNumberInput(
-            key: const Key('phone'),
-            onInputChanged: (PhoneNumber value) {},
-            onSaved: (PhoneNumber phoneNumber) async =>
-                await stepOne(phoneNumber.phoneNumber!),
-            inputDecoration: const InputDecoration(labelText: 'Phone number'),
-          ),
+          ListView(shrinkWrap: true, children: [
+            const ListTile(
+                title: Text(
+                    'To login, please enter your mobile phone number below')),
+            InternationalPhoneNumberInput(
+              key: const Key('phone'),
+              onInputChanged: (PhoneNumber value) {},
+              onSaved: (PhoneNumber phoneNumber) async =>
+                  await stepOne(phoneNumber.phoneNumber!),
+              inputDecoration: const InputDecoration(labelText: 'Phone number'),
+            )
+          ]),
           keys[0]),
       buildStep(
           'Login code',
-          TextFormField(
-              key: const Key('login-code'),
-              validator: valid,
-              autovalidateMode: AutovalidateMode.always,
-              onSaved: (String? loginCode) async => await stepTwo(loginCode!),
-              decoration: const InputDecoration(
-                labelText: 'Login code',
-              )),
+          ListView(
+            shrinkWrap: true,
+            children: [
+              const ListTile(
+                  title: Text(
+                      'You have been sent a text message with a 6 digit code, please enter it below')),
+              TextFormField(
+                  key: const Key('login-code'),
+                  validator: valid,
+                  autovalidateMode: AutovalidateMode.always,
+                  onSaved: (String? loginCode) async =>
+                      await stepTwo(loginCode!),
+                  decoration: const InputDecoration(
+                    labelText: 'Login code',
+                  ))
+            ],
+          ),
           keys[1]),
       Step(
-          title: const Text('Welcome!'),
-          content: Column(children: [
-            Text("welcome!: ${getAccessToken()?.phone}"),
-          ]))
+          title: Text("Welcome ${getAccessToken()?.phone}"),
+          content: Column(
+              children: const [Text('You are now logged in. Eat well 💜')]))
     ];
 
-    return AlertDialog(
-        content: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox.square(
-          child: Stepper(
-              currentStep: currentStep,
-              steps: steps,
-              onStepCancel: () {
-                Get.back(closeOverlays: true);
-              },
-              onStepContinue: () async {
-                if (currentStep == 2) {
-                  Get.back(result: getAccessToken()!, closeOverlays: true);
-                } else {
-                  context.progress("Loading");
-                  var _formKey = keys[currentStep];
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                  }
-                  context.loaderOverlay.hide();
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Please login'),
+        ),
+        body: Stepper(
+            currentStep: currentStep,
+            steps: steps,
+            onStepContinue: () async {
+              if (currentStep == 2) {
+                await Get.toNamed(MyHomePage.routeName);
+              } else {
+                context.progress("Loading");
+                var _formKey = keys[currentStep];
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
                 }
-              }),
-          dimension: 400),
-    ));
+                context.loaderOverlay.hide();
+              }
+            }));
   }
 
   String? valid(String? value) {

@@ -28,16 +28,20 @@ import 'package:flutter/widgets.dart'
         Wrap,
         runApp;
 import 'package:geolocator/geolocator.dart'
-    show GeolocatorPlatform, LocationPermission, Position;
+    show GeolocatorPlatform, LocationPermission, LocationSettings, Position;
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
-    show LoaderOverlay, OverlayControllerWidgetExtension;
+    show GlobalLoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
+import 'package:material_you_colours/material_you_colours.dart'
+    show getMaterialYouThemeData;
 import 'package:sentry_flutter/sentry_flutter.dart'
     show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
-import 'package:supabase/supabase.dart' show SupabaseClient;
+import 'package:sentry_logging/sentry_logging.dart' show LoggingIntegration;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Supabase, SupabaseClient;
 
 import 'common.dart'
     show
@@ -48,11 +52,11 @@ import 'common.dart'
         getAccessToken,
         makeErrorDialog,
         title;
+import 'common/auth_required_state.dart' show AuthRequiredState;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
     show Session, Point, Decision, Participant;
 import 'info.dart' show InfoPage;
-import 'platform_colours.dart' show getThemeData;
 import 'sessions.dart' show Sessions;
 
 var log = Logger();
@@ -60,13 +64,21 @@ var log = Logger();
 Future<void> main() async {
   if (EnvironmentConfig.sentryDsn == 'https://...') {
     log.w("Running without sentry");
-    runApp(const MyApp());
+    await _runApp();
   } else {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
       options.beforeSend = beforeSend;
-    }, appRunner: () => runApp(const MyApp()));
+      options.addIntegration(LoggingIntegration());
+    }, appRunner: _runApp);
   }
+}
+
+Future<void> _runApp() async {
+  await Supabase.initialize(
+      url: EnvironmentConfig.supabaseUrl,
+      anonKey: EnvironmentConfig.supabaseKey);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -76,26 +88,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
-    Get.put(SupabaseClient(
-        EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
+
+    Get.put(Supabase.instance.client);
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
     return FutureBuilder<ThemeData>(
-        future: getThemeData(),
-        builder: (context, snapshot) => GetMaterialApp(
+        future: getMaterialYouThemeData(),
+        builder: (context, snapshot) => GlobalLoaderOverlay(
+                child: GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
-              home: const LoaderOverlay(child: MyHomePage(title: title)),
+              initialRoute: MyHomePage.routeName,
               navigatorObservers: [
                 SentryNavigatorObserver(),
               ],
               routes: {
+                MyHomePage.routeName: (context) =>
+                    const MyHomePage(title: title),
+                LoginDialog.routeName: (context) => const LoginDialog(),
                 InfoPage.routeName: (context) => const InfoPage(),
                 FriendsSessions.routeName: (context) => const FriendsSessions(),
                 HistoricalSessions.routeName: (context) =>
                     const HistoricalSessions(),
               },
-            ));
+            )));
   }
 }
 
@@ -119,7 +135,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends AuthRequiredState<MyHomePage> {
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
@@ -132,9 +148,7 @@ class MyHomePageState extends State<MyHomePage> {
   Participant? participant;
 
   @override
-  void initState() {
-    super.initState();
-
+  void onAuthenticated(session) {
     loadExistingSession();
   }
 
@@ -219,7 +233,8 @@ class MyHomePageState extends State<MyHomePage> {
     Position geoposition;
     try {
       geoposition = await geolocatorPlatform.getCurrentPosition(
-          timeLimit: const Duration(seconds: 10));
+          locationSettings:
+              const LocationSettings(timeLimit: Duration(seconds: 10)));
     } catch (e, s) {
       throw await makeError("Location request timed out", e: e, s: s);
     }
@@ -341,11 +356,6 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String getUser() {
-    return supabaseClient.auth.currentUser?.id ??
-        '00000000-0000-0000-0000-000000000000';
-  }
-
   Future<void> createDecision(String reference, bool state) async {
     await supabaseClient
         .from(TableNames.decision)
@@ -387,6 +397,9 @@ class ColumnNames {
 
 class ParticipantFieldNames {
   final String sessionId = "sessionId";
+  final userId = "userId";
+  final createdAt = "created_at";
+  final id = "id";
 
   const ParticipantFieldNames();
 }
@@ -405,6 +418,10 @@ class TableNames {
   static const String session = "session";
   static const String participant = "participant";
   static const String users = "users";
+}
+
+class RpcNames {
+  static const String getMatchingUsers = "get_matching_users";
 }
 
 class LocationCard extends StatelessWidget {

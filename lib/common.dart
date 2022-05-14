@@ -1,31 +1,35 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart'
     show
-        AlertDialog,
+        Material,
+        NavigationBar,
+        Scaffold,
+        NavigationDestinationLabelBehavior,
+        NavigationDestination,
         AppBar,
+        AlertDialog,
+        EdgeInsets,
+        Padding,
+        CircularProgressIndicator;
+import 'package:flutter/widgets.dart'
+    show
         BoxConstraints,
         BuildContext,
         Center,
-        CircularProgressIndicator,
         Column,
         Container,
         Icon,
         Key,
         ListBody,
         MainAxisAlignment,
-        NavigationBar,
-        NavigationDestination,
-        NavigationDestinationLabelBehavior,
-        Navigator,
         Row,
-        Scaffold,
         SingleChildScrollView,
         State,
         StatefulWidget,
         StatelessWidget,
         Text,
         Widget;
-import 'package:get/get.dart' show Get, Inst;
+import 'package:get/get.dart' show Get, Inst, GetNavigation;
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:loader_overlay/loader_overlay.dart'
     show OverlayControllerWidgetExtension;
@@ -39,10 +43,10 @@ import 'package:supabase/supabase.dart'
         SupabaseClient,
         User;
 
-import 'main.dart';
-import 'info.dart';
 import 'components/friends_sessions.dart' show FriendsSessions;
 import 'components/historical_sessions.dart' show HistoricalSessions;
+import 'info.dart' show InfoPage;
+import 'main.dart' show MyHomePage;
 
 const title = "Choose Food";
 var log = Logger();
@@ -74,16 +78,16 @@ class _BasePage extends State<BasePage> {
     });
     switch (value) {
       case 0:
-        Navigator.pushNamed(context, MyHomePage.routeName);
+        Get.toNamed(MyHomePage.routeName);
         break;
       case 1:
-        Navigator.pushNamed(context, FriendsSessions.routeName);
+        Get.toNamed(FriendsSessions.routeName);
         break;
       case 2:
-        Navigator.pushNamed(context, HistoricalSessions.routeName);
+        Get.toNamed(HistoricalSessions.routeName);
         break;
       case 3:
-        Navigator.pushNamed(context, InfoPage.routeName);
+        Get.toNamed(InfoPage.routeName);
         break;
       default:
         log.e("fell through", value);
@@ -194,14 +198,22 @@ class LabelledProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(
-        minWidth: 36.0,
-        minHeight: 36.0,
-      ),
-      child: Row(
-        children: [const CircularProgressIndicator(), Text(label)],
-      ),
-    );
+        constraints: const BoxConstraints(
+          minWidth: 36.0,
+          minHeight: 36.0,
+        ),
+        padding: const EdgeInsets.all(20),
+        width: 100,
+        child: Center(
+            child: Material(
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        const CircularProgressIndicator(),
+                        Text(label)
+                      ],
+                    )))));
   }
 }
 

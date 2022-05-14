@@ -41,7 +41,13 @@ class Sessions {
   Future<List<String>> summariseSession(String sessionId) async {
     var participants = (await supabaseClient
             .from(TableNames.participant)
-            .select("userId, decision ( * )")
+            .select("""
+              ${ColumnNames.participant.userId},
+              ${ColumnNames.participant.createdAt},
+              ${ColumnNames.participant.id},
+              ${ColumnNames.participant.sessionId},
+              decision ( * )
+              """)
             .eq(ColumnNames.participant.sessionId, sessionId)
             .typedExecute(ParticipantWithDecisions.fromJson))
         .datam;

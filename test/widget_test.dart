@@ -1,18 +1,20 @@
 import 'dart:convert' show base64Url, json, jsonEncode;
+import 'dart:io' show Platform;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
-import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart' as flutter_test;
 import 'package:flutter_test/flutter_test.dart'
     show
         Skip,
         WidgetTester,
         expect,
+        setUpAll,
         find,
         findsNothing,
         findsOneWidget,
@@ -20,12 +22,11 @@ import 'package:flutter_test/flutter_test.dart'
         hasLength,
         isNull,
         setUp,
-        tearDown,
-        testWidgets;
-import 'package:test/test.dart' show group;
+        tearDown;
 import 'package:flutter_test/src/finders.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:get/get.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:intl_phone_number_input/src/widgets/selector_button.dart'
     show SelectorButton;
@@ -34,8 +35,37 @@ import 'package:network_image_mock/network_image_mock.dart'
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
+import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
+
+List<MapEntry<String, String>> getColours(String prefix) => {
+      '${prefix}_100': '000000000',
+      '${prefix}_50': '000000000',
+      '${prefix}_100': '000000000',
+      '${prefix}_200': '000000000',
+      '${prefix}_300': '000000000',
+      '${prefix}_400': '000000000',
+      '${prefix}_500': '000000000',
+      '${prefix}_600': '000000000',
+      '${prefix}_700': '000000000',
+      '${prefix}_800': '000000000',
+      '${prefix}_900': '000000000',
+    }.entries.toList();
+
+void setupColours(WidgetTester tester) => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('material_you_colours'),
+            (message) async {
+      switch (message.method) {
+        case "getMaterialYouColours":
+          return Map.fromEntries(getColours('system_accent1') +
+              getColours('system_accent2') +
+              getColours('system_accent3') +
+              getColours('system_neutral1') +
+              getColours('system_neutral2'));
+      }
+    });
 
 String accessToken({String role = "authenticated"}) =>
     "ey." +
@@ -81,10 +111,26 @@ void setupLibPhoneNumber(WidgetTester tester) =>
       }
     });
 
+void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {
+  flutter_test.testWidgets(name, (tester) async {
+    // ignore: avoid_print
+    print("::group::$name");
+    await fn(tester);
+    // ignore: avoid_print
+    print("::endgroup::");
+  });
+}
+
 void main() {
   late NockScope supabaseScope;
   late NockScope mapsScope;
   late supabase.SupabaseClient supabaseClient;
+
+  setUpAll(() {
+    Supabase.initialize(url: "https://supabase", anonKey: "");
+    Supabase.instance.client.auth.currentSession =
+        Session(accessToken: accessToken());
+  });
 
   setUp(() {
     nock.init();
@@ -101,6 +147,7 @@ void main() {
   });
 
   testWidgets('Places load', (tester) async {
+    setupColours(tester);
     var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
       "point": {
@@ -132,7 +179,7 @@ void main() {
     supabaseScope.post("/rest/v1/participant",
         {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
 
-    Get.deleteAll();
+    await Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
     Get.put(supabaseClient);
 
@@ -193,12 +240,9 @@ void main() {
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
 
-    supabaseScope
-        .get(Uri(
-                path: "/rest/v1/users",
-                queryParameters: {"select": '*', "phone": 'in.("$phone")'})
-            .toString())
-        .reply(200, [{}]);
+    supabaseScope.post("/rest/v1/rpc/get_matching_users", {
+      "phones": [phone]
+    }).reply(200, [{}]);
 
     await tester.pumpWidget(const MyApp());
 
@@ -223,7 +267,7 @@ void main() {
 
   testWidgets('Login dialog', (WidgetTester tester) async {
     setupLibPhoneNumber(tester);
-    Get.deleteAll();
+    await Get.deleteAll();
     supabaseClient.auth.currentSession = null;
     Get.put(supabaseClient);
 
@@ -287,7 +331,7 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(1));
     await tester.pumpAndSettle();
 
-    expect(find.text("Welcome!"), findsWidgets);
+    expect(find.text('You are now logged in. Eat well 💜'), findsWidgets);
   });
 
   group('golden tests', () {
@@ -322,7 +366,9 @@ void main() {
       await screenMatchesGolden(tester, 'main', autoHeight: true);
     });
   }, onPlatform: {
-    'windows': [const Skip()]
+    'windows': Platform.environment.containsKey('CI')
+        ? [const Skip("Only run on CI if not on windows")]
+        : []
   });
 }
 
