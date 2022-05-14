@@ -202,7 +202,7 @@ jobs:
       - name: Build
         run: flutter pub run build_runner build
 
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: adopt-hotspot
