@@ -268,17 +268,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: appbundle
           path: '*.aab'
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: apk
           path: '*.apk'
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: msix
           path: '*.msix'
@@ -312,7 +312,7 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/
