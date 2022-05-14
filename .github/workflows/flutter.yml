@@ -93,13 +93,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{ matrix.target == 'appbundle' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: apk
           path: '*.apk'
 
       - if: ${{ matrix.target == 'appbundle' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
@@ -116,7 +116,7 @@ jobs:
 #             *.apk
 
       - if: ${{ matrix.target == 'web' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web
           path: build/web
@@ -227,7 +227,7 @@ jobs:
             flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
             echo "::endgroup::"
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: screenshots
@@ -379,7 +379,7 @@ jobs:
 
       - run: flutter build windows
       - run: flutter pub run msix:create
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: msix
           path: build\windows\runner\**\*.msix
