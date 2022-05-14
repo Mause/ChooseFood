@@ -2,6 +2,12 @@ ci:
   skip: [flutter-format, flutter-analyze]
 exclude: .devcontainer/devcontainer.json
 repos:
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v1.3.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [] # optional: list of Conventional Commits types to allow
   - repo: https://github.com/Cretezy/flutter-format-pre-commit
     rev: 4a1df675bb74dea371c17934933e257e46f8dd98
     hooks:
@@ -11,7 +17,7 @@ repos:
     hooks:
       - id: flutter-analyze
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.2.0
     hooks:
       - id: check-yaml
       - id: check-json

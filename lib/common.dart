@@ -1,10 +1,52 @@
-import 'package:choose_food/components/friends_sessions.dart';
-import 'package:choose_food/main.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter/material.dart'
+    show
+        Material,
+        NavigationBar,
+        Scaffold,
+        NavigationDestinationLabelBehavior,
+        NavigationDestination,
+        AppBar,
+        AlertDialog,
+        EdgeInsets,
+        Padding,
+        CircularProgressIndicator;
+import 'package:flutter/widgets.dart'
+    show
+        BoxConstraints,
+        BuildContext,
+        Center,
+        Column,
+        Container,
+        Icon,
+        Key,
+        ListBody,
+        MainAxisAlignment,
+        Row,
+        SingleChildScrollView,
+        State,
+        StatefulWidget,
+        StatelessWidget,
+        Text,
+        Widget;
+import 'package:get/get.dart' show Get, Inst, GetNavigation;
+import 'package:jwt_decode/jwt_decode.dart';
+import 'package:loader_overlay/loader_overlay.dart'
+    show OverlayControllerWidgetExtension;
+import 'package:logger/logger.dart' show Logger;
+import 'package:sentry_flutter/sentry_flutter.dart' show Sentry;
+import 'package:supabase/supabase.dart'
+    show
+        PostgrestBuilder,
+        PostgrestError,
+        PostgrestResponse,
+        SupabaseClient,
+        User;
 
-import 'info.dart';
+import 'components/friends_sessions.dart' show FriendsSessions;
+import 'components/historical_sessions.dart' show HistoricalSessions;
+import 'info.dart' show InfoPage;
+import 'main.dart' show MyHomePage;
 
 const title = "Choose Food";
 var log = Logger();
@@ -36,13 +78,16 @@ class _BasePage extends State<BasePage> {
     });
     switch (value) {
       case 0:
-        Navigator.pushNamed(context, MyHomePage.routeName);
+        Get.toNamed(MyHomePage.routeName);
         break;
       case 1:
-        Navigator.pushNamed(context, FriendsSessions.routeName);
+        Get.toNamed(FriendsSessions.routeName);
+        break;
+      case 2:
+        Get.toNamed(HistoricalSessions.routeName);
         break;
       case 3:
-        Navigator.pushNamed(context, InfoPage.routeName);
+        Get.toNamed(InfoPage.routeName);
         break;
       default:
         log.e("fell through", value);
@@ -87,7 +132,7 @@ class _BasePage extends State<BasePage> {
             NavigationDestination(
                 icon: Icon(CupertinoIcons.home), label: 'Home'),
             NavigationDestination(
-                icon: Icon(CupertinoIcons.person), label: 'Friends sessions'),
+                icon: Icon(CupertinoIcons.person_2), label: 'Friends sessions'),
             NavigationDestination(
                 icon: Icon(CupertinoIcons.time), label: 'Past sessions'),
             NavigationDestination(
@@ -95,4 +140,99 @@ class _BasePage extends State<BasePage> {
           ]),
     );
   }
+}
+
+Future<MyPostgrestResponse<T>> execute<T>(PostgrestBuilder builder,
+    T Function(Map<String, dynamic> e) fromJson) async {
+  var response = await builder.execute();
+
+  if (response.error != null) {
+    var message = "Failed to request ${builder.method} ${builder.url}";
+    log.e(message, response.error, StackTrace.current);
+    await Sentry.captureException(response.error, hint: message);
+  }
+
+  return MyPostgrestResponse(
+      datam: ((response.data as List<dynamic>?) ?? [])
+          .map((e) => e as Map<String, dynamic>)
+          .map((e) => fromJson(e))
+          .toList(),
+      count: response.count,
+      status: response.status,
+      error: response.error);
+}
+
+extension TypedExecuteExtension on PostgrestBuilder {
+  Future<MyPostgrestResponse<T>> typedExecute<T>(
+      T Function(Map<String, dynamic> e) fromJson) async {
+    return execute<T>(this, fromJson);
+  }
+}
+
+class MyPostgrestResponse<T> extends PostgrestResponse {
+  @override
+  get data => datam;
+
+  List<T> datam;
+
+  MyPostgrestResponse(
+      {required this.datam, int? count, PostgrestError? error, int? status})
+      : super(count: count, error: error, status: status);
+}
+
+Widget Function(BuildContext) makeErrorDialog(String error,
+    {dynamic title = 'Login failed'}) {
+  return (BuildContext context) => AlertDialog(
+      title: Text(title.toString()),
+      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
+}
+
+Map<String, dynamic> excludeNull(Map<String, dynamic> map) =>
+    Map.from(map)..removeWhere((key, value) => value == null);
+
+class LabelledProgressIndicator extends StatelessWidget {
+  final String label;
+
+  const LabelledProgressIndicator(this.label, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        constraints: const BoxConstraints(
+          minWidth: 36.0,
+          minHeight: 36.0,
+        ),
+        padding: const EdgeInsets.all(20),
+        width: 100,
+        child: Center(
+            child: Material(
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        const CircularProgressIndicator(),
+                        Text(label)
+                      ],
+                    )))));
+  }
+}
+
+extension LabelledProgressIndicatorExtension on BuildContext {
+  progress(String label) {
+    loaderOverlay.show(widget: LabelledProgressIndicator(label));
+  }
+}
+
+User? getAccessToken() {
+  SupabaseClient supabaseClient = Get.find();
+
+  var accessToken = supabaseClient.auth.currentSession?.accessToken;
+  if (accessToken == null) return null;
+
+  var decode = Jwt.parseJwt(accessToken);
+
+  decode['id'] = decode['sub'];
+  decode['created_at'] = decode['updated_at'] = "0";
+
+  return User.fromJson(decode);
 }

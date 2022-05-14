@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          checked: true
+      swagger_dart_code_generator:
+        options:
+          input_folder: 'lib/swagger'
+          output_folder: 'lib/generated_code/'
+          build_only_models: true
+          separate_models: true

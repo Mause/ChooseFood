@@ -51,3 +51,6 @@ app.*.map.json
 vendor/
 secrets.json
 .bundle/
+lib/generated_code
+firebase/
+test/failures

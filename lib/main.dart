@@ -1,24 +1,25 @@
-import 'dart:async' show Future;
-import 'dart:collection';
+import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
+import 'package:choose_food/components/historical_sessions.dart';
 import 'package:choose_food/environment_config.dart';
+import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
+    show PointType;
 import 'package:flutter/material.dart'
-    show AlertDialog, Card, ElevatedButton, Theme, ThemeData, showDialog;
+    show ButtonBar, Card, ElevatedButton, Ink, ListTile, ThemeData, showDialog;
 import 'package:flutter/widgets.dart'
     show
         Axis,
+        BoxFit,
         BuildContext,
+        Column,
         EdgeInsets,
-        Expanded,
         FutureBuilder,
-        Image,
         Key,
-        ListBody,
         MediaQuery,
+        NetworkImage,
         Padding,
-        Row,
-        SingleChildScrollView,
+        SizedBox,
         State,
         StatefulWidget,
         StatelessWidget,
@@ -26,41 +27,58 @@ import 'package:flutter/widgets.dart'
         Widget,
         Wrap,
         runApp;
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart'
-    show FacebookAuth, LoginStatus;
 import 'package:geolocator/geolocator.dart'
-    show GeolocatorPlatform, LocationPermission, Position;
+    show GeolocatorPlatform, LocationPermission, LocationSettings, Position;
+import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart'
     show GoogleMapsPlaces, Location, PlacesSearchResult;
 import 'package:loader_overlay/loader_overlay.dart'
-    show LoaderOverlay, OverlayControllerWidgetExtension;
+    show GlobalLoaderOverlay, OverlayControllerWidgetExtension;
 import 'package:logger/logger.dart' show Logger;
+import 'package:material_you_colours/material_you_colours.dart'
+    show getMaterialYouThemeData;
 import 'package:sentry_flutter/sentry_flutter.dart'
-    show Sentry, SentryFlutter, SentryNavigatorObserver;
-import 'package:get/get.dart';
-import 'package:supabase/supabase.dart';
+    show Sentry, SentryFlutter, SentryNavigatorObserver, SentryEvent;
+import 'package:sentry_logging/sentry_logging.dart' show LoggingIntegration;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Supabase, SupabaseClient;
 
-import 'common.dart' show BasePage, title;
+import 'common.dart'
+    show
+        BasePage,
+        LabelledProgressIndicatorExtension,
+        TypedExecuteExtension,
+        excludeNull,
+        getAccessToken,
+        makeErrorDialog,
+        title;
+import 'common/auth_required_state.dart' show AuthRequiredState;
+import 'components/login_dialog.dart';
+import 'generated_code/openapi.models.swagger.dart'
+    show Session, Point, Decision, Participant;
 import 'info.dart' show InfoPage;
-import 'platform_colours.dart' show getThemeData;
+import 'sessions.dart' show Sessions;
 
 var log = Logger();
 
 Future<void> main() async {
   if (EnvironmentConfig.sentryDsn == 'https://...') {
     log.w("Running without sentry");
-    runApp(const MyApp());
+    await _runApp();
   } else {
     await SentryFlutter.init((options) {
       options.dsn = EnvironmentConfig.sentryDsn;
-    }, appRunner: () => runApp(const MyApp()));
+      options.beforeSend = beforeSend;
+      options.addIntegration(LoggingIntegration());
+    }, appRunner: _runApp);
   }
 }
 
-Widget Function(BuildContext) makeErrorDialog(String error) {
-  return (BuildContext context) => AlertDialog(
-      title: const Text('Login failed'),
-      content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
+Future<void> _runApp() async {
+  await Supabase.initialize(
+      url: EnvironmentConfig.supabaseUrl,
+      anonKey: EnvironmentConfig.supabaseKey);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -70,24 +88,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.isLogEnable = true;
-    Get.put(SupabaseClient(
-        EnvironmentConfig.supabaseUrl, EnvironmentConfig.supabaseKey));
+
+    Get.put(Supabase.instance.client);
     Get.put(GoogleMapsPlaces(apiKey: EnvironmentConfig.googleApiKey));
 
     return FutureBuilder<ThemeData>(
-        future: getThemeData(),
-        builder: (context, snapshot) => GetMaterialApp(
+        future: getMaterialYouThemeData(),
+        builder: (context, snapshot) => GlobalLoaderOverlay(
+                child: GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
-              home: const LoaderOverlay(child: MyHomePage(title: title)),
+              initialRoute: MyHomePage.routeName,
               navigatorObservers: [
                 SentryNavigatorObserver(),
               ],
               routes: {
+                MyHomePage.routeName: (context) =>
+                    const MyHomePage(title: title),
+                LoginDialog.routeName: (context) => const LoginDialog(),
                 InfoPage.routeName: (context) => const InfoPage(),
-                FriendsSessions.routeName: (context) => const FriendsSessions()
+                FriendsSessions.routeName: (context) => const FriendsSessions(),
+                HistoricalSessions.routeName: (context) =>
+                    const HistoricalSessions(),
               },
-            ));
+            )));
   }
 }
 
@@ -111,8 +135,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => MyHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class MyHomePageState extends AuthRequiredState<MyHomePage> {
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
@@ -122,48 +145,58 @@ class MyHomePageState extends State<MyHomePage> {
   GoogleMapsPlaces places = Get.find();
   SupabaseClient supabaseClient = Get.find();
 
-  getPlaces() async {
-    context.loaderOverlay.show();
-    var session =
-        await supabaseClient.from(TableNames.session).insert({}).execute();
+  Participant? participant;
+
+  @override
+  void onAuthenticated(session) {
+    loadExistingSession();
+  }
+
+  Future<void> loadExistingSession() async {
+    context.progress("Loading existing session");
+
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .select()
+        .is_(ColumnNames.session.concludedTime, null)
+        .typedExecute(Session.fromJson);
+    if (response.error != null) {
+      throw await makeError(response.error);
+    }
+
     setState(() {
-      sessionId = ((session.data as List<dynamic>)[0]
-          as LinkedHashMap<String, dynamic>)['id'];
+      sessionId = response.datam.isEmpty ? null : response.datam[0].id;
     });
 
-    log.i("started new session: $sessionId");
-
-    var locationServiceEnabled =
-        await geolocatorPlatform.isLocationServiceEnabled();
-    var permission = await geolocatorPlatform.requestPermission();
-    log.i({
-      "message": "checking location",
-      "locationServiceEnabled": locationServiceEnabled,
-      "permission": permission
-    });
-    if (!(locationServiceEnabled && isAllowed(permission))) {
-      log.e("Location permission not given");
-      return;
+    if (response.datam.isNotEmpty) {
+      await loadPlaces(toLocation(response.datam[0].point!));
+    } else {
+      context.loaderOverlay.hide();
     }
+  }
 
-    Position geoposition;
-    try {
-      geoposition = await geolocatorPlatform.getCurrentPosition(
-          timeLimit: const Duration(seconds: 10));
-    } catch (e, s) {
-      showDialog(context: context, builder: makeErrorDialog(e.toString()));
-      await Sentry.captureException(e, stackTrace: s);
-      log.e("timed out", e, s);
-      return;
-    }
-    var location =
-        Location(lat: geoposition.latitude, lng: geoposition.longitude);
+  Location toLocation(Point point) {
+    var coordinates = point.coordinates!;
+    var location = Location(lat: coordinates[0], lng: coordinates[1]);
+    return location;
+  }
 
+  getPlaces() async {
+    context.progress("Determining location...");
+    var location = await getLocation();
+
+    context.progress("Creating session...");
+    await createSession(location);
+
+    await loadPlaces(location);
+  }
+
+  Future<void> loadPlaces(Location location) async {
+    context.progress("Loading places...");
     var response =
         await places.searchNearbyWithRadius(location, 3000, type: "restaurant");
     if (response.errorMessage != null) {
-      await Sentry.captureMessage(response.errorMessage);
-      log.e(response.errorMessage);
+      throw await makeError(response.errorMessage!);
     } else {
       log.i("found places ${response.results.length}");
     }
@@ -174,44 +207,105 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> _login() async {
-    log.w('Calling login');
-
-    var accessToken = await FacebookAuth.i.accessToken;
-    if (accessToken == null) {
-      var loginResult =
-          await FacebookAuth.instance.login(permissions: ["email"]);
-      log.w({"status": loginResult.status, "message": loginResult.message});
-      if (loginResult.status != LoginStatus.success) {
-        await Sentry.captureMessage(loginResult.message!);
-        await showDialog(
-            context: context, builder: makeErrorDialog(loginResult.message!));
+  Future<Location> getLocation() async {
+    var locationServiceEnabled =
+        await geolocatorPlatform.isLocationServiceEnabled();
+    log.i({"locationServiceEnabled": locationServiceEnabled});
+    if (!locationServiceEnabled) {
+      throw makeError("Location service not enabled");
+    }
+    try {
+      var permission = await geolocatorPlatform
+          .requestPermission()
+          .timeout(const Duration(minutes: 1));
+      log.i({
+        "message": "checking location",
+        "locationServiceEnabled": locationServiceEnabled,
+        "permission": permission
+      });
+      if (!isAllowed(permission)) {
+        throw await makeError("Location permission not given");
       }
-      accessToken = loginResult.accessToken;
+    } catch (e, s) {
+      log.e("Failed to request permission, trying anyway", e, s);
     }
 
-    if (accessToken == null) {
-      await Sentry.captureMessage('failed to login');
-      log.e("failed to login");
-      return;
+    Position geoposition;
+    try {
+      geoposition = await geolocatorPlatform.getCurrentPosition(
+          locationSettings:
+              const LocationSettings(timeLimit: Duration(seconds: 10)));
+    } catch (e, s) {
+      throw await makeError("Location request timed out", e: e, s: s);
     }
-
-    setState(() {
-      userId = accessToken?.userId;
-    });
-
-    log.i("login complete?");
+    var location =
+        Location(lat: geoposition.latitude, lng: geoposition.longitude);
+    return location;
   }
 
-  void _incrementCounter() {
+  Future<ArgumentError> makeError(dynamic message,
+      {dynamic e, StackTrace? s}) async {
+    await Sentry.captureException(e, stackTrace: s, hint: message);
+    context.loaderOverlay.hide();
+    await showDialog(
+        context: context,
+        builder: makeErrorDialog(e.toString(), title: message));
+    log.e(message, e, s);
+    return ArgumentError(message);
+  }
+
+  Future<void> createSession(Location location) async {
+    var response = await supabaseClient
+        .from(TableNames.session)
+        .insert(excludeNull(Session(
+            point: Point(
+                type: PointType.point,
+                coordinates: [location.lat, location.lng])).toJson()))
+        .typedExecute(Session.fromJson);
+    if (response.error != null) {
+      log.e(response.error);
+      throw ArgumentError(response.error);
+    }
+
+    var session = response.data[0];
+
+    participant = await Sessions().joinSession(session, getAccessToken()!);
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      sessionId = session.id;
     });
+
+    log.i("started new session: $sessionId");
+  }
+
+  Future<void> _login() async {
+    await showDialog(
+        context: context, builder: (context) => const LoginDialog());
+
+    // log.w('Calling login');
+
+    // var accessToken = await FacebookAuth.i.accessToken;
+    // if (accessToken == null) {
+    //   var loginResult =
+    //       await FacebookAuth.instance.login(permissions: ["email"]);
+    //   log.w({"status": loginResult.status, "message": loginResult.message});
+    //   if (loginResult.status != LoginStatus.success) {
+    //     await Sentry.captureMessage(loginResult.message!);
+    //     await showDialog(
+    //         context: context, builder: makeErrorDialog(loginResult.message!));
+    //   }
+    //   accessToken = loginResult.accessToken;
+    // }
+
+    // if (accessToken == null) {
+    //   throw await makeError('Failed to login');
+    // }
+
+    // setState(() {
+    //   userId = accessToken?.userId;
+    // });
+
+    // log.i("login complete?");
   }
 
   @override
@@ -235,15 +329,27 @@ class MyHomePageState extends State<MyHomePage> {
         Wrap(
           direction: Axis.horizontal,
           children: [
-            elevatedButton('Login', _login),
-            elevatedButton('Increment', _incrementCounter),
-            elevatedButton('Get places', getPlaces),
+            getAccessToken() == null
+                ? elevatedButton('Login', _login)
+                : elevatedButton('Logout', () async {
+                    context.progress('Logging out');
+                    await supabaseClient.auth.signOut();
+                    context.loaderOverlay.hide();
+                  }),
+            elevatedButton('Conclude session', concludeSession,
+                enabled: sessionId != null),
+            elevatedButton('Get places', getPlaces,
+                enabled: getAccessToken() != null),
           ],
         ),
         Text(
-          '$_counter',
-          style: Theme.of(context).textTheme.headline4,
+          getAccessToken() != null
+              ? 'Logged in: ${getAccessToken()?.phone ?? "Unknown"}'
+              : 'Logged out',
         ),
+        Text(sessionId == null
+            ? 'No session started yet'
+            : 'Session ID: $sessionId'),
         location ?? const Text('No locations loaded yet'),
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
@@ -251,17 +357,71 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> createDecision(String reference, bool state) async {
-    await supabaseClient.from(TableNames.decision).insert({
-      "sessionId": sessionId!,
-      "placeReference": reference,
-      "decision": state
-    }).execute();
+    await supabaseClient
+        .from(TableNames.decision)
+        .insert(excludeNull(Decision(
+                sessionId: sessionId!,
+                participantId: participant!.id,
+                placeReference: reference,
+                decision: state)
+            .toJson()))
+        .typedExecute(Decision.fromJson);
   }
+
+  Future<void> concludeSession() async {
+    context.progress('Closing session');
+
+    await Sessions().concludeSession(sessionId!);
+
+    setState(() {
+      sessionId = null;
+      results = [];
+      index = 0;
+    });
+    context.loaderOverlay.hide();
+  }
+}
+
+class SessionFieldNames {
+  final String concludedTime = "concludedTime";
+  final String id = 'id';
+
+  const SessionFieldNames();
+}
+
+class ColumnNames {
+  static const session = SessionFieldNames();
+  static const decision = DecisionFieldNames();
+  static const participant = ParticipantFieldNames();
+}
+
+class ParticipantFieldNames {
+  final String sessionId = "sessionId";
+  final userId = "userId";
+  final createdAt = "created_at";
+  final id = "id";
+
+  const ParticipantFieldNames();
+}
+
+class DecisionFieldNames {
+  final String id = "id";
+  final String decision = "decision";
+  final String placeReference = "placeReference";
+  final String participantId = "participantId";
+
+  const DecisionFieldNames();
 }
 
 class TableNames {
   static const String decision = "decision";
   static const String session = "session";
+  static const String participant = "participant";
+  static const String users = "users";
+}
+
+class RpcNames {
+  static const String getMatchingUsers = "get_matching_users";
 }
 
 class LocationCard extends StatelessWidget {
@@ -275,15 +435,21 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: Image.network(places.buildPhotoUrl(
-                maxWidth: MediaQuery.of(context).size.width.truncate(),
-                photoReference: location.photos[0].photoReference)),
+          ListTile(title: Text(location.name)),
+          SizedBox(
+            height: 200.0,
+            child: Ink.image(
+              image: NetworkImage(
+                places.buildPhotoUrl(
+                    maxWidth: MediaQuery.of(context).size.width.truncate(),
+                    photoReference: location.photos[0].photoReference),
+              ),
+              fit: BoxFit.cover,
+            ),
           ),
-          Wrap(direction: Axis.horizontal, children: [Text(location.name)]),
-          Wrap(direction: Axis.horizontal, children: [
+          ButtonBar(children: [
             elevatedButton('No', () {
               callback(location, false);
             }),
@@ -297,12 +463,13 @@ class LocationCard extends StatelessWidget {
   }
 }
 
-Padding elevatedButton(String label, void Function() onPressed) {
+Padding elevatedButton(String label, void Function() onPressed,
+    {bool enabled = true}) {
   return Padding(
     padding: const EdgeInsets.all(10),
     child: ElevatedButton(
       child: Text(label),
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
     ),
   );
 }
@@ -315,4 +482,8 @@ bool isAllowed(LocationPermission index) {
     default:
       return false;
   }
+}
+
+FutureOr<SentryEvent?> beforeSend(SentryEvent event, {hint}) {
+  return event.tags?['os.rooted'] == 'yes' ? null : event;
 }
