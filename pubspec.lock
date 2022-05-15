@@ -816,7 +816,7 @@ packages:
       name: sentry_dart_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-beta.1"
+    version: "1.0.0-beta.2"
   sentry_flutter:
     dependency: "direct main"
     description:
@@ -962,13 +962,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
-  system_info:
+  system_info2:
     dependency: transitive
     description:
-      name: system_info
+      name: system_info2
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.3"
   term_glyph:
     dependency: transitive
     description:
