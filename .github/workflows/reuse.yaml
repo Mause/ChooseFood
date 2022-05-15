@@ -3,6 +3,9 @@ name: Flutter
 on:
   workflow_call:
 
+env:
+  flutter_version: '2.9.0'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +21,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.9.0'
+          flutter-version: ${{ env.flutter_version }}
           channel: 'beta'
 
       - name: Install dependencies
