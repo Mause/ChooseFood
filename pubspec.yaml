@@ -55,6 +55,7 @@ dependencies:
     git:
       url: https://github.com/Mause/material_you_colours
       ref: 9bec0cb3
+  win32: ^2.5.2
 
 dev_dependencies:
   flutter_test:
