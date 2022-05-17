@@ -44,7 +44,16 @@ import 'package:supabase_flutter/supabase_flutter.dart'
     show Supabase, SupabaseClient;
 
 import 'common.dart'
-    show BasePage, LabelledProgressIndicatorExtension, TypedExecuteExtension, excludeNull, getAccessToken, makeErrorDialog, nullIntKey, nullStrKey, title;
+    show
+        BasePage,
+        LabelledProgressIndicatorExtension,
+        TypedExecuteExtension,
+        excludeNull,
+        getAccessToken,
+        makeErrorDialog,
+        nullIntKey,
+        nullStrKey,
+        title;
 import 'common/auth_required_state.dart' show AuthRequiredState;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'

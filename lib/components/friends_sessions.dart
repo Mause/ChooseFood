@@ -46,7 +46,7 @@ import 'package:supabase/supabase.dart' show SupabaseClient;
 
 import '../common.dart' show LabelledProgressIndicatorExtension;
 import '../generated_code/openapi.models.swagger.dart'
-    show Decision, Session, Point, Users;
+    show Decision, Point, Session, Users;
 import '../sessions.dart' show Sessions;
 
 part 'friends_sessions.g.dart';
