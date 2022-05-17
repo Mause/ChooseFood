@@ -16,11 +16,51 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  flutter-version: '2.9.0'
+  flutter_version: '2.13.0'
 
 jobs:
   build:
-    uses: Mause/ChooseFood/.github/workflows/reuse.yaml@main
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: 'beta'
+
+      - run: flutter doctor
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build
+        run: flutter pub run build_runner build
+
+      # Uncomment this step to verify the use of 'dart format' on each commit.
+      # - name: Verify formatting
+      #   run: flutter format --output=none --set-exit-if-changed .
+
+      - uses: invertase/github-action-dart-analyzer@v1
+
+      - name: Unit tests
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test failures
+          path: test/failures
+      #- run: flutter packages pub run sentry_dart_plugin
+      #  env:
+      #    SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   build_releases:
     runs-on: ubuntu-latest
@@ -31,17 +71,17 @@ jobs:
         target: [appbundle, web]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter-version }}
+          flutter-version: ${{ env.flutter_version }}
           channel: beta
       - name: Install dependencies
         run: flutter pub get
@@ -93,13 +133,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{ matrix.target == 'appbundle' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: apk
           path: '*.apk'
 
       - if: ${{ matrix.target == 'appbundle' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/app-release.aab
@@ -116,7 +156,7 @@ jobs:
 #             *.apk
 
       - if: ${{ matrix.target == 'web' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web
           path: build/web
@@ -125,18 +165,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
           channel: 'beta'
-          flutter-version: ${{ env.flutter-version }}
+          flutter-version: ${{ env.flutter_version }}
 
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
@@ -150,7 +190,7 @@ jobs:
         api-level: [31]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Gradle cache
         uses: actions/cache@v3
@@ -189,11 +229,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter-version }}
+          flutter-version: ${{ env.flutter_version }}
           channel: 'beta'
 
       - name: Install dependencies
@@ -227,7 +267,7 @@ jobs:
             flutter drive --driver=test_driver/integration_test.dart --target=integration_test/screenshot_test.dart -d emulator-5554 --trace-startup
             echo "::endgroup::"
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: screenshots
@@ -245,7 +285,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: ruby/setup-ruby@v1
@@ -264,21 +304,21 @@ jobs:
      # - integration_tests
       - build_windows
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: appbundle
           path: '*.aab'
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: apk
           path: '*.apk'
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: msix
           path: '*.msix'
@@ -300,7 +340,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: ruby/setup-ruby@v1
@@ -312,7 +352,7 @@ jobs:
         env:
           SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: appbundle
           path: build/app/outputs/bundle/release/
@@ -348,17 +388,17 @@ jobs:
     needs: build
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter-version }}-${{ hashFiles('pubspec.lock') }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ hashFiles('pubspec.lock') }}
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter-version }}
+          flutter-version: ${{ env.flutter_version }}
           channel: 'beta'
 
       - run: flutter config --enable-windows-desktop
@@ -377,9 +417,8 @@ jobs:
       - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
-      - run: flutter build windows
-      - run: flutter pub run msix:create
-      - uses: actions/upload-artifact@v2
+      - run: flutter pub run msix:create --install-certificate false
+      - uses: actions/upload-artifact@v3
         with:
           name: msix
           path: build\windows\runner\**\*.msix
