@@ -2,7 +2,9 @@ import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
     show BasePage, MyPostgrestResponse, TypedExecuteExtension, getAccessToken;
-import 'package:choose_food/main.dart' show ColumnNames, TableNames;
+import '../common/auth_required_state.dart' show AuthRequiredState;
+import '../main.dart' show ColumnNames, RpcNames, TableNames;
+import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:flutter/material.dart'
     show
         AlertDialog,
@@ -13,6 +15,7 @@ import 'package:flutter/material.dart'
         DataRow,
         DataTable,
         ListTile,
+        RefreshIndicator,
         TextButton,
         showDialog;
 import 'package:flutter/services.dart' show PlatformException;
@@ -34,7 +37,8 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart' show Get, Inst, ExtensionSnackbar;
 import 'package:google_maps_webservice/places.dart' show GoogleMapsPlaces;
 import 'package:intl_phone_number_input/intl_phone_number_input_test.dart';
-import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
+import 'package:json_annotation/json_annotation.dart'
+    show JsonSerializable, $checkedCreate;
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -61,7 +65,7 @@ class FriendsSessions extends StatefulWidget {
 List<Map<String, dynamic>> toMapList(dynamic data) =>
     (data as List<dynamic>).map((e) => e as Map<String, dynamic>).toList();
 
-class FriendsSessionsState extends State<FriendsSessions> {
+class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
   SupabaseClient supabaseClient = Get.find();
 
   List<Widget> sessions = [];
@@ -73,11 +77,13 @@ class FriendsSessionsState extends State<FriendsSessions> {
   num? numberOfContacts;
 
   @override
-  void initState() {
-    super.initState();
+  void onAuthenticated(session) {
+    reload();
+  }
 
+  Future<void> reload() async {
     context.progress("Loading...");
-    Future.wait([initSessions(), loadFriends()]).whenComplete(() {
+    await Future.wait([initSessions(), loadFriends()]).whenComplete(() {
       context.loaderOverlay.hide();
     });
   }
@@ -88,27 +94,30 @@ class FriendsSessionsState extends State<FriendsSessions> {
       FlutterContacts.config.includeNonVisibleOnAndroid = true;
 
       log.i("Loading friends");
-      var possibles = await FlutterContacts.getContacts(withPhoto: true);
+      var possibles = await FlutterContacts.getContacts(
+          withPhoto: true, withProperties: true);
       log.i("Loaded contacts: ${possibles.length}");
       setState(() {
         numberOfContacts = possibles.length;
       });
 
-      List<NamePhone> contacts = (await Future.wait(possibles
-              .expand((element) =>
-                  element.phones.map((e) => NamePhone(element.name, e)))
-              .map(formatNumbers)
-              .toList()))
-          .where((NamePhone? element) => element != null)
-          .map((e) => e!)
+      var numbers = possibles
+          .expand((element) =>
+              element.phones.map((e) => NamePhone(element.name, e)))
           .toList();
+      log.i("Numbers to parse: ${numbers.length}");
+
+      List<NamePhone> contacts =
+          (await Future.wait(numbers.map(formatNumbers).toList()))
+              .where((NamePhone? element) => element != null)
+              .map((e) => e!)
+              .toList();
       log.i("Parsed ${contacts.length} contacts");
 
-      var yourFriends = (await supabaseClient
-              .from(TableNames.users)
-              .select()
-              .in_("phone", contacts.map((e) => e.phone.number).toList())
-              .typedExecute(Users.fromJson))
+      var yourFriends = (await supabaseClient.rpc(RpcNames.getMatchingUsers,
+              params: {
+            "phones": contacts.map((e) => e.phone.number).toList()
+          }).typedExecute(Users.fromJson))
           .datam;
       setState(() {
         this.yourFriends = yourFriends;
@@ -130,7 +139,10 @@ class FriendsSessionsState extends State<FriendsSessions> {
     PhoneNumberTest phoneNumberTest;
     try {
       phoneNumberTest = await PhoneNumberTest.getRegionInfoFromPhoneNumber(
-          e.phone.normalizedNumber, 'AU');
+          e.phone.normalizedNumber.isEmpty
+              ? e.phone.number
+              : e.phone.normalizedNumber,
+          'AU');
     } on PlatformException {
       log.e('failed to parse "${e.phone}" for ${e.name}');
       return null;
@@ -192,7 +204,10 @@ class FriendsSessionsState extends State<FriendsSessions> {
           title: Text(
               'Your friends have ${friendsSessions?.length ?? "?"} sessions')),
       ListTile(title: Text('${openSessions ?? "?"} of which are open')),
-      Expanded(child: ListView(children: sessions, primary: true))
+      Expanded(
+          child: RefreshIndicator(
+              onRefresh: reload,
+              child: ListView(children: sessions, primary: true)))
     ]);
   }
 }
