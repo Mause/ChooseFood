@@ -342,7 +342,10 @@ void main() {
               "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
           .reply(200, [
         SessionWithDecisions(
-            decision: [Decision()],
+            decision: [
+              Decision(
+                  id: 0, placeReference: "", participantId: 0, decision: false)
+            ],
             id: "0",
             concludedTime: null,
             createdAt: DateTime.now().toIso8601String(),

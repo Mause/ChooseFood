@@ -218,10 +218,10 @@ class SessionWithDecisions extends Session {
 
   SessionWithDecisions(
       {required this.decision,
-      String? id,
-      String? concludedTime,
+      required String id,
       String? createdAt,
-      Point? point})
+      String? concludedTime,
+      required Point point})
       : super(
             id: id,
             concludedTime: concludedTime,
@@ -247,7 +247,7 @@ class SessionCard extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          ListTile(title: Text(sessionWithDecisions.id!)),
+          ListTile(title: Text(sessionWithDecisions.id)),
           ButtonBar(children: [
             TextButton(
                 onPressed: () async {
@@ -308,7 +308,7 @@ class _DecisionDialogState extends State<DecisionDialog> {
 
     log.d("Loading place names");
     placeNames = (await Future.wait(widget.sessionWithDecisions.decision
-            .map((e) => places.getDetailsByPlaceId(e.placeReference!))))
+            .map((e) => places.getDetailsByPlaceId(e.placeReference))))
         .toMap((e) => e.result.reference!, (e) => e.result.name);
 
     log.d("Loading user names");
@@ -330,7 +330,7 @@ class _DecisionDialogState extends State<DecisionDialog> {
   Widget build(context) {
     log.d("rendering");
     return AlertDialog(
-        title: Text(widget.sessionWithDecisions.id!),
+        title: Text(widget.sessionWithDecisions.id),
         content: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
@@ -342,10 +342,10 @@ class _DecisionDialogState extends State<DecisionDialog> {
                 rows: widget.sessionWithDecisions.decision
                     .map((e) => DataRow(cells: [
                           DataCell(Text(
-                              placeNames[e.placeReference!] ?? 'Loading...')),
+                              placeNames[e.placeReference] ?? 'Loading...')),
                           DataCell(Text(e.decision == true ? 'Yes' : 'No')),
                           DataCell(
-                              Text(userNames[e.participantId!] ?? 'Loading...'))
+                              Text(userNames[e.participantId] ?? 'Loading...'))
                         ]))
                     .toList())));
   }

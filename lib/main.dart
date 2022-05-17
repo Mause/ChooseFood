@@ -44,14 +44,7 @@ import 'package:supabase_flutter/supabase_flutter.dart'
     show Supabase, SupabaseClient;
 
 import 'common.dart'
-    show
-        BasePage,
-        LabelledProgressIndicatorExtension,
-        TypedExecuteExtension,
-        excludeNull,
-        getAccessToken,
-        makeErrorDialog,
-        title;
+    show BasePage, LabelledProgressIndicatorExtension, TypedExecuteExtension, excludeNull, getAccessToken, makeErrorDialog, nullIntKey, nullStrKey, title;
 import 'common/auth_required_state.dart' show AuthRequiredState;
 import 'components/login_dialog.dart';
 import 'generated_code/openapi.models.swagger.dart'
@@ -139,7 +132,7 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
   String? userId;
   int index = 0;
   List<PlacesSearchResult> results = [];
-  String? sessionId;
+  Session? session;
 
   GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
   GoogleMapsPlaces places = Get.find();
@@ -165,11 +158,11 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
     }
 
     setState(() {
-      sessionId = response.datam.isEmpty ? null : response.datam[0].id;
+      session = response.datam.isEmpty ? null : response.datam[0];
     });
 
     if (response.datam.isNotEmpty) {
-      await loadPlaces(toLocation(response.datam[0].point!));
+      await loadPlaces(toLocation(response.datam[0].point));
     } else {
       context.loaderOverlay.hide();
     }
@@ -258,6 +251,7 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
     var response = await supabaseClient
         .from(TableNames.session)
         .insert(excludeNull(Session(
+            id: nullStrKey,
             point: Point(
                 type: PointType.point,
                 coordinates: [location.lat, location.lng])).toJson()))
@@ -267,15 +261,13 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
       throw ArgumentError(response.error);
     }
 
-    var session = response.data[0];
-
-    participant = await Sessions().joinSession(session, getAccessToken()!);
-
     setState(() {
-      sessionId = session.id;
+      session = response.data[0];
     });
 
-    log.i("started new session: $sessionId");
+    participant = await Sessions().joinSession(session!, getAccessToken()!);
+
+    log.i("started new session: ${session!.id}");
   }
 
   Future<void> _login() async {
@@ -337,7 +329,7 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
                     context.loaderOverlay.hide();
                   }),
             elevatedButton('Conclude session', concludeSession,
-                enabled: sessionId != null),
+                enabled: session != null),
             elevatedButton('Get places', getPlaces,
                 enabled: getAccessToken() != null),
           ],
@@ -347,9 +339,9 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
               ? 'Logged in: ${getAccessToken()?.phone ?? "Unknown"}'
               : 'Logged out',
         ),
-        Text(sessionId == null
+        Text(session == null
             ? 'No session started yet'
-            : 'Session ID: $sessionId'),
+            : 'Session ID: ${session!.id}'),
         location ?? const Text('No locations loaded yet'),
         //Expanded(child: ListView(children: locations, primary: true)),
       ],
@@ -360,7 +352,8 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
     await supabaseClient
         .from(TableNames.decision)
         .insert(excludeNull(Decision(
-                sessionId: sessionId!,
+                id: nullIntKey,
+                sessionId: session!.id,
                 participantId: participant!.id,
                 placeReference: reference,
                 decision: state)
@@ -371,10 +364,10 @@ class MyHomePageState extends AuthRequiredState<MyHomePage> {
   Future<void> concludeSession() async {
     context.progress('Closing session');
 
-    await Sessions().concludeSession(sessionId!);
+    await Sessions().concludeSession(session!);
 
     setState(() {
-      sessionId = null;
+      session = null;
       results = [];
       index = 0;
     });

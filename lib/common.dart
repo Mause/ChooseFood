@@ -187,8 +187,11 @@ Widget Function(BuildContext) makeErrorDialog(String error,
       content: SingleChildScrollView(child: ListBody(children: [Text(error)])));
 }
 
-Map<String, dynamic> excludeNull(Map<String, dynamic> map) =>
-    Map.from(map)..removeWhere((key, value) => value == null);
+const nullStrKey = '<<<<<<null_key>>>>>>';
+const nullIntKey = -1;
+Map<String, dynamic> excludeNull(Map<String, dynamic> map) => Map.from(map)
+  ..removeWhere((key, value) =>
+      value == null || value == nullIntKey || value == nullStrKey);
 
 class LabelledProgressIndicator extends StatelessWidget {
   final String label;

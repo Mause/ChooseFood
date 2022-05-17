@@ -99,14 +99,14 @@ class SessionCard extends StatelessWidget {
         child: Column(
       children: [
         ListTile(
-          title: Text(session.id!),
+          title: Text(session.id),
           subtitle: Text('Concluded time: ${session.concludedTime}'),
         ),
         ButtonBar(children: [
           TextButton(
               onPressed: () async {
                 context.progress("Loading summary");
-                var summary = await Sessions().summariseSession(session.id!);
+                var summary = await Sessions().summariseSession(session.id);
                 context.loaderOverlay.hide();
 
                 await Get.defaultDialog(
