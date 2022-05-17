@@ -401,7 +401,10 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
           channel: 'beta'
 
+      - run: flutter config --enable-windows-uwp-desktop
       - run: flutter config --enable-windows-desktop
+      - run: flutter doctor
+
       - name: Install dependencies
         run: flutter pub get
 
