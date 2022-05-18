@@ -350,6 +350,8 @@ void main() {
       supabaseScope
           .get("/rest/v1/participant?select=%2A&userId=in.%28%29")
           .reply(200, []);
+      supabaseScope.post(
+          "/rest/v1/rpc/get_matching_users", {"phones": []}).reply(200, []);
 
       var goldens = GoldenBuilder.column(
           wrap: (widget) => Container(
