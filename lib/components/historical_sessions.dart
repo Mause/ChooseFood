@@ -17,13 +17,20 @@ import 'package:flutter/widgets.dart'
         Expanded,
         Key,
         ListView,
-        State,
-        StatefulWidget,
         StatelessWidget,
         Text,
         Widget;
-import 'package:get/get.dart' show Get, Inst;
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart'
+    show
+        ExtensionDialog,
+        ExtensionSnackbar,
+        Get,
+        GetView,
+        GetxController,
+        Inst,
+        RxStatus,
+        StateExt,
+        StateMixin;
 import 'package:loader_overlay/loader_overlay.dart'
     show OverlayControllerWidgetExtension;
 import 'package:supabase/supabase.dart' show SupabaseClient;
@@ -31,29 +38,21 @@ import 'package:supabase/supabase.dart' show SupabaseClient;
 import '../generated_code/openapi.models.swagger.dart' show Session;
 import '../sessions.dart';
 
-class HistoricalSessions extends StatefulWidget {
-  static const routeName = "/historical";
-
-  const HistoricalSessions({Key? key}) : super(key: key);
-
-  @override
-  State<HistoricalSessions> createState() => _HistoricalSessionsState();
-}
-
-class _HistoricalSessionsState extends State<HistoricalSessions> {
+class HistoricalSessionsController extends GetxController
+    with StateMixin<List<Session>> {
   final SupabaseClient supabaseClient = Get.find();
 
   List<Session>? sessions;
 
   @override
-  void initState() {
-    super.initState();
-
-    context.progress("Loading historical sessions");
-    loadSessions().whenComplete(() => context.loaderOverlay.hide());
+  void onInit() {
+    super.onInit();
+    loadSessions();
   }
 
   Future<void> loadSessions() async {
+    change([], status: RxStatus.loading());
+
     var sessions = await supabaseClient
         .from(TableNames.session)
         .select()
@@ -65,25 +64,31 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
       return;
     }
 
-    setState(() {
-      this.sessions = sessions.datam;
-    });
+    change(sessions.datam, status: RxStatus.success());
 
     Get.snackbar(
         'Sessions loaded', 'Loaded ${this.sessions?.length ?? -1}\n$sessions',
         instantInit: false);
   }
+}
+
+class HistoricalSessions extends GetView<HistoricalSessionsController> {
+  static const routeName = "/historical";
+
+  const HistoricalSessions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BasePage(selectedIndex: 2, children: [
-      Text("Sessions: ${sessions == null ? -1 : sessions!.length}"),
       Expanded(
-          child: ListView(
-              children: (sessions ?? [])
-                  .map((session) => SessionCard(session))
-                  .toList(),
-              primary: true))
+        child: controller.obx(
+            (sessions) => ListView(
+                children:
+                    sessions!.map((session) => SessionCard(session)).toList(),
+                primary: true),
+            onLoading:
+                const LabelledProgressIndicator("Loading historical sessions")),
+      )
     ]);
   }
 }
