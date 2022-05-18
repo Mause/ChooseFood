@@ -65,6 +65,7 @@ void setupColours(WidgetTester tester) => tester.binding.defaultBinaryMessenger
               getColours('system_neutral1') +
               getColours('system_neutral2'));
       }
+      throw Exception(message.method);
     });
 
 String accessToken({String role = "authenticated"}) =>
@@ -88,9 +89,8 @@ void setupContacts(WidgetTester tester,
           return true;
         case "select":
           return contacts ?? [];
-        default:
-          log.e(message);
       }
+      throw Exception(message.method);
     });
 
 void setupLibPhoneNumber(WidgetTester tester) =>
@@ -106,9 +106,8 @@ void setupLibPhoneNumber(WidgetTester tester) =>
           return methodCall.arguments['phoneNumber'];
         case "getRegionInfo":
           return {};
-        default:
-          log.e(methodCall);
       }
+      throw Exception(methodCall.method);
     });
 
 void testWidgets(String name, Future<void> Function(WidgetTester tester) fn) {

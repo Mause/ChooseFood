@@ -28,8 +28,7 @@ import '../test/widget_test.dart' show accessToken;
 var log = Logger();
 
 void main() {
-  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
-      as IntegrationTestWidgetsFlutterBinding;
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() {
     Supabase.initialize(url: "https://supabase", anonKey: "");
