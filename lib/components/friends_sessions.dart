@@ -1,7 +1,7 @@
 import 'dart:async' show Future;
 
 import 'package:choose_food/common.dart'
-    show BasePage, MyPostgrestResponse, TypedExecuteExtension, getAccessToken;
+    show BasePage, TypedExecuteExtension, getAccessToken;
 import '../common/auth_required_state.dart' show AuthRequiredState;
 import '../main.dart' show ColumnNames, RpcNames, TableNames;
 import 'package:choose_food/main.dart' show ColumnNames, RpcNames, TableNames;
@@ -42,7 +42,7 @@ import 'package:json_annotation/json_annotation.dart'
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart' show Logger;
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:supabase/supabase.dart' show SupabaseClient;
+import 'package:supabase/supabase.dart' show PostgrestResponse, SupabaseClient;
 
 import '../common.dart' show LabelledProgressIndicatorExtension;
 import '../generated_code/openapi.models.swagger.dart'
@@ -118,7 +118,7 @@ class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
               params: {
             "phones": contacts.map((e) => e.phone.number).toList()
           }).typedExecute(Users.fromJson))
-          .datam;
+          .data!;
       setState(() {
         this.yourFriends = yourFriends;
       });
@@ -128,7 +128,7 @@ class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
               .select()
               .in_("userId", yourFriends.map((e) => e.id).toList())
               .typedExecute(Session.fromJson))
-          .datam;
+          .data;
       setState(() {
         this.friendsSessions = friendsSessions;
       });
@@ -152,7 +152,7 @@ class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
   }
 
   Future<void> initSessions() async {
-    MyPostgrestResponse<SessionWithDecisions> sessions;
+    PostgrestResponse<List<SessionWithDecisions>> sessions;
 
     context.loaderOverlay.show();
 
@@ -178,7 +178,7 @@ class FriendsSessionsState extends AuthRequiredState<FriendsSessions> {
     }
 
     setState(() {
-      this.sessions = sessions.datam
+      this.sessions = sessions.data!
           .map((e) => SessionCard(sessionWithDecisions: e))
           .toList();
     });
@@ -321,7 +321,7 @@ class _DecisionDialogState extends State<DecisionDialog> {
                     .map((e) => e.participantId)
                     .toList())
             .typedExecute(Users.fromJson))
-        .datam
+        .data!
         .toIndexMap((e) => e.id);
     log.d("Loaded: userNames: $userNames, placeNames: $placeNames");
   }

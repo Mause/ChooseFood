@@ -66,7 +66,7 @@ class _HistoricalSessionsState extends State<HistoricalSessions> {
     }
 
     setState(() {
-      this.sessions = sessions.datam;
+      this.sessions = sessions.data!;
     });
 
     Get.snackbar(
