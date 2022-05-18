@@ -14,9 +14,9 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
   }
 
   @override
-  void onAuthenticated(Session session) {
+  Future<void> onAuthenticated(Session session) async {
     if (mounted) {
-      Get.offNamedUntil(MyHomePage.routeName, (route) => false);
+      await Get.offNamedUntil(MyHomePage.routeName, (route) => false);
     }
   }
 

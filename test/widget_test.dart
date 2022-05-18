@@ -1,3 +1,4 @@
+import 'dart:async' show Future;
 import 'dart:convert' show base64Url, json, jsonEncode;
 import 'dart:io' show Platform;
 
@@ -6,6 +7,7 @@ import 'package:choose_food/components/friends_sessions.dart'
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
     show Decision, Point, Users;
 import 'package:choose_food/main.dart';
+import 'package:fake_async/fake_async.dart' show fakeAsync;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart' as flutter_test;
@@ -20,7 +22,6 @@ import 'package:flutter_test/flutter_test.dart'
         findsOneWidget,
         findsWidgets,
         hasLength,
-        isNull,
         setUp,
         tearDown;
 import 'package:flutter_test/src/finders.dart';
@@ -35,7 +36,8 @@ import 'package:network_image_mock/network_image_mock.dart'
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
 import 'package:supabase/supabase.dart' as supabase;
-import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
+import 'package:supabase_flutter/supabase_flutter.dart'
+    show Session, Supabase, AuthChangeEvent;
 import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
@@ -80,34 +82,60 @@ String accessToken({String role = "authenticated"}) =>
 
 void setupContacts(WidgetTester tester,
         {List<Map<String, dynamic>>? contacts}) =>
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('github.com/QuisApp/flutter_contacts'),
-        (message) async {
-      switch (message.method) {
+    handler(tester, 'github.com/QuisApp/flutter_contacts',
+        (method, args) async {
+      switch (method) {
         case "requestPermission":
           return true;
         case "select":
           return contacts ?? [];
         default:
-          log.e(message);
+          log.e(method);
       }
     });
 
+void setupUniLinks(WidgetTester tester) {
+  handler(tester, 'uni_links/events', (method, args) async {
+    switch (method) {
+      case "listen":
+        return null;
+      case "cancel":
+        return null;
+      default:
+        log.e(method);
+    }
+  });
+
+  handler(tester, 'uni_links/messages', (method, args) {
+    switch (method) {
+      case "getInitialLink":
+        return null;
+      default:
+        log.e(method);
+    }
+  });
+}
+
+void handler(flutter_test.WidgetTester tester, String channel,
+    Future<Object?>? Function(String, dynamic) callback) {
+  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      MethodChannel(channel),
+      (message) => callback(message.method, message.arguments));
+}
+
 void setupLibPhoneNumber(WidgetTester tester) =>
-    tester.binding.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('plugin.libphonenumber'),
-            (MethodCall methodCall) async {
-      switch (methodCall.method) {
+    handler(tester, 'plugin.libphonenumber', (method, args) async {
+      switch (method) {
         case "isValidPhoneNumber":
           return true;
         case "formatAsYouType":
-          return methodCall.arguments['phoneNumber'];
+          return args['phoneNumber'];
         case "normalizePhoneNumber":
-          return methodCall.arguments['phoneNumber'];
+          return args['phoneNumber'];
         case "getRegionInfo":
           return {};
         default:
-          log.e(methodCall);
+          log.e(method);
       }
     });
 
@@ -126,19 +154,36 @@ void main() {
   late NockScope mapsScope;
   late supabase.SupabaseClient supabaseClient;
 
-  setUpAll(() {
-    Supabase.initialize(url: "https://supabase", anonKey: "");
+  setUpAll(() async {
+    await Supabase.initialize(url: "https://supabase", anonKey: "");
     Supabase.instance.client.auth.currentSession =
         Session(accessToken: accessToken());
   });
+
+  void initialRequest(count) {
+    for (var _ in Iterable.generate(count)) {
+      supabaseScope
+          .get("/rest/v1/session?select=%2A&concludedTime=is.null")
+          .reply(200, []);
+    }
+  }
+
+  Future<void> triggerLogin(tester, AuthChangeEvent event) async {
+    var auth = Supabase.instance.client.auth;
+    var currentSession = auth.currentSession;
+    fakeAsync((fake) {
+      auth.stateChangeEmitters.forEach((k, v) => v.callback(
+          event, event == AuthChangeEvent.signedIn ? currentSession : null));
+      fake.flushMicrotasks();
+    });
+    await tester.pumpAndSettle();
+  }
 
   setUp(() {
     nock.init();
     supabaseScope = nock("https://supabase");
     mapsScope = nock("https://maps.googleapis.com");
-    supabaseScope
-        .get("/rest/v1/session?select=%2A&concludedTime=is.null")
-        .reply(200, []);
+    initialRequest(3);
     supabaseClient = supabase.SupabaseClient("https://supabase", "");
     supabaseClient.auth.setAuth(accessToken());
   });
@@ -147,6 +192,7 @@ void main() {
   });
 
   testWidgets('Places load', (tester) async {
+    setupUniLinks(tester);
     setupColours(tester);
     var sessionId = "0000-00000-00000-00000";
     supabaseScope.post("/rest/v1/session", {
@@ -184,6 +230,7 @@ void main() {
     Get.put(supabaseClient);
 
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
     expect(find.byType(Card), findsNothing);
 
@@ -239,12 +286,18 @@ void main() {
     supabaseScope
         .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
             200, [{}]);
+    supabaseScope
+        .get("/rest/v1/participant?select=%2A&userId=in.%28%22null%22%29")
+        .reply(200, []);
 
     supabaseScope.post("/rest/v1/rpc/get_matching_users", {
       "phones": [phone]
     }).reply(200, [{}]);
 
     await tester.pumpWidget(const MyApp());
+    await triggerLogin(tester, AuthChangeEvent.userUpdated);
+    await triggerLogin(tester, AuthChangeEvent.signedIn);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
 
     await tester
         .tap(find.widgetWithText(NavigationDestination, 'Friends sessions'))
@@ -267,6 +320,7 @@ void main() {
 
   testWidgets('Login dialog', (WidgetTester tester) async {
     setupLibPhoneNumber(tester);
+    setupUniLinks(tester);
     await Get.deleteAll();
     supabaseClient.auth.currentSession = null;
     Get.put(supabaseClient);
@@ -290,10 +344,7 @@ void main() {
             {"error": null, "access_token": accessToken(), 'expires_in': 3600});
 
     await tester.pumpWidget(const MyApp());
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
-    await tester.pumpAndSettle();
-
-    expect(await tester.takeException(), isNull);
+    await triggerLogin(tester, AuthChangeEvent.signedOut);
 
     Finder inputField = find.byKey(const Key('phone'));
     expect(inputField, findsOneWidget);
@@ -319,7 +370,7 @@ void main() {
             .map((e) => e.child as Text)
             .map((e) => e.data)
             .toList(),
-        hasLength(9));
+        hasLength(6));
 
     await tester.tap(find.widgetWithText(TextButton, 'CONTINUE').at(0));
     await tester.pumpAndSettle();
@@ -351,6 +402,9 @@ void main() {
       supabaseScope
           .get("/rest/v1/participant?select=%2A&userId=in.%28%29")
           .reply(200, []);
+      supabaseScope.post("/rest/v1/rpc/get_matching_users", {
+        "phones": [null]
+      }).reply(200, [{}]);
 
       var goldens = GoldenBuilder.column(
           wrap: (widget) => Container(

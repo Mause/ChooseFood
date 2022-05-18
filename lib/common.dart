@@ -72,22 +72,22 @@ class _BasePage extends State<BasePage> {
     selectedIndex = widget.selectedIndex;
   }
 
-  void _handleNav(int value) {
+  Future<void> _handleNav(int value) async {
     setState(() {
       selectedIndex = value;
     });
     switch (value) {
       case 0:
-        Get.toNamed(MyHomePage.routeName);
+        await Get.toNamed(MyHomePage.routeName);
         break;
       case 1:
-        Get.toNamed(FriendsSessions.routeName);
+        await Get.toNamed(FriendsSessions.routeName);
         break;
       case 2:
-        Get.toNamed(HistoricalSessions.routeName);
+        await Get.toNamed(HistoricalSessions.routeName);
         break;
       case 3:
-        Get.toNamed(InfoPage.routeName);
+        await Get.toNamed(InfoPage.routeName);
         break;
       default:
         log.e("fell through", value);

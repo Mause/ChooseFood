@@ -2,6 +2,7 @@ import 'dart:async' show Future, FutureOr;
 
 import 'package:choose_food/components/friends_sessions.dart';
 import 'package:choose_food/components/historical_sessions.dart';
+import 'package:choose_food/components/splash_screen.dart';
 import 'package:choose_food/environment_config.dart';
 import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
     show PointType;
@@ -98,11 +99,12 @@ class MyApp extends StatelessWidget {
                 child: GetMaterialApp(
               title: title,
               theme: snapshot.data ?? ThemeData(),
-              initialRoute: MyHomePage.routeName,
+              initialRoute: SplashPage.routeName,
               navigatorObservers: [
                 SentryNavigatorObserver(),
               ],
               routes: {
+                SplashPage.routeName: (context) => const SplashPage(),
                 MyHomePage.routeName: (context) =>
                     const MyHomePage(title: title),
                 LoginDialog.routeName: (context) => const LoginDialog(),
