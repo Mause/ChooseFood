@@ -327,6 +327,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  functions_client:
+    dependency: transitive
+    description:
+      name: functions_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1-dev.5"
   geolocator:
     dependency: "direct main"
     description:
@@ -417,7 +424,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2"
+    version: "0.2.2"
   graphs:
     dependency: transitive
     description:
@@ -431,7 +438,7 @@ packages:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.2.1"
   hive_flutter:
     dependency: transitive
     description:
@@ -795,7 +802,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.9"
+    version: "0.1.10+1"
   process:
     dependency: transitive
     description:
@@ -823,7 +830,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.13"
+    version: "0.1.15"
   recase:
     dependency: transitive
     description:
@@ -968,14 +975,14 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.10"
+    version: "0.3.4"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.9"
+    version: "0.3.1+1"
   swagger_dart_code_generator:
     dependency: "direct dev"
     description:
@@ -1073,7 +1080,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.18"
+    version: "6.1.2"
   url_launcher_android:
     dependency: transitive
     description:
