@@ -204,16 +204,16 @@ void main() {
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
-      {
-        ColumnNames.session.id: id,
-        "decision": [
-          {
-            ColumnNames.decision.decision: true,
-            ColumnNames.decision.placeReference: placeReference,
-            ColumnNames.decision.participantId: 101
-          }
-        ]
-      }
+      SessionWithDecisions(
+          id: id,
+          decision: [
+            Decision(
+                decision: true,
+                placeReference: placeReference,
+                participantId: 101,
+                id: 0)
+          ],
+          point: Point())
     ]);
 
     var placeName = 'The Last Drop';
