@@ -989,7 +989,7 @@ packages:
       name: swagger_dart_code_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.2"
+    version: "2.6.0"
   sync_http:
     dependency: transitive
     description:
