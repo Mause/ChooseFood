@@ -233,7 +233,7 @@ void main() {
 
     supabaseScope.post("/rest/v1/rpc/get_matching_users", {
       "phones": [phone]
-    }).reply(200, [{}]);
+    }).reply(200, [Users()]);
 
     await tester.pumpWidget(const MyApp());
 
