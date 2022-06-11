@@ -227,7 +227,7 @@ void main() {
                 htmlAttributions: []).toJson());
     var email = 'fake@example.com';
     supabaseScope
-        .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
+        .get("/rest/v1/users?select=name&id=in.%28101%29")
         .reply(200, [Users(id: 'PID', email: email, phone: phone).toJson()]);
     mockParticipant(supabaseScope, id);
 
