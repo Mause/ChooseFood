@@ -3,8 +3,10 @@ import 'dart:io' show Platform;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
+import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
+    show PointType;
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Decision, Point, Users;
+    show Decision, Participant, Point, Session, Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,8 +36,7 @@ import 'package:network_image_mock/network_image_mock.dart'
     show mockNetworkImagesFor;
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
-import 'package:supabase/supabase.dart' as supabase;
-import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
@@ -126,9 +127,9 @@ void main() {
   late supabase.SupabaseClient supabaseClient;
 
   setUpAll(() {
-    Supabase.initialize(url: "https://supabase", anonKey: "");
-    Supabase.instance.client.auth.currentSession =
-        Session(accessToken: accessToken());
+    supabase.Supabase.initialize(url: "https://supabase", anonKey: "");
+    supabase.Supabase.instance.client.auth.currentSession =
+        supabase.Session(accessToken: accessToken());
   });
 
   setUp(() {
@@ -148,16 +149,10 @@ void main() {
   testWidgets('Places load', (tester) async {
     setupColours(tester);
     var sessionId = "0000-00000-00000-00000";
-    supabaseScope.post("/rest/v1/session", {
-      "point": {
-        "type": "Point",
-        "coordinates": [115.8577778, -31.9509882]
-      }
-    }).reply(200, [
-      {
-        "id": sessionId,
-      }
-    ]);
+    var point =
+        Point(type: PointType.point, coordinates: [115.8577778, -31.9509882]);
+    supabaseScope.post("/rest/v1/session", {"point": point.toJson()}).reply(
+        200, [Session(id: sessionId, point: point)]);
 
     mapsScope
         .get(
@@ -175,8 +170,7 @@ void main() {
       ],
       "status": "OK"
     });
-    supabaseScope.post("/rest/v1/participant",
-        {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
+    mockParticipant(supabaseScope, sessionId);
 
     await Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
@@ -209,16 +203,16 @@ void main() {
         .get(
             "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
         .reply(200, [
-      {
-        ColumnNames.session.id: id,
-        "decision": [
-          {
-            ColumnNames.decision.decision: true,
-            ColumnNames.decision.placeReference: placeReference,
-            ColumnNames.decision.participantId: 101
-          }
-        ]
-      }
+      SessionWithDecisions(
+          id: id,
+          decision: [
+            Decision(
+                decision: true,
+                placeReference: placeReference,
+                participantId: 101,
+                id: 0)
+          ],
+          point: Point())
     ]);
 
     var placeName = 'The Last Drop';
@@ -233,15 +227,13 @@ void main() {
                 htmlAttributions: []).toJson());
     var email = 'fake@example.com';
     supabaseScope
-        .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
+        .get("/rest/v1/users?select=name&id=in.%28101%29")
         .reply(200, [Users(id: 'PID', email: email, phone: phone).toJson()]);
-    supabaseScope
-        .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
-            200, [{}]);
+    mockParticipant(supabaseScope, id);
 
     supabaseScope.post("/rest/v1/rpc/get_matching_users", {
       "phones": [phone]
-    }).reply(200, [{}]);
+    }).reply(200, [Users()]);
 
     await tester.pumpWidget(const MyApp());
 
@@ -341,7 +333,10 @@ void main() {
               "/rest/v1/session?select=id%2Cdecision%28decision%2CplaceReference%2CparticipantId%29&concludedTime=is.null")
           .reply(200, [
         SessionWithDecisions(
-            decision: [Decision()],
+            decision: [
+              Decision(
+                  id: 0, placeReference: "", participantId: 0, decision: false)
+            ],
             id: "0",
             concludedTime: null,
             createdAt: DateTime.now().toIso8601String(),
@@ -371,6 +366,13 @@ void main() {
         ? [const Skip("Only run on CI if not on windows")]
         : []
   });
+}
+
+void mockParticipant(NockScope supabaseScope, String sessionId) {
+  supabaseScope.post("/rest/v1/participant", {
+    "sessionId": sessionId,
+    "userId": "id"
+  }).reply(200, [Participant(id: 0, sessionId: sessionId, userId: '0')]);
 }
 
 List<Element> list(Type t) {

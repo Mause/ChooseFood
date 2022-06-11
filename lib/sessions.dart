@@ -2,9 +2,9 @@ import 'package:get/get.dart' show Get, Inst;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:supabase/supabase.dart' show SupabaseClient, User;
 
-import 'common.dart' show excludeNull, TypedExecuteExtension;
+import 'common.dart' show TypedExecuteExtension, excludeNull, nullIntKey;
 import 'generated_code/openapi.models.swagger.dart'
-    show Decision, Participant, Session;
+    show $SessionExtension, Decision, Participant, Session;
 import 'main.dart' show ColumnNames, TableNames;
 
 part 'sessions.g.dart';
@@ -13,7 +13,8 @@ class Sessions {
   SupabaseClient supabaseClient = Get.find();
 
   Future<Participant> joinSession(Session session, User user) async {
-    var par = Participant(sessionId: session.id!, userId: user.id);
+    var par =
+        Participant(id: nullIntKey, sessionId: session.id, userId: user.id);
 
     var res = await supabaseClient
         .from(TableNames.participant)
@@ -26,16 +27,17 @@ class Sessions {
   }
 
   Future<List<String>> concludeSession(
-    String sessionId,
+    Session session,
   ) async {
+    session = session.copyWith(concludedTime: DateTime.now().toIso8601String());
+
     await supabaseClient
         .from(TableNames.session)
-        .update(excludeNull(
-            Session(concludedTime: DateTime.now().toIso8601String()).toJson()))
-        .eq(ColumnNames.session.id, sessionId)
+        .update(excludeNull(session.toJson()))
+        .eq(ColumnNames.session.id, session.id)
         .typedExecute(Session.fromJson);
 
-    return summariseSession(sessionId);
+    return summariseSession(session.id);
   }
 
   Future<List<String>> summariseSession(String sessionId) async {
@@ -55,14 +57,13 @@ class Sessions {
     var places = participants
         .map((p) => p.decision.map((d) => d.placeReference))
         .expand((decision) => decision)
-        .map((pid) => pid!)
         .toSet();
 
     var agreements = places
         .where((place) => participants.every((participant) => participant
             .decision
             .firstWhere((element) => place == element.placeReference)
-            .decision!))
+            .decision))
         .toList();
 
     return agreements;
