@@ -22,7 +22,7 @@ class Sessions {
 
     if (res.error != null) throw res.error!;
 
-    return res.datam[0];
+    return res.data![0];
   }
 
   Future<List<String>> concludeSession(
@@ -50,7 +50,7 @@ class Sessions {
               """)
             .eq(ColumnNames.participant.sessionId, sessionId)
             .typedExecute(ParticipantWithDecisions.fromJson))
-        .datam;
+        .data!;
 
     var places = participants
         .map((p) => p.decision.map((d) => d.placeReference))
