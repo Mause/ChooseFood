@@ -3,8 +3,10 @@ import 'dart:io' show Platform;
 
 import 'package:choose_food/components/friends_sessions.dart'
     show FriendsSessions, SessionWithDecisions;
+import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
+    show PointType;
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Decision, Point, Users;
+    show Decision, Point, Session, Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,8 +36,7 @@ import 'package:network_image_mock/network_image_mock.dart'
     show mockNetworkImagesFor;
 import 'package:nock/nock.dart';
 import 'package:nock/src/scope.dart';
-import 'package:supabase/supabase.dart' as supabase;
-import 'package:supabase_flutter/supabase_flutter.dart' show Session, Supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:test/test.dart' show group;
 
 import 'geolocator_platform.dart' show MockGeolocatorPlatform;
@@ -126,9 +127,9 @@ void main() {
   late supabase.SupabaseClient supabaseClient;
 
   setUpAll(() {
-    Supabase.initialize(url: "https://supabase", anonKey: "");
-    Supabase.instance.client.auth.currentSession =
-        Session(accessToken: accessToken());
+    supabase.Supabase.initialize(url: "https://supabase", anonKey: "");
+    supabase.Supabase.instance.client.auth.currentSession =
+        supabase.Session(accessToken: accessToken());
   });
 
   setUp(() {
@@ -148,16 +149,10 @@ void main() {
   testWidgets('Places load', (tester) async {
     setupColours(tester);
     var sessionId = "0000-00000-00000-00000";
-    supabaseScope.post("/rest/v1/session", {
-      "point": {
-        "type": "Point",
-        "coordinates": [115.8577778, -31.9509882]
-      }
-    }).reply(200, [
-      {
-        "id": sessionId,
-      }
-    ]);
+    var point =
+        Point(type: PointType.point, coordinates: [115.8577778, -31.9509882]);
+    supabaseScope.post("/rest/v1/session", {"point": point.toJson()}).reply(
+        200, [Session(id: sessionId, point: point)]);
 
     mapsScope
         .get(
