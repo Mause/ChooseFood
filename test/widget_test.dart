@@ -6,7 +6,7 @@ import 'package:choose_food/components/friends_sessions.dart'
 import 'package:choose_food/generated_code/openapi.enums.swagger.dart'
     show PointType;
 import 'package:choose_food/generated_code/openapi.models.swagger.dart'
-    show Decision, Point, Session, Users;
+    show Decision, Participant, Point, Session, Users;
 import 'package:choose_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -170,8 +170,7 @@ void main() {
       ],
       "status": "OK"
     });
-    supabaseScope.post("/rest/v1/participant",
-        {"sessionId": sessionId, "userId": "id"}).reply(200, [{}]);
+    mockParticipant(supabaseScope, sessionId);
 
     await Get.deleteAll();
     geolocator.GeolocatorPlatform.instance = MockGeolocatorPlatform();
@@ -230,9 +229,7 @@ void main() {
     supabaseScope
         .get("/rest/v1/users?select=name&id=in.%28%22101%22%29")
         .reply(200, [Users(id: 'PID', email: email, phone: phone).toJson()]);
-    supabaseScope
-        .post("/rest/v1/participant", {"sessionId": id, "userId": "id"}).reply(
-            200, [{}]);
+    mockParticipant(supabaseScope, id);
 
     supabaseScope.post("/rest/v1/rpc/get_matching_users", {
       "phones": [phone]
@@ -369,6 +366,13 @@ void main() {
         ? [const Skip("Only run on CI if not on windows")]
         : []
   });
+}
+
+void mockParticipant(NockScope supabaseScope, String sessionId) {
+  supabaseScope.post("/rest/v1/participant", {
+    "sessionId": sessionId,
+    "userId": "id"
+  }).reply(200, [Participant(id: 0, sessionId: sessionId, userId: '0')]);
 }
 
 List<Element> list(Type t) {
