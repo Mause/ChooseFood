@@ -419,7 +419,9 @@ jobs:
       - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
-      - run: flutter pub run msix:create --install-certificate false
+      - run: flutter build winuwp
+      - run: flutter pub run msix:create --install-certificate false --build-windows false
+
       - uses: actions/upload-artifact@v3
         with:
           name: msix
