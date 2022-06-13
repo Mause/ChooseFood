@@ -275,11 +275,28 @@ jobs:
 
       - name: Upload failed tests
         if: always() && github.ref != 'refs/heads/main'
-        uses: edunad/actions-image@v1.0.1
+        uses: actions/github-script@v5
         with:
-            path: './screenshots/*'
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            title: 'Screenshots'
+          script: |
+            const fs = require('fs');
+            const fetch = require('${process.env.GITHUB_WORKSPACE}/node_modules/node-fetch');
+            const fileStream = fs.createReadStream("screenshots/screenshot-friends.png");
+
+            const url = '${{ secrets.SUPABASE_URL }}/storage/v1/object/screenshots/${{ github.run_number }}/screenshot-friends.png';
+
+            await fetch(url, {headers: {Authorization: "${{ secrets.SUPABASE_KEY }}"}, body: fileStream});
+
+            const fields = {
+              commit_sha: context.sha,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            };
+            console.log(fields);
+            const comment = await github.rest.repos.createCommitComment({
+              body: `![Image](${url})`,
+              ...fields
+            });
+            console.log(comment);
 
   note_changelog:
     runs-on: ubuntu-latest
