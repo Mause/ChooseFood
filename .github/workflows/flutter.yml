@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  flutter_version: '2.13.0'
+  flutter_version: '3.1.0'
 
 jobs:
   build:
@@ -401,7 +401,9 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
           channel: 'beta'
 
-      - run: flutter config --enable-windows-desktop
+      - run: flutter config --enable-windows-uwp-desktop
+      - run: flutter doctor
+
       - name: Install dependencies
         run: flutter pub get
 
@@ -417,7 +419,9 @@ jobs:
       - name: Unit tests
         run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
 
-      - run: flutter pub run msix:create --install-certificate false
+      - run: flutter build winuwp
+      - run: flutter pub run msix:create --install-certificate false --build-windows false
+
       - uses: actions/upload-artifact@v3
         with:
           name: msix
