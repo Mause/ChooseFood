@@ -51,7 +51,7 @@ jobs:
       - uses: invertase/github-action-dart-analyzer@v1
 
       - name: Unit tests
-        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/ --reporter json | dart ga_reporter.dart
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -415,7 +415,7 @@ jobs:
       - uses: invertase/github-action-dart-analyzer@v1
 
       - name: Unit tests
-        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/
+        run: flutter test --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} test/ --reporter json | dart ga_reporter.dart
 
       - run: flutter pub run msix:create --install-certificate false
       - uses: actions/upload-artifact@v3
