@@ -11,7 +11,7 @@ jobs:
     name: issue_opened_and_reopened
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/add-to-project@v0.0.3
+      - uses: actions/add-to-project@v0.3.0
         with:
           project-url: https://github.com/users/Mause/projects/3
           github-token: ${{ secrets.ACCESS_TOKEN }}
