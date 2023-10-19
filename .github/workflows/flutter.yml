@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
@@ -71,7 +71,7 @@ jobs:
         target: [appbundle, web]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
@@ -165,7 +165,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
@@ -190,7 +190,7 @@ jobs:
         api-level: [31]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Gradle cache
         uses: actions/cache@v3
@@ -285,7 +285,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: ruby/setup-ruby@v1
@@ -304,7 +304,7 @@ jobs:
      # - integration_tests
       - build_windows
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -340,7 +340,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: ruby/setup-ruby@v1
@@ -388,7 +388,7 @@ jobs:
     needs: build
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
